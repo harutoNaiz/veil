@@ -1,0 +1,19 @@
+<View>
+  <Video name="video" value="$video" framerate="30"/>
+  <VideoRectangle name="box" toName="video"/>
+  <Labels name="label" toName="video" allowEmpty="true">
+    <Label value="cats" background="#ff9900"/>
+    <Label value="cat-emoji" background="#ffcc00"/>
+    <Label value="cat-text" background="#ff6600"/>
+    <Label value="spiders" background="#222222"/>
+    <Label value="spider-emoji" background="#666666"/>
+    <Label value="dogs" background="#3366ff"/>
+  </Labels>
+  <TimelineLabels name="marks" toName="video">
+    <Label value="sceneCut" background="#ff0000"/>
+    <Label value="appSwitch" background="#00aa00"/>
+    <Label value="lock" background="#0000ff"/>
+    <Label value="unlock" background="#00aaaa"/>
+    <Label value="clean" background="#999999"/>
+  </TimelineLabels>
+</View>
