@@ -1,0 +1,60 @@
+[project]
+name = "veil-workshop"
+version = "0.1.0"
+description = "Veil Workshop: Python twin, evaluation, model export, bench tools and contract types"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "numpy==2.4.6",
+  "opencv-python==4.14.0.94",
+  "pillow==12.3.0",
+  "pydantic==2.13.5",
+  "jsonschema==4.26.0",
+  "referencing==0.37.0",
+  "flask==3.1.3",
+  "onnx==1.23.1",
+  "onnxruntime==1.30.0",
+  "huggingface_hub==2.1.1",
+  "qai-hub==0.56.0",
+]
+
+[dependency-groups]
+dev = [
+  "pytest==9.1.1",
+  "ruff==0.16.10",
+  "pre-commit==4.6.2",
+  "datamodel-code-generator==0.83.0",
+]
+# Installed from Phase 1.3 with `uv sync --group ml` (DV-3). Pinned and locked now.
+ml = [
+  "torch==2.14.1",
+  "torchvision==0.29.1",
+  "transformers==5.18.0",
+  "ultralytics==8.4.171",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+# R4 deviation: transformers 5.18.0 (ml group) needs tokenizers>=0.23.1, which still declares
+# huggingface-hub<2.0, while the main pin is huggingface_hub 2.1.1 (transformers itself allows <3.0).
+# Without this override `uv lock` has no solution. Remove it once tokenizers lifts its cap.
+override-dependencies = ["huggingface-hub==2.1.1"]
+environments = ["sys_platform == 'win32'", "sys_platform == 'linux'"]
+
+[build-system]
+requires = ["hatchling==1.32.4"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["workshop"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["workshop/contracts/models.py", "console", "guard"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --import-mode=importlib"
+testpaths = ["workshop", "contracts"]

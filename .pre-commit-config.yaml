@@ -1,0 +1,27 @@
+default_install_hook_types: [pre-commit]
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: ruff format (Python)
+        entry: uv run --no-sync ruff format
+        language: unsupported
+        types_or: [python, pyi]
+        exclude: ^workshop/contracts/models\.py$
+      - id: ruff-check
+        name: ruff check --fix (Python)
+        entry: uv run --no-sync ruff check --fix --exit-non-zero-on-fix
+        language: unsupported
+        types_or: [python, pyi]
+        exclude: ^workshop/contracts/models\.py$
+      - id: ktlint
+        name: ktlint --format (Kotlin, guard/)
+        entry: uv run --no-sync python tools/hooks/ktlint_hook.py
+        language: unsupported
+        files: ^guard/.*\.kts?$
+        exclude: /build/
+      - id: dart-format
+        name: dart format (Flutter, console/)
+        entry: uv run --no-sync python tools/hooks/dart_format_hook.py
+        language: unsupported
+        files: ^console/.*\.dart$

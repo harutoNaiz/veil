@@ -1,0 +1,28 @@
+# Private data (AC-1.1-08): never committed
+/data/*
+!/data/README.md
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Android / Gradle
+.gradle/
+.kotlin/
+build/
+local.properties
+captures/
+.cxx/
+*.iml
+.idea/
+
+# Flutter (console/.gitignore covers the rest)
+.dart_tool/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/

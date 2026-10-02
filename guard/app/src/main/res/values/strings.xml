@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="probe_label">Veil probe (does nothing)</string>
+    <string name="probe_description">Test-only service used in Phase 1.1 to check that this phone lets a sideloaded app enable an accessibility service. It reads nothing.</string>
+</resources>
