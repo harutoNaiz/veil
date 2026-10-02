@@ -93,3 +93,12 @@ def test_index(session):
     idx = index.build(d)
     assert idx["totalSeconds"] == 20 and idx["situations"]["reelsSwipe"] == 4
     assert not idx["ac_2_1_01"] and not idx["ac_2_1_02"]
+
+
+def test_label_validates(session):
+    from workshop.labels.recordings import validate as validate_label
+
+    d, _ = session
+    label = json.loads((d / "labels" / "synth-known-scroll.json").read_text(encoding="utf-8"))
+    assert validate_label(label) == []
+    assert all(t["conceptId"] != "dogs" for t in label["tracks"])

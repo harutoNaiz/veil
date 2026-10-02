@@ -245,6 +245,8 @@ def _label(session_id, truth, marks, t_of, n) -> dict:
     per_key: dict[str, dict] = {}
     for fr in truth:
         for b in fr["boxes"]:
+            if b["conceptId"] == "dogs":  # lookalike: truth only, never a concept track
+                continue
             tr = per_key.setdefault(b["key"], {"conceptId": b["conceptId"], "pts": []})
             tr["pts"].append((fr["i"], b["rect"]))
     tracks = []
@@ -264,11 +266,13 @@ def _label(session_id, truth, marks, t_of, n) -> dict:
             {"key": key, "conceptId": tr["conceptId"], "spans": spans, "keyframes": keyframes}
         )
     mk = [{"tMs": t_of(i), "type": m} for i, m in marks]
+    # clean = exactly the stretches where no concept track is visible
+    busy = sorted((sp["startMs"], sp["endMs"]) for tr in tracks for sp in tr["spans"])
     clean, cur = [], t_of(0)
-    for m in sorted(x["tMs"] for x in mk):
-        if m - 150 > cur:
-            clean.append({"startMs": cur, "endMs": m - 150})
-        cur = m + 150
+    for st, en in busy:
+        if st > cur:
+            clean.append({"startMs": cur, "endMs": st})
+        cur = max(cur, en)
     if t_of(n - 1) > cur:
         clean.append({"startMs": cur, "endMs": t_of(n - 1)})
     return {
