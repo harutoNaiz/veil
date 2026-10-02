@@ -1,0 +1,14 @@
+{
+  "contractVersion": "1.0",
+  "regionId": "r12",
+  "lookId": 413,
+  "tMs": 93205020,
+  "rect": {
+    "x": 480,
+    "y": 1056,
+    "w": 480,
+    "h": 480
+  },
+  "source": "tile",
+  "kind": "image"
+}

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Region",
+  "description": "A piece of the screen proposed by the Spotter for describing and judging. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "regionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+      "description": "Unique within its look."
+    },
+    "lookId": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The look (one run of find, describe, judge) this region belongs to."
+    },
+    "frameId": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Frame the region was cut from."
+    },
+    "tMs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Time the region was proposed."
+    },
+    "rect": {
+      "$ref": "rect.schema.json",
+      "description": "Region bounds on screen."
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "whole",
+        "tile",
+        "layout",
+        "finder",
+        "crop"
+      ],
+      "description": "How the region was proposed."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "screen",
+        "post",
+        "image",
+        "video",
+        "text",
+        "object",
+        "unknown"
+      ],
+      "description": "What the region contains."
+    },
+    "objectness": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "The finder's score."
+    },
+    "postRect": {
+      "$ref": "rect.schema.json",
+      "description": "Bounds of the enclosing post, for whole-post covers."
+    },
+    "parentRegionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+      "description": "The region this one was cut from."
+    },
+    "text": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Text of a text region."
+    },
+    "phash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{16}$",
+      "description": "64-bit picture hash of the crop, used as the memory key."
+    },
+    "ownOverlayFraction": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Share of the region hidden by Veil's own covers."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "regionId",
+    "lookId",
+    "tMs",
+    "rect",
+    "source",
+    "kind"
+  ]
+}

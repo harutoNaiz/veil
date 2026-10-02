@@ -1,0 +1,32 @@
+{
+  "contractVersion": "1.0",
+  "conceptId": "cats",
+  "displayName": "Cats",
+  "layer": 2,
+  "enabled": true,
+  "looksLike": [],
+  "butNot": [
+    "a lion",
+    "a tiger",
+    "a cat-shaped cloud"
+  ],
+  "ignore": [
+    "a cat logo in the app toolbar"
+  ],
+  "keywords": [
+    "cat",
+    "kitten",
+    "meow"
+  ],
+  "examplePhotos": [
+    {
+      "path": "data/concepts/cats/example-01.jpg",
+      "sha256": "6862e5b7981a88304b4e9aea78f9497bf9f3947c87d340d9abcc87d5c8f4ce8c"
+    }
+  ],
+  "scope": "object",
+  "coverStyle": "blur",
+  "showLabel": true,
+  "strictness": "balanced",
+  "sensitive": false
+}

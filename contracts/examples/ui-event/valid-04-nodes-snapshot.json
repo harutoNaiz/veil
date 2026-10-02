@@ -1,0 +1,57 @@
+{
+  "contractVersion": "1.0",
+  "eventId": 214,
+  "tMs": 93208120,
+  "type": "nodesSnapshot",
+  "packageName": "com.instagram.android",
+  "nodes": [
+    {
+      "kind": "list",
+      "rect": {
+        "x": 0,
+        "y": 228,
+        "w": 1440,
+        "h": 2740
+      },
+      "nodeId": "feed-list",
+      "className": "androidx.recyclerview.widget.RecyclerView"
+    },
+    {
+      "kind": "post",
+      "rect": {
+        "x": 0,
+        "y": 228,
+        "w": 1440,
+        "h": 1780
+      },
+      "nodeId": "post-0",
+      "contentDescription": "Photo by whisker_world. 3,412 likes."
+    },
+    {
+      "kind": "image",
+      "rect": {
+        "x": 0,
+        "y": 300,
+        "w": 1440,
+        "h": 1440
+      },
+      "nodeId": "post-0-image",
+      "contentDescription": "A grey cat asleep on a windowsill",
+      "className": "android.widget.ImageView"
+    },
+    {
+      "kind": "text",
+      "rect": {
+        "x": 48,
+        "y": 1760,
+        "w": 1344,
+        "h": 120
+      },
+      "nodeId": "post-0-caption",
+      "text": "whisker_world Lazy Sunday",
+      "className": "android.widget.TextView"
+    }
+  ],
+  "truncated": false,
+  "durationMs": 14
+}

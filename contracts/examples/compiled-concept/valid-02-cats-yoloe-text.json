@@ -1,0 +1,39 @@
+{
+  "contractVersion": "1.0",
+  "conceptId": "cats",
+  "spaceId": "yoloe-v1-text-prompt",
+  "textModelId": "yoloe-text-pe",
+  "conceptSha256": "470b7ad8873883ce20099f8224cb2513455bd91235928fa99a36763be2bc9d9b",
+  "looksLike": [
+    {
+      "contractVersion": "1.0",
+      "spaceId": "yoloe-v1-text-prompt",
+      "modelId": "yoloe-text-pe",
+      "dim": 8,
+      "vectorF16": "9C5SN1S4FjhWo8CzyLM/tQ==",
+      "kind": "text",
+      "text": "cat"
+    },
+    {
+      "contractVersion": "1.0",
+      "spaceId": "yoloe-v1-text-prompt",
+      "modelId": "yoloe-text-pe",
+      "dim": 8,
+      "vectorF16": "S7Zstd21m7GENja3QDSvNQ==",
+      "kind": "text",
+      "text": "kitten"
+    }
+  ],
+  "butNot": [],
+  "ignore": [],
+  "exampleCount": 0,
+  "exceptions": [],
+  "calibrationOffset": 0.0,
+  "userOffset": 0.0,
+  "thresholds": {
+    "light": 0.4,
+    "balanced": 0.3,
+    "strict": 0.2
+  },
+  "margin": 0.0
+}

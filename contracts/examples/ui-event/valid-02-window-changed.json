@@ -1,0 +1,9 @@
+{
+  "contractVersion": "1.0",
+  "eventId": 212,
+  "tMs": 93207340,
+  "type": "windowChanged",
+  "packageName": "com.instagram.android",
+  "className": "com.instagram.android.activity.MainTabActivity",
+  "windowId": 37
+}

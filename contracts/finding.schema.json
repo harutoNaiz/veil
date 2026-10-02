@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Finding",
+  "description": "The Judge's verdict on one piece for one concept, or a Layer 1 detector hit. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "findingId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+      "description": "Unique identifier of the finding."
+    },
+    "lookId": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The look this finding belongs to."
+    },
+    "tMs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Time of the verdict."
+    },
+    "frameId": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Frame the piece was cut from."
+    },
+    "image": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 260,
+      "description": "Screenshot file name in offline evaluation."
+    },
+    "regionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+      "description": "The region that was judged."
+    },
+    "rect": {
+      "$ref": "rect.schema.json",
+      "description": "Bounds of the finding on screen."
+    },
+    "conceptId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+      "description": "The concept judged; Layer 1 ids look like l1.nudity and l1.abuse."
+    },
+    "layer": {
+      "type": "integer",
+      "enum": [
+        1,
+        2
+      ],
+      "description": "1 is the always-on safety layer, 2 is the user's own list."
+    },
+    "lane": {
+      "type": "string",
+      "enum": [
+        "describer",
+        "finder",
+        "layer1",
+        "text"
+      ],
+      "description": "Which lane produced the finding."
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "hide",
+        "nearMiss",
+        "leave"
+      ],
+      "description": "hide is a confident finding; nearMiss is a near-threshold finding that only keeps existing covers alive; leave is no finding."
+    },
+    "probability": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Probability that the piece matches the concept."
+    },
+    "score": {
+      "type": "number",
+      "minimum": -1,
+      "maximum": 1,
+      "description": "Raw similarity score."
+    },
+    "margin": {
+      "type": "number",
+      "minimum": -2,
+      "maximum": 2,
+      "description": "Margin over the best lookalike."
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "object",
+        "wholeElement"
+      ],
+      "description": "Cover only the object, or the whole element around it."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "findingId",
+    "lookId",
+    "tMs",
+    "rect",
+    "conceptId",
+    "layer",
+    "lane",
+    "decision",
+    "probability",
+    "scope"
+  ]
+}

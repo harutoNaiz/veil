@@ -1,0 +1,95 @@
+{
+  "contractVersion": "1.0",
+  "conceptId": "cats",
+  "textModelId": "siglip2-base-text",
+  "conceptSha256": "470b7ad8873883ce20099f8224cb2513455bd91235928fa99a36763be2bc9d9b",
+  "looksLike": [
+    {
+      "contractVersion": "1.0",
+      "spaceId": "siglip2-base-p16-224",
+      "modelId": "siglip2-base-text",
+      "dim": 8,
+      "vectorF16": "OCQ+Obk437OYsBG0ZTTrpg==",
+      "kind": "text",
+      "text": "a photo of a cat"
+    },
+    {
+      "contractVersion": "1.0",
+      "spaceId": "siglip2-base-p16-224",
+      "modelId": "siglip2-base-text",
+      "dim": 8,
+      "vectorF16": "1JjINRk0ADR5OKq27rJNtw==",
+      "kind": "text",
+      "text": "a cartoon cat"
+    },
+    {
+      "contractVersion": "1.0",
+      "spaceId": "siglip2-base-p16-224",
+      "modelId": "siglip2-base-text",
+      "dim": 8,
+      "vectorF16": "tjaouQozGCTYNKsttzZ3Hw==",
+      "kind": "text",
+      "text": "a kitten sleeping"
+    }
+  ],
+  "butNot": [
+    {
+      "contractVersion": "1.0",
+      "spaceId": "siglip2-base-p16-224",
+      "modelId": "siglip2-base-text",
+      "dim": 8,
+      "vectorF16": "3DEhtKG2Krr0rUI1diBQMA==",
+      "kind": "text",
+      "text": "a lion"
+    },
+    {
+      "contractVersion": "1.0",
+      "spaceId": "siglip2-base-p16-224",
+      "modelId": "siglip2-base-text",
+      "dim": 8,
+      "vectorF16": "NbiCtaIwKrIvMsA0P7j7NQ==",
+      "kind": "text",
+      "text": "a tiger"
+    }
+  ],
+  "ignore": [
+    {
+      "contractVersion": "1.0",
+      "spaceId": "siglip2-base-p16-224",
+      "modelId": "siglip2-base-text",
+      "dim": 8,
+      "vectorF16": "T7PBM2M2VjaWObywsDKAsA==",
+      "kind": "text",
+      "text": "a cat logo in the app toolbar"
+    }
+  ],
+  "exampleCentroid": {
+    "contractVersion": "1.0",
+    "spaceId": "siglip2-base-p16-224",
+    "modelId": "siglip2-base-image",
+    "dim": 8,
+    "vectorF16": "JjaPLweyCbdKuakehrTetA==",
+    "kind": "centroid"
+  },
+  "exampleCount": 1,
+  "exceptions": [
+    {
+      "contractVersion": "1.0",
+      "spaceId": "siglip2-base-p16-224",
+      "modelId": "siglip2-base-image",
+      "dim": 8,
+      "vectorF16": "vrAztmQzE7aGORI14q9CMg==",
+      "kind": "region",
+      "regionId": "r7"
+    }
+  ],
+  "calibrationOffset": 0.02,
+  "userOffset": 0.04,
+  "thresholds": {
+    "light": 0.62,
+    "balanced": 0.55,
+    "strict": 0.48
+  },
+  "margin": 0.05,
+  "exampleThreshold": 0.78
+}

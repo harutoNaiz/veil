@@ -1,0 +1,18 @@
+{
+  "contractVersion": "1.0",
+  "feedbackId": "fb-0001",
+  "tMs": 93230000,
+  "kind": "notThis",
+  "conceptId": "cats",
+  "layer": 2,
+  "spaceId": "siglip2-base-p16-224",
+  "rect": {
+    "x": 72,
+    "y": 412,
+    "w": 1296,
+    "h": 1296
+  },
+  "trackId": 3,
+  "source": "longPress",
+  "thumbnailPath": "feedback/thumbs/fb-0001.jpg"
+}

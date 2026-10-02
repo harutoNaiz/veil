@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EngineStats",
+  "description": "Periodic statistics published by the Guard. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "tMs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Time the statistics were published."
+    },
+    "windowMs": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 600000,
+      "description": "Length of the window the statistics cover."
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "light",
+        "balanced",
+        "strict"
+      ],
+      "description": "Global strictness mode."
+    },
+    "schedulerState": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "watching",
+        "hot",
+        "throttled"
+      ],
+      "description": "State of the Gatekeeper."
+    },
+    "captureState": {
+      "type": "string",
+      "enum": [
+        "running",
+        "paused",
+        "stopped",
+        "awaitingPermission"
+      ],
+      "description": "State of screen capture."
+    },
+    "captureStopReason": {
+      "type": "string",
+      "maxLength": 120,
+      "description": "Why capture stopped."
+    },
+    "captureSource": {
+      "type": "string",
+      "enum": [
+        "mediaProjection",
+        "accessibilityScreenshot",
+        "replay"
+      ],
+      "description": "Capture source in use."
+    },
+    "foregroundPackage": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)+$",
+      "description": "Package name of the app in the foreground."
+    },
+    "looksPerSecond": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Looks per second in the window."
+    },
+    "looksTotal": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Looks since start."
+    },
+    "framesSeen": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Frames seen."
+    },
+    "framesAnalysed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Frames analysed."
+    },
+    "framesSkipped": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Frames skipped."
+    },
+    "cacheHits": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Memory cache hits."
+    },
+    "cacheMisses": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Memory cache misses."
+    },
+    "activeTracks": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Tracks being followed."
+    },
+    "activeCovers": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 24,
+      "description": "Covers on screen (at most 24)."
+    },
+    "aiMsLastLook": {
+      "type": "number",
+      "minimum": 0,
+      "description": "AI time of the last look."
+    },
+    "lookMsP50": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Median look time."
+    },
+    "lookMsP95": {
+      "type": "number",
+      "minimum": 0,
+      "description": "95th percentile look time."
+    },
+    "memoryPssKb": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Proportional set size in kilobytes."
+    },
+    "thermalStatus": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 6,
+      "description": "Android PowerManager THERMAL_STATUS_* value."
+    },
+    "batteryImpactPctPerHour": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Estimated battery impact in percent per hour."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "tMs",
+    "windowMs",
+    "mode",
+    "schedulerState",
+    "captureState",
+    "looksPerSecond",
+    "looksTotal",
+    "framesSeen",
+    "framesAnalysed",
+    "framesSkipped",
+    "cacheHits",
+    "cacheMisses",
+    "activeTracks",
+    "activeCovers"
+  ]
+}

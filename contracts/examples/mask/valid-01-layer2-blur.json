@@ -1,0 +1,20 @@
+{
+  "contractVersion": "1.0",
+  "maskId": 1,
+  "rect": {
+    "x": 48,
+    "y": 88,
+    "w": 1344,
+    "h": 1344
+  },
+  "style": "blur",
+  "layer": 2,
+  "peekable": true,
+  "label": "Hidden · cats",
+  "conceptIds": [
+    "cats"
+  ],
+  "trackIds": [
+    3
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "contractVersion": "1.0",
+  "findingId": "f-412-r7-cats",
+  "lookId": 412,
+  "tMs": 93204470,
+  "frameId": 4812,
+  "regionId": "r7",
+  "rect": {
+    "x": 72,
+    "y": 412,
+    "w": 1296,
+    "h": 1296
+  },
+  "conceptId": "cats",
+  "layer": 2,
+  "lane": "describer",
+  "decision": "hide",
+  "probability": 0.94,
+  "score": 0.31,
+  "margin": 0.12,
+  "scope": "object"
+}

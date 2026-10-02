@@ -1,0 +1,65 @@
+{
+  "contractVersion": "1.0",
+  "modelId": "siglip2-base-image",
+  "name": "SigLIP2 base patch16-224 image encoder",
+  "version": "1.0.0",
+  "task": "imageEmbedding",
+  "inputs": [
+    {
+      "name": "pixel_values",
+      "shape": [
+        1,
+        3,
+        224,
+        224
+      ],
+      "dtype": "float32"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "image_embeds",
+      "shape": [
+        1,
+        768
+      ],
+      "dtype": "float32"
+    }
+  ],
+  "preprocessing": {
+    "kind": "image",
+    "resizeWidth": 224,
+    "resizeHeight": 224,
+    "resizeMode": "stretch",
+    "colorOrder": "RGB",
+    "layout": "NCHW",
+    "scale": 0.00392156862745098,
+    "mean": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "std": [
+      0.5,
+      0.5,
+      0.5
+    ]
+  },
+  "fingerprint": {
+    "spaceId": "siglip2-base-p16-224",
+    "dim": 768,
+    "role": "image",
+    "pairedWith": "siglip2-base-text"
+  },
+  "precision": "w8a16",
+  "runtime": "onnxruntime-qnn",
+  "batch": 1,
+  "file": {
+    "path": "models/siglip2-base-image-w8a16.onnx",
+    "sha256": "57a8990fd0df5024e3faee5ca9237ec0dc34137b515ee6c87e0f5bd61c32b12e",
+    "bytes": 96468992
+  },
+  "sourceUrl": "https://huggingface.co/google/siglip2-base-patch16-224",
+  "licence": "Apache-2.0",
+  "notes": "Exported with fixed shapes for the Snapdragon NPU; compiled on AI Hub."
+}

@@ -1,0 +1,21 @@
+{
+  "contractVersion": "1.0",
+  "findingId": "f-017-r4-cats",
+  "lookId": 17,
+  "tMs": 0,
+  "image": "explore-grid-0017.png",
+  "rect": {
+    "x": 960,
+    "y": 1056,
+    "w": 480,
+    "h": 480
+  },
+  "conceptId": "cats",
+  "layer": 2,
+  "lane": "describer",
+  "decision": "nearMiss",
+  "probability": 0.55,
+  "score": 0.23,
+  "margin": -0.02,
+  "scope": "object"
+}

@@ -1,0 +1,16 @@
+{
+  "contractVersion": "1.0",
+  "packId": "spiders",
+  "name": "Spiders and creepy-crawlies",
+  "version": "1.0.0",
+  "description": "Hides spiders and similar crawling animals, including cartoons. Measured on the spiders-eval-v1 test set: recall 0.93, clean false-cover rate 0.01.",
+  "sensitive": false,
+  "concepts": [],
+  "accuracy": {
+    "recall": 0.93,
+    "cleanFalseCoverRate": 0.01,
+    "testImages": 120,
+    "testSet": "spiders-eval-v1"
+  },
+  "licence": "CC-BY-4.0"
+}

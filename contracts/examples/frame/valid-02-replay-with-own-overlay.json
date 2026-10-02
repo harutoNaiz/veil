@@ -1,0 +1,29 @@
+{
+  "contractVersion": "1.0",
+  "frameId": 123,
+  "tMs": 15210,
+  "width": 360,
+  "height": 792,
+  "screenWidth": 1440,
+  "screenHeight": 3168,
+  "rotation": 0,
+  "source": "replay",
+  "foregroundPackage": "com.instagram.android",
+  "ownOverlay": [
+    {
+      "x": 72,
+      "y": 1020,
+      "w": 1296,
+      "h": 640
+    }
+  ],
+  "blindRects": [
+    {
+      "x": 0,
+      "y": 3000,
+      "w": 1440,
+      "h": 168
+    }
+  ],
+  "image": "frame-000123.png"
+}

@@ -1,0 +1,14 @@
+{
+  "contractVersion": "1.0",
+  "frameId": 4812,
+  "sessionId": "sess-20261002-01",
+  "tMs": 93204411,
+  "width": 360,
+  "height": 792,
+  "screenWidth": 1440,
+  "screenHeight": 3168,
+  "rotation": 0,
+  "source": "mediaProjection",
+  "foregroundPackage": "com.instagram.android",
+  "ownOverlay": []
+}

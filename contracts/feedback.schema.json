@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Feedback",
+  "description": "A user correction on a Layer 2 cover. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16. A fingerprint may only be compared with a concept from the same model family: both must carry the same spaceId.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "feedbackId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+      "description": "Unique identifier of the feedback."
+    },
+    "tMs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Time of the correction."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "notThis",
+        "missed",
+        "correct"
+      ],
+      "description": "notThis: wrongly covered; missed: should have been covered; correct: confirmed."
+    },
+    "conceptId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+      "description": "The concept the correction is about."
+    },
+    "layer": {
+      "type": "integer",
+      "const": 2,
+      "description": "Always 2: Layer 1 cannot be corrected."
+    },
+    "spaceId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+      "description": "Model family of the embedding."
+    },
+    "embedding": {
+      "$ref": "embedding.schema.json",
+      "description": "Fingerprint of the corrected piece."
+    },
+    "rect": {
+      "$ref": "rect.schema.json",
+      "description": "Bounds of the corrected piece on screen."
+    },
+    "trackId": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The track that was corrected."
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "longPress",
+        "recentCovers",
+        "screenshot"
+      ],
+      "description": "Where the correction was made."
+    },
+    "thumbnailPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 260,
+      "description": "A phone-local thumbnail file only."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "feedbackId",
+    "tMs",
+    "kind",
+    "conceptId",
+    "layer",
+    "spaceId",
+    "source"
+  ],
+  "if": {
+    "properties": {
+      "kind": {
+        "const": "notThis"
+      }
+    },
+    "required": [
+      "kind"
+    ]
+  },
+  "then": {
+    "required": [
+      "embedding"
+    ]
+  }
+}

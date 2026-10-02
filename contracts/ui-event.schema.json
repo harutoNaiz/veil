@@ -1,0 +1,376 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UiEvent",
+  "description": "One screen signal from the accessibility service: scrolled, window changed, content changed, nodes snapshot, screen off or screen on. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/Scrolled"
+    },
+    {
+      "$ref": "#/$defs/WindowChanged"
+    },
+    {
+      "$ref": "#/$defs/ContentChanged"
+    },
+    {
+      "$ref": "#/$defs/NodesSnapshot"
+    },
+    {
+      "$ref": "#/$defs/ScreenOff"
+    },
+    {
+      "$ref": "#/$defs/ScreenOn"
+    }
+  ],
+  "$defs": {
+    "Scrolled": {
+      "title": "UiEventScrolled",
+      "description": "The content of a scrollable container moved.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contractVersion": {
+          "type": "string",
+          "const": "1.0",
+          "description": "Contract version this object follows."
+        },
+        "eventId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Per-session event sequence number."
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time the event happened."
+        },
+        "type": {
+          "type": "string",
+          "const": "scrolled",
+          "description": "Event kind."
+        },
+        "packageName": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)+$",
+          "description": "Package name of the app that produced the event."
+        },
+        "dx": {
+          "type": "integer",
+          "description": "How far the content moved horizontally on screen, in screen pixels: +dx means it moved right. Opposite sign to Android's scroll delta."
+        },
+        "dy": {
+          "type": "integer",
+          "description": "How far the content moved vertically on screen, in screen pixels: +dy means it moved down, -dy means it moved up (the user scrolled towards later content). Opposite sign to Android's scroll delta."
+        },
+        "containerRect": {
+          "$ref": "rect.schema.json",
+          "description": "Bounds of the scrolled container."
+        },
+        "containerId": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Identifier of the scrolled container."
+        },
+        "estimated": {
+          "type": "boolean",
+          "description": "True when the scroll was derived from frame differences."
+        }
+      },
+      "required": [
+        "contractVersion",
+        "eventId",
+        "tMs",
+        "type",
+        "dx",
+        "dy"
+      ]
+    },
+    "WindowChanged": {
+      "title": "UiEventWindowChanged",
+      "description": "The foreground window changed.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contractVersion": {
+          "type": "string",
+          "const": "1.0",
+          "description": "Contract version this object follows."
+        },
+        "eventId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Per-session event sequence number."
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time the event happened."
+        },
+        "type": {
+          "type": "string",
+          "const": "windowChanged",
+          "description": "Event kind."
+        },
+        "packageName": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)+$",
+          "description": "Package name of the app that produced the event."
+        },
+        "className": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Class name of the new window."
+        },
+        "windowId": {
+          "type": "integer",
+          "description": "Android window id."
+        }
+      },
+      "required": [
+        "contractVersion",
+        "eventId",
+        "tMs",
+        "type",
+        "packageName"
+      ]
+    },
+    "ContentChanged": {
+      "title": "UiEventContentChanged",
+      "description": "Content inside a window changed without a scroll.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contractVersion": {
+          "type": "string",
+          "const": "1.0",
+          "description": "Contract version this object follows."
+        },
+        "eventId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Per-session event sequence number."
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time the event happened."
+        },
+        "type": {
+          "type": "string",
+          "const": "contentChanged",
+          "description": "Event kind."
+        },
+        "packageName": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)+$",
+          "description": "Package name of the app that produced the event."
+        },
+        "rect": {
+          "$ref": "rect.schema.json",
+          "description": "Area that changed."
+        },
+        "changeTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "maxItems": 8,
+          "description": "Android content change type names."
+        }
+      },
+      "required": [
+        "contractVersion",
+        "eventId",
+        "tMs",
+        "type"
+      ]
+    },
+    "NodesSnapshot": {
+      "title": "UiEventNodesSnapshot",
+      "description": "A snapshot of the visible accessibility nodes.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contractVersion": {
+          "type": "string",
+          "const": "1.0",
+          "description": "Contract version this object follows."
+        },
+        "eventId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Per-session event sequence number."
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time the event happened."
+        },
+        "type": {
+          "type": "string",
+          "const": "nodesSnapshot",
+          "description": "Event kind."
+        },
+        "packageName": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)+$",
+          "description": "Package name of the app that produced the event."
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "maxItems": 300,
+          "description": "Visible nodes (at most 300)."
+        },
+        "truncated": {
+          "type": "boolean",
+          "description": "True if the node limit or the time budget was hit."
+        },
+        "durationMs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time the snapshot took."
+        }
+      },
+      "required": [
+        "contractVersion",
+        "eventId",
+        "tMs",
+        "type",
+        "nodes",
+        "truncated",
+        "durationMs"
+      ]
+    },
+    "ScreenOff": {
+      "title": "UiEventScreenOff",
+      "description": "The screen turned off.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contractVersion": {
+          "type": "string",
+          "const": "1.0",
+          "description": "Contract version this object follows."
+        },
+        "eventId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Per-session event sequence number."
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time the event happened."
+        },
+        "type": {
+          "type": "string",
+          "const": "screenOff",
+          "description": "Event kind."
+        },
+        "packageName": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)+$",
+          "description": "Package name of the app that produced the event."
+        }
+      },
+      "required": [
+        "contractVersion",
+        "eventId",
+        "tMs",
+        "type"
+      ]
+    },
+    "ScreenOn": {
+      "title": "UiEventScreenOn",
+      "description": "The screen turned on.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contractVersion": {
+          "type": "string",
+          "const": "1.0",
+          "description": "Contract version this object follows."
+        },
+        "eventId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Per-session event sequence number."
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time the event happened."
+        },
+        "type": {
+          "type": "string",
+          "const": "screenOn",
+          "description": "Event kind."
+        },
+        "packageName": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)+$",
+          "description": "Package name of the app that produced the event."
+        }
+      },
+      "required": [
+        "contractVersion",
+        "eventId",
+        "tMs",
+        "type"
+      ]
+    },
+    "Node": {
+      "title": "UiEventNode",
+      "description": "One visible accessibility node.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "image",
+            "video",
+            "web",
+            "text",
+            "list",
+            "post",
+            "other"
+          ],
+          "description": "Coarse node kind."
+        },
+        "rect": {
+          "$ref": "rect.schema.json",
+          "description": "Node bounds on screen."
+        },
+        "nodeId": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Node identifier."
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Node text."
+        },
+        "contentDescription": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Node content description."
+        },
+        "className": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Android class name."
+        }
+      },
+      "required": [
+        "kind",
+        "rect"
+      ]
+    }
+  }
+}

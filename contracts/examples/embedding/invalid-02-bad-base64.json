@@ -1,0 +1,9 @@
+{
+  "contractVersion": "1.0",
+  "spaceId": "siglip2-base-p16-224",
+  "modelId": "siglip2-base-text",
+  "dim": 8,
+  "vectorF16": "not base64!!",
+  "kind": "text",
+  "text": "a photo of a cat"
+}

@@ -1,0 +1,101 @@
+{
+  "compiled-concept/invalid-01-missing-spaceId.json": [
+    "required"
+  ],
+  "compiled-concept/invalid-02-user-offset-too-big.json": [
+    "maximum"
+  ],
+  "concept-pack/invalid-01-bad-semver.json": [
+    "pattern"
+  ],
+  "concept-pack/invalid-02-no-concepts.json": [
+    "minItems"
+  ],
+  "concept/invalid-01-layer1-blur.json": [
+    "const"
+  ],
+  "concept/invalid-02-empty-looksLike.json": [
+    "minItems"
+  ],
+  "embedding/invalid-01-missing-spaceId.json": [
+    "required"
+  ],
+  "embedding/invalid-02-bad-base64.json": [
+    "pattern"
+  ],
+  "engine-stats/invalid-01-negative-framesSkipped.json": [
+    "minimum"
+  ],
+  "engine-stats/invalid-02-bad-captureState.json": [
+    "enum"
+  ],
+  "feedback/invalid-01-layer1.json": [
+    "const"
+  ],
+  "feedback/invalid-02-notThis-without-embedding.json": [
+    "required"
+  ],
+  "feedback/invalid-03-missing-spaceId.json": [
+    "required"
+  ],
+  "finding/invalid-01-probability-above-1.json": [
+    "maximum"
+  ],
+  "finding/invalid-02-bad-decision.json": [
+    "enum"
+  ],
+  "frame/invalid-01-missing-ownOverlay.json": [
+    "required"
+  ],
+  "frame/invalid-02-bad-rotation.json": [
+    "enum"
+  ],
+  "mask-plan/invalid-01-25-masks.json": [
+    "maxItems"
+  ],
+  "mask-plan/invalid-02-missing-reason.json": [
+    "required"
+  ],
+  "mask/invalid-01-layer1-peekable.json": [
+    "const"
+  ],
+  "mask/invalid-02-layer1-blur.json": [
+    "const"
+  ],
+  "model-manifest/invalid-01-dynamic-shape.json": [
+    "minimum"
+  ],
+  "model-manifest/invalid-02-fingerprint-model-without-fingerprint.json": [
+    "required"
+  ],
+  "rect/invalid-01-zero-width.json": [
+    "minimum"
+  ],
+  "rect/invalid-02-float-x.json": [
+    "type"
+  ],
+  "region/invalid-01-bad-source.json": [
+    "enum"
+  ],
+  "region/invalid-02-missing-rect.json": [
+    "required"
+  ],
+  "screen-label/invalid-01-clean-with-boxes.json": [
+    "maxItems"
+  ],
+  "screen-label/invalid-02-jpg-image.json": [
+    "pattern"
+  ],
+  "track/invalid-01-bad-state.json": [
+    "enum"
+  ],
+  "track/invalid-02-trackId-zero.json": [
+    "minimum"
+  ],
+  "ui-event/invalid-01-scrolled-missing-dy.json": [
+    "oneOf"
+  ],
+  "ui-event/invalid-02-unknown-type.json": [
+    "oneOf"
+  ]
+}

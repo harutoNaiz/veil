@@ -1,0 +1,17 @@
+{
+  "contractVersion": "1.0",
+  "eventId": 213,
+  "tMs": 93207902,
+  "type": "contentChanged",
+  "packageName": "com.instagram.android",
+  "rect": {
+    "x": 0,
+    "y": 1180,
+    "w": 1440,
+    "h": 900
+  },
+  "changeTypes": [
+    "CONTENT_CHANGE_TYPE_SUBTREE",
+    "CONTENT_CHANGE_TYPE_TEXT"
+  ]
+}

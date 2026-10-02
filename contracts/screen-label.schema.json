@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ScreenLabel",
+  "description": "Ground-truth labels for one screenshot (the Phase 1.2 label format). Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "image": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]+\\.png$",
+      "description": "Screenshot file name."
+    },
+    "width": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16384,
+      "description": "Screenshot width in pixels."
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16384,
+      "description": "Screenshot height in pixels."
+    },
+    "clean": {
+      "type": "boolean",
+      "description": "True means no labelled concept is present."
+    },
+    "boxes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Box"
+      },
+      "maxItems": 200,
+      "description": "Labelled boxes."
+    },
+    "lookalikes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
+      },
+      "maxItems": 16,
+      "description": "Lookalike content present, e.g. dog or fox."
+    },
+    "meta": {
+      "$ref": "#/$defs/Meta",
+      "description": "Where the screenshot came from."
+    },
+    "labeller": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "Who labelled the screenshot."
+    },
+    "reviewed": {
+      "type": "boolean",
+      "description": "True once a second person reviewed the labels."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "image",
+    "width",
+    "height",
+    "clean",
+    "boxes"
+  ],
+  "if": {
+    "properties": {
+      "clean": {
+        "const": true
+      }
+    },
+    "required": [
+      "clean"
+    ]
+  },
+  "then": {
+    "properties": {
+      "boxes": {
+        "maxItems": 0
+      }
+    }
+  },
+  "else": {
+    "properties": {
+      "boxes": {
+        "minItems": 1
+      }
+    }
+  },
+  "$defs": {
+    "Box": {
+      "title": "ScreenLabelBox",
+      "description": "One labelled box.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rect": {
+          "$ref": "rect.schema.json",
+          "description": "Box bounds in screenshot pixels."
+        },
+        "concept": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+          "description": "The concept present in the box."
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "photo",
+            "cartoon",
+            "drawing",
+            "sticker",
+            "emoji",
+            "text",
+            "other"
+          ],
+          "description": "How the content is depicted."
+        },
+        "tag": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+          "description": "Free tag such as cat-emoji or cat-text."
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "object",
+            "wholeElement"
+          ],
+          "description": "Cover only the object, or the whole element around it."
+        },
+        "visibleFraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Share of the item that is visible."
+        },
+        "postRect": {
+          "$ref": "rect.schema.json",
+          "description": "Bounds of the enclosing post."
+        }
+      },
+      "required": [
+        "rect",
+        "concept",
+        "kind",
+        "scope"
+      ]
+    },
+    "Meta": {
+      "title": "ScreenLabelMeta",
+      "description": "Where the screenshot came from.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "app": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+          "description": "App the screenshot was taken in."
+        },
+        "surface": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Part of the app, e.g. explore-grid."
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "dark",
+            "light"
+          ],
+          "description": "Colour mode."
+        },
+        "orientation": {
+          "type": "string",
+          "enum": [
+            "portrait",
+            "landscape"
+          ],
+          "description": "Screen orientation."
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "How the screenshot was captured."
+        }
+      },
+      "required": [
+        "app",
+        "surface",
+        "mode",
+        "orientation",
+        "source"
+      ]
+    }
+  }
+}

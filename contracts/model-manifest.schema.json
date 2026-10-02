@@ -1,0 +1,357 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ModelManifest",
+  "description": "Everything the phone needs to load and use one model file. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16. A fingerprint may only be compared with a concept from the same model family: both must carry the same spaceId.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "modelId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+      "description": "Stable identifier of the model."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Model name."
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "description": "Model version."
+    },
+    "task": {
+      "type": "string",
+      "enum": [
+        "imageEmbedding",
+        "textEmbedding",
+        "objectFinder",
+        "nsfwDetector",
+        "toxicityClassifier",
+        "ocr",
+        "other"
+      ],
+      "description": "What the model does."
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TensorSpec"
+      },
+      "minItems": 1,
+      "maxItems": 16,
+      "description": "Input tensors."
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TensorSpec"
+      },
+      "minItems": 1,
+      "maxItems": 16,
+      "description": "Output tensors."
+    },
+    "preprocessing": {
+      "$ref": "#/$defs/Preprocessing",
+      "description": "Input preparation."
+    },
+    "fingerprint": {
+      "$ref": "#/$defs/Fingerprint",
+      "description": "Fingerprint details; required for embedding and finder tasks."
+    },
+    "precision": {
+      "type": "string",
+      "enum": [
+        "float32",
+        "float16",
+        "w8a16",
+        "w8a8",
+        "w4a16"
+      ],
+      "description": "Numeric precision of the file."
+    },
+    "runtime": {
+      "type": "string",
+      "enum": [
+        "onnxruntime-qnn",
+        "onnxruntime-cpu",
+        "litert-npu",
+        "litert-cpu",
+        "mlkit"
+      ],
+      "description": "Runtime to load it with."
+    },
+    "batch": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 64,
+      "description": "Batch size."
+    },
+    "file": {
+      "$ref": "#/$defs/File",
+      "description": "The model file."
+    },
+    "sourceUrl": {
+      "type": "string",
+      "pattern": "^https://",
+      "description": "Where the model came from."
+    },
+    "licence": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "Licence of the model."
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Free-form notes."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "modelId",
+    "name",
+    "version",
+    "task",
+    "inputs",
+    "outputs",
+    "preprocessing",
+    "precision",
+    "runtime",
+    "batch",
+    "file",
+    "sourceUrl",
+    "licence"
+  ],
+  "if": {
+    "properties": {
+      "task": {
+        "enum": [
+          "imageEmbedding",
+          "textEmbedding",
+          "objectFinder"
+        ]
+      }
+    },
+    "required": [
+      "task"
+    ]
+  },
+  "then": {
+    "required": [
+      "fingerprint"
+    ]
+  },
+  "$defs": {
+    "TensorSpec": {
+      "title": "ModelManifestTensorSpec",
+      "description": "One input or output tensor with a fixed shape.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "Tensor name."
+        },
+        "shape": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "minItems": 1,
+          "maxItems": 8,
+          "description": "Fixed shape; dynamic dimensions are not allowed."
+        },
+        "dtype": {
+          "type": "string",
+          "enum": [
+            "float32",
+            "float16",
+            "uint8",
+            "int8",
+            "uint16",
+            "int16",
+            "int32",
+            "int64",
+            "bool"
+          ],
+          "description": "Element type."
+        }
+      },
+      "required": [
+        "name",
+        "shape",
+        "dtype"
+      ]
+    },
+    "Preprocessing": {
+      "title": "ModelManifestPreprocessing",
+      "description": "How to prepare input for the model.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "image",
+            "text",
+            "none"
+          ],
+          "description": "Kind of input."
+        },
+        "resizeWidth": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096,
+          "description": "Resize width."
+        },
+        "resizeHeight": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096,
+          "description": "Resize height."
+        },
+        "resizeMode": {
+          "type": "string",
+          "enum": [
+            "stretch",
+            "letterbox",
+            "centerCrop"
+          ],
+          "description": "How to resize."
+        },
+        "colorOrder": {
+          "type": "string",
+          "enum": [
+            "RGB",
+            "BGR"
+          ],
+          "description": "Channel order."
+        },
+        "layout": {
+          "type": "string",
+          "enum": [
+            "NCHW",
+            "NHWC"
+          ],
+          "description": "Tensor layout."
+        },
+        "scale": {
+          "type": "number",
+          "description": "Multiplier applied to pixel values."
+        },
+        "mean": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1,
+          "maxItems": 4,
+          "description": "Per-channel mean."
+        },
+        "std": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1,
+          "maxItems": 4,
+          "description": "Per-channel standard deviation."
+        },
+        "tokenizer": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Tokenizer name."
+        },
+        "maxTokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024,
+          "description": "Maximum number of tokens."
+        }
+      },
+      "required": [
+        "kind"
+      ]
+    },
+    "Fingerprint": {
+      "title": "ModelManifestFingerprint",
+      "description": "What a fingerprint model produces.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "spaceId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+          "description": "Model family of the fingerprints."
+        },
+        "dim": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096,
+          "description": "Number of vector elements."
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "image",
+            "text",
+            "region"
+          ],
+          "description": "What the model embeds."
+        },
+        "pairedWith": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+          "description": "The modelId of the paired encoder (for image and region models, their text encoder)."
+        }
+      },
+      "required": [
+        "spaceId",
+        "dim",
+        "role",
+        "pairedWith"
+      ]
+    },
+    "File": {
+      "title": "ModelManifestFile",
+      "description": "The model file.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 260,
+          "description": "Path of the file."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "SHA-256 of the file."
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Size in bytes."
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ]
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Embedding",
+  "description": "A fingerprint (meaning vector) of an image piece or a text prompt. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16. A fingerprint may only be compared with a concept from the same model family: both must carry the same spaceId.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "spaceId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+      "description": "Model family the fingerprint belongs to."
+    },
+    "modelId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+      "description": "The model that produced it; matches ModelManifest.modelId."
+    },
+    "dim": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4096,
+      "description": "Number of vector elements."
+    },
+    "vectorF16": {
+      "type": "string",
+      "minLength": 4,
+      "pattern": "^[A-Za-z0-9+/]*={0,2}$",
+      "description": "Standard base64 with padding of dim little-endian IEEE-754 binary16 values, L2-normalised. The byte length 2 x dim is checked by rules.py."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "image",
+        "text",
+        "region",
+        "centroid"
+      ],
+      "description": "What was fingerprinted."
+    },
+    "regionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+      "description": "Region the fingerprint was computed from."
+    },
+    "text": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "The prompt, for text kind."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "spaceId",
+    "modelId",
+    "dim",
+    "vectorF16",
+    "kind"
+  ]
+}

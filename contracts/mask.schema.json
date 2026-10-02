@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Mask",
+  "description": "One cover to draw. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "maskId": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Identifier of the cover."
+    },
+    "rect": {
+      "$ref": "rect.schema.json",
+      "description": "Cover bounds on screen, already padded."
+    },
+    "style": {
+      "type": "string",
+      "enum": [
+        "solid",
+        "blur",
+        "mosaic"
+      ],
+      "description": "How the cover looks."
+    },
+    "layer": {
+      "type": "integer",
+      "enum": [
+        1,
+        2
+      ],
+      "description": "1 is the always-on safety layer, 2 is the user's own list."
+    },
+    "peekable": {
+      "type": "boolean",
+      "description": "Whether the user may peek under the cover. Never true for Layer 1."
+    },
+    "label": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "Text shown on the cover, e.g. Hidden · cats."
+    },
+    "conceptIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
+      },
+      "minItems": 1,
+      "maxItems": 8,
+      "description": "Concepts that caused the cover."
+    },
+    "trackIds": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 1,
+      "maxItems": 32,
+      "description": "Tracks the cover follows."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "maskId",
+    "rect",
+    "style",
+    "layer",
+    "peekable",
+    "conceptIds",
+    "trackIds"
+  ],
+  "if": {
+    "properties": {
+      "layer": {
+        "const": 1
+      }
+    },
+    "required": [
+      "layer"
+    ]
+  },
+  "then": {
+    "properties": {
+      "style": {
+        "const": "solid"
+      },
+      "peekable": {
+        "const": false
+      }
+    }
+  }
+}

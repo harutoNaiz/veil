@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Frame",
+  "description": "Metadata of one captured screen frame; pixels are never part of a contract. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "frameId": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Increases with every delivered frame within a capture session."
+    },
+    "sessionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+      "description": "Capture session this frame belongs to."
+    },
+    "tMs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Capture time."
+    },
+    "width": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8192,
+      "description": "Frame width in pixels at capture scale (e.g. 360)."
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8192,
+      "description": "Frame height in pixels at capture scale (e.g. 792)."
+    },
+    "screenWidth": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16384,
+      "description": "Full-resolution screen width in the current orientation. Conversion: x_frame = x_screen * width / screenWidth."
+    },
+    "screenHeight": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16384,
+      "description": "Full-resolution screen height in the current orientation."
+    },
+    "rotation": {
+      "type": "integer",
+      "enum": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "description": "Display rotation in degrees."
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "mediaProjection",
+        "accessibilityScreenshot",
+        "replay",
+        "screenshotFile"
+      ],
+      "description": "Where the frame came from."
+    },
+    "foregroundPackage": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)+$",
+      "description": "Package name of the app in the foreground."
+    },
+    "ownOverlay": {
+      "type": "array",
+      "items": {
+        "$ref": "rect.schema.json"
+      },
+      "maxItems": 64,
+      "description": "Veil's own covers visible at capture time, in screen pixels (may be empty)."
+    },
+    "blindRects": {
+      "type": "array",
+      "items": {
+        "$ref": "rect.schema.json"
+      },
+      "maxItems": 16,
+      "description": "Areas known to be black or protected from capture."
+    },
+    "image": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 260,
+      "description": "File name when the frame is stored on disk."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "frameId",
+    "tMs",
+    "width",
+    "height",
+    "screenWidth",
+    "screenHeight",
+    "rotation",
+    "source",
+    "ownOverlay"
+  ]
+}

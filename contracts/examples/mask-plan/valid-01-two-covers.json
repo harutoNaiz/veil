@@ -1,0 +1,52 @@
+{
+  "contractVersion": "1.0",
+  "planId": 57,
+  "tMs": 93204520,
+  "screenWidth": 1440,
+  "screenHeight": 3168,
+  "rotation": 0,
+  "masks": [
+    {
+      "contractVersion": "1.0",
+      "maskId": 1,
+      "rect": {
+        "x": 48,
+        "y": 88,
+        "w": 1344,
+        "h": 1344
+      },
+      "style": "blur",
+      "layer": 2,
+      "peekable": true,
+      "label": "Hidden · cats",
+      "conceptIds": [
+        "cats"
+      ],
+      "trackIds": [
+        3
+      ]
+    },
+    {
+      "contractVersion": "1.0",
+      "maskId": 3,
+      "rect": {
+        "x": 0,
+        "y": 2000,
+        "w": 1440,
+        "h": 700
+      },
+      "style": "mosaic",
+      "layer": 2,
+      "peekable": true,
+      "label": "Hidden · spiders",
+      "conceptIds": [
+        "spiders"
+      ],
+      "trackIds": [
+        4
+      ]
+    }
+  ],
+  "basedOnFrameId": 4812,
+  "reason": "look"
+}

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ConceptPack",
+  "description": "A named, versioned set of concepts (a topic pack). Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "packId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+      "description": "Stable identifier of the pack."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "Pack name."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Pack version (major.minor.patch)."
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "What the pack covers, including measured accuracy."
+    },
+    "sensitive": {
+      "type": "boolean",
+      "description": "True for sensitive topics."
+    },
+    "concepts": {
+      "type": "array",
+      "items": {
+        "$ref": "concept.schema.json"
+      },
+      "minItems": 1,
+      "maxItems": 64,
+      "description": "The concepts in the pack."
+    },
+    "accuracy": {
+      "$ref": "#/$defs/Accuracy",
+      "description": "Measured accuracy of the pack."
+    },
+    "licence": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "Licence of the pack."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "packId",
+    "name",
+    "version",
+    "description",
+    "sensitive",
+    "concepts"
+  ],
+  "$defs": {
+    "Accuracy": {
+      "title": "ConceptPackAccuracy",
+      "description": "Measured accuracy of a pack on a named test set.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "recall": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Share of target items that were covered."
+        },
+        "cleanFalseCoverRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Share of clean items that were covered by mistake."
+        },
+        "testImages": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of test images."
+        },
+        "testSet": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Name of the test set."
+        }
+      },
+      "required": [
+        "recall",
+        "cleanFalseCoverRate",
+        "testImages",
+        "testSet"
+      ]
+    }
+  }
+}

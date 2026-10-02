@@ -1,0 +1,33 @@
+{
+  "contractVersion": "1.0",
+  "packId": "series-spoilers",
+  "name": "Series spoilers",
+  "version": "0.2.1",
+  "description": "Covers posts that give away how a series ends. Sensitive: shown without previews.",
+  "sensitive": true,
+  "concepts": [
+    {
+      "contractVersion": "1.0",
+      "conceptId": "finale-spoilers",
+      "displayName": "Finale spoilers",
+      "layer": 2,
+      "enabled": true,
+      "looksLike": [
+        "a post revealing who wins the series finale"
+      ],
+      "butNot": [
+        "a post about the trailer",
+        "a post about the cast"
+      ],
+      "keywords": [
+        "finale",
+        "who dies",
+        "ending explained"
+      ],
+      "scope": "wholeElement",
+      "coverStyle": "solid",
+      "showLabel": true,
+      "sensitive": true
+    }
+  ]
+}

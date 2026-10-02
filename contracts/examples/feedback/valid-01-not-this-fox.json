@@ -1,0 +1,27 @@
+{
+  "contractVersion": "1.0",
+  "feedbackId": "fb-0001",
+  "tMs": 93230000,
+  "kind": "notThis",
+  "conceptId": "cats",
+  "layer": 2,
+  "spaceId": "siglip2-base-p16-224",
+  "embedding": {
+    "contractVersion": "1.0",
+    "spaceId": "siglip2-base-p16-224",
+    "modelId": "siglip2-base-image",
+    "dim": 8,
+    "vectorF16": "dLP6MLk1lbg8N88wYTcjMQ==",
+    "kind": "region",
+    "regionId": "r9"
+  },
+  "rect": {
+    "x": 72,
+    "y": 412,
+    "w": 1296,
+    "h": 1296
+  },
+  "trackId": 3,
+  "source": "longPress",
+  "thumbnailPath": "feedback/thumbs/fb-0001.jpg"
+}

@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MaskPlan",
+  "description": "The complete set of covers to draw now. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "planId": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Increases with every new plan."
+    },
+    "tMs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Time the plan was made."
+    },
+    "screenWidth": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16384,
+      "description": "Screen width the rects refer to."
+    },
+    "screenHeight": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16384,
+      "description": "Screen height the rects refer to."
+    },
+    "rotation": {
+      "type": "integer",
+      "enum": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "description": "Display rotation in degrees."
+    },
+    "masks": {
+      "type": "array",
+      "items": {
+        "$ref": "mask.schema.json"
+      },
+      "maxItems": 24,
+      "description": "The covers to draw (at most 24)."
+    },
+    "basedOnFrameId": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Frame the plan was computed from."
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "look",
+        "scroll",
+        "expire",
+        "peek",
+        "clear",
+        "appChange"
+      ],
+      "description": "Why a new plan was made."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "planId",
+    "tMs",
+    "screenWidth",
+    "screenHeight",
+    "rotation",
+    "masks",
+    "reason"
+  ]
+}

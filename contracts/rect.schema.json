@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Rect",
+  "description": "An axis-aligned rectangle on the screen. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "x": {
+      "type": "integer",
+      "minimum": -100000,
+      "maximum": 100000,
+      "description": "Left edge (top-left corner x). Negative values are allowed for items scrolled partly or fully off-screen."
+    },
+    "y": {
+      "type": "integer",
+      "minimum": -100000,
+      "maximum": 100000,
+      "description": "Top edge (top-left corner y). Negative values are allowed for items scrolled partly or fully off-screen."
+    },
+    "w": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100000,
+      "description": "Width in screen pixels."
+    },
+    "h": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100000,
+      "description": "Height in screen pixels."
+    }
+  },
+  "required": [
+    "x",
+    "y",
+    "w",
+    "h"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "contractVersion": "1.0",
+  "image": "explore-grid-0001.jpg",
+  "width": 1440,
+  "height": 3168,
+  "clean": false,
+  "boxes": [
+    {
+      "rect": {
+        "x": 0,
+        "y": 228,
+        "w": 960,
+        "h": 960
+      },
+      "concept": "cats",
+      "kind": "photo",
+      "scope": "object",
+      "visibleFraction": 1.0
+    },
+    {
+      "rect": {
+        "x": 960,
+        "y": 228,
+        "w": 480,
+        "h": 480
+      },
+      "concept": "cats",
+      "kind": "cartoon",
+      "scope": "wholeElement",
+      "visibleFraction": 1.0,
+      "postRect": {
+        "x": 960,
+        "y": 228,
+        "w": 480,
+        "h": 480
+      }
+    },
+    {
+      "rect": {
+        "x": 1180,
+        "y": 2480,
+        "w": 96,
+        "h": 96
+      },
+      "concept": "cats",
+      "kind": "emoji",
+      "tag": "cat-emoji",
+      "scope": "object"
+    }
+  ],
+  "lookalikes": [
+    "dog"
+  ],
+  "meta": {
+    "app": "instagram",
+    "surface": "explore-grid",
+    "mode": "dark",
+    "orientation": "portrait",
+    "source": "screenshot-script"
+  },
+  "labeller": "labeller-a",
+  "reviewed": false
+}

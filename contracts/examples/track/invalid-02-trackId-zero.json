@@ -1,0 +1,22 @@
+{
+  "contractVersion": "1.0",
+  "trackId": 0,
+  "conceptId": "cats",
+  "layer": 2,
+  "rect": {
+    "x": 72,
+    "y": 112,
+    "w": 1296,
+    "h": 1296
+  },
+  "state": "confirmed",
+  "sightings": 4,
+  "firstSeenMs": 93204470,
+  "lastSeenMs": 93205210,
+  "holdUntilMs": 93205710,
+  "maxHoldUntilMs": 93214470,
+  "selfCaptureFraction": 0.0,
+  "peeked": false,
+  "scope": "object",
+  "lastFindingId": "f-412-r7-cats"
+}

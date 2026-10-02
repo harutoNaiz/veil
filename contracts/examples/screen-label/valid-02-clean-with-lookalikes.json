@@ -1,0 +1,19 @@
+{
+  "contractVersion": "1.0",
+  "image": "explore-grid-0002.png",
+  "width": 1440,
+  "height": 3168,
+  "clean": true,
+  "boxes": [],
+  "lookalikes": [
+    "dog",
+    "fox"
+  ],
+  "meta": {
+    "app": "instagram",
+    "surface": "explore-grid",
+    "mode": "dark",
+    "orientation": "portrait",
+    "source": "screenshot-script"
+  }
+}

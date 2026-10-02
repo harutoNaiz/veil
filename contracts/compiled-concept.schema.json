@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CompiledConcept",
+  "description": "A concept compiled into fingerprints for one model family, ready for the Judge. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16. A fingerprint may only be compared with a concept from the same model family: both must carry the same spaceId.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Contract version this object follows."
+    },
+    "conceptId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+      "description": "The concept this was compiled from."
+    },
+    "spaceId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$",
+      "description": "Model family of every fingerprint inside."
+    },
+    "textModelId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+      "description": "The text encoder that produced the text fingerprints."
+    },
+    "conceptSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Hash of the canonical JSON of the source Concept (see rules.concept_sha256), so phone-built and Workshop-built cards can be compared."
+    },
+    "looksLike": {
+      "type": "array",
+      "items": {
+        "$ref": "embedding.schema.json"
+      },
+      "minItems": 1,
+      "maxItems": 32,
+      "description": "Fingerprints of the looksLike phrases."
+    },
+    "butNot": {
+      "type": "array",
+      "items": {
+        "$ref": "embedding.schema.json"
+      },
+      "minItems": 0,
+      "maxItems": 32,
+      "description": "Fingerprints of the butNot phrases."
+    },
+    "ignore": {
+      "type": "array",
+      "items": {
+        "$ref": "embedding.schema.json"
+      },
+      "minItems": 0,
+      "maxItems": 16,
+      "description": "Fingerprints of the ignore phrases."
+    },
+    "exampleCentroid": {
+      "$ref": "embedding.schema.json",
+      "description": "Centroid of the example photos' fingerprints."
+    },
+    "exampleCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 16,
+      "description": "Number of example photos behind the centroid."
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "$ref": "embedding.schema.json"
+      },
+      "maxItems": 64,
+      "description": "\"That's not it\" fingerprints from user feedback."
+    },
+    "calibrationOffset": {
+      "type": "number",
+      "minimum": -1,
+      "maximum": 1,
+      "description": "Offset from calibration."
+    },
+    "userOffset": {
+      "type": "number",
+      "minimum": -0.15,
+      "maximum": 0.15,
+      "description": "Offset from the user's feedback, capped at 0.15 either way."
+    },
+    "thresholds": {
+      "$ref": "#/$defs/Thresholds",
+      "description": "Thresholds per strictness mode."
+    },
+    "margin": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Judge margin."
+    },
+    "exampleThreshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Threshold for matches against the example centroid."
+    }
+  },
+  "required": [
+    "contractVersion",
+    "conceptId",
+    "spaceId",
+    "textModelId",
+    "conceptSha256",
+    "looksLike",
+    "butNot",
+    "ignore",
+    "exampleCount",
+    "exceptions",
+    "calibrationOffset",
+    "userOffset",
+    "thresholds",
+    "margin"
+  ],
+  "$defs": {
+    "Thresholds": {
+      "title": "CompiledConceptThresholds",
+      "description": "Decision thresholds per strictness mode.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "light": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold in light mode."
+        },
+        "balanced": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold in balanced mode."
+        },
+        "strict": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold in strict mode."
+        }
+      },
+      "required": [
+        "light",
+        "balanced",
+        "strict"
+      ]
+    }
+  }
+}
