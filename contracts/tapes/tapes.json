@@ -1,0 +1,61 @@
+{
+ "tapes": [
+  {
+   "name": "feed-scroll",
+   "sessionId": "feed-31",
+   "mode": "balanced",
+   "oracle": {
+    "miss_pct": 3,
+    "near_pct": 3,
+    "jitter_px": 4,
+    "fp_per_100_looks": 2,
+    "occlude_pct": 50,
+    "latency_ms": 100,
+    "seed": 0
+   },
+   "frames": 180,
+   "tapeIn": "feed-scroll.tape-in.jsonl",
+   "tapeInSha256": "e27f7e7ff200493ae67fce0005aee50d77df2ca4b53dda6cfbc8331bf2adea43",
+   "tapeOut": "feed-scroll.tape-out.jsonl",
+   "tapeOutSha256": "d45c0f78111654e9134ed3241d0b164c4c86cd6b8a685a0e292c13ab0ce7b177"
+  },
+  {
+   "name": "reels",
+   "sessionId": "reels-32",
+   "mode": "balanced",
+   "oracle": {
+    "miss_pct": 3,
+    "near_pct": 3,
+    "jitter_px": 4,
+    "fp_per_100_looks": 2,
+    "occlude_pct": 50,
+    "latency_ms": 100,
+    "seed": 0
+   },
+   "frames": 180,
+   "tapeIn": "reels.tape-in.jsonl",
+   "tapeInSha256": "0baf02e5d12b40b3fd0831e35b632fa0b83c9c520e48eacd495a1e639c4404da",
+   "tapeOut": "reels.tape-out.jsonl",
+   "tapeOutSha256": "9cf913850511041915075a57a18e34d7847a923ba74be520873964accdd4cc62"
+  },
+  {
+   "name": "video",
+   "sessionId": "video-33",
+   "mode": "balanced",
+   "oracle": {
+    "miss_pct": 3,
+    "near_pct": 3,
+    "jitter_px": 4,
+    "fp_per_100_looks": 2,
+    "occlude_pct": 50,
+    "latency_ms": 100,
+    "seed": 0
+   },
+   "frames": 180,
+   "tapeIn": "video.tape-in.jsonl",
+   "tapeInSha256": "db916464f87b85ab5222af5d0e55cd9fb40b72ab5fe4721f27838d5885b14334",
+   "tapeOut": "video.tape-out.jsonl",
+   "tapeOutSha256": "9b7ffffd6739063cf1bdc771bd2182a069caf6ac4e25148d52aa8a7583f3df75"
+  }
+ ]
+}
