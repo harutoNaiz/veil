@@ -43,3 +43,21 @@ The shared contracts v1.0 define these 16 types, one JSON Schema each in `contra
 PLAN 1.1.2 lists 15 types but its deliverables and AC-1.1-03 say 16. The 16th is `ScreenLabel`, the screenshot label format, because Phase 1.2's entry condition reads "the label format schema exists". `Tape` (Phase 2.1) and `LookRequest` (Phase 2.2) are added by those phases as v1.1 additions.
 
 <!-- The target-chip check (D-004 or later) is appended by workshop.bench.device_profile. -->
+
+<!-- ch1-see:begin -->
+## D-004 · SEE prototype: SigLIP2 Describer with a YOLOE finder, calibrated thresholds
+
+2026-10-02 · Phase 1.3
+
+Status: proposed. Run on set **synthetic** (1.2's synthetic drawn shapes: pipeline check only, the numbers mean little); chosen variant **A**.
+
+- Models and versions: torch 2.14.1 (CPU), transformers 5.18.0, ultralytics 8.4.171; SigLIP2 HF commit 75de2d55ec2d0b4efc50b3e9ad70dba96a7b2fa2; YOLOE file yoloe-26s-seg.pt, sha256 48f24206bc8680d60cbbfa296b0140da849669b9515058b72f5a945142df0654.
+- spaceIds: {"describer": "siglip2-base-p16-224", "finder": "yoloe-26s-mobileclip2-b"}.
+- Licences: SigLIP2 Apache-2.0; YOLOE (Ultralytics) AGPL-3.0; YOLOE text encoder (MobileCLIP family) Apple research-only (per D-001, verify).
+- Thresholds (calibrated p): Light 0.35, Balanced 0.35, Strict 0.25; margin 0.01.
+- Calibration (per concept): cats offset -0.477835, butNotExtra none, exampleThreshold None; spiders offset -0.285157, butNotExtra none, exampleThreshold None.
+- Why this variant: A chosen: best mean recall at <=5% clean false-cover; A, C tied within 0.005, the faster one won (A: recall 1.000, 4.23 s/screen, B: recall 0.273, 0.16 s/screen (over 5% false-cover), C: recall 1.000, 4.49 s/screen)
+- Dev Balanced: cats recall 100.0%, clean false-cover 0.0%; spiders recall 100.0%, clean false-cover 0.0%.
+- Gate: PENDING-HUMAN (real frozen test set); fallback rule per PLAN 1.3 'If rejected'.
+- Full numbers: docs/reports/ch1-see.md.
+<!-- ch1-see:end -->

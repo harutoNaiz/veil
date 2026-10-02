@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "modes": {
+    "light": 0.35,
+    "balanced": 0.35,
+    "strict": 0.25
+  },
+  "margin": 0.01
+}
