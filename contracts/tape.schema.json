@@ -1,0 +1,451 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TapeLine",
+  "description": "One line of a Veil tape v1 file (tape-in or tape-out). Not a contract type.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/header"
+    },
+    {
+      "$ref": "#/$defs/event"
+    },
+    {
+      "$ref": "#/$defs/frame"
+    },
+    {
+      "$ref": "#/$defs/finding"
+    },
+    {
+      "$ref": "#/$defs/fingerprint"
+    },
+    {
+      "$ref": "#/$defs/change"
+    },
+    {
+      "$ref": "#/$defs/look"
+    },
+    {
+      "$ref": "#/$defs/tracks"
+    },
+    {
+      "$ref": "#/$defs/maskPlan"
+    },
+    {
+      "$ref": "#/$defs/cache"
+    }
+  ],
+  "$defs": {
+    "header": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "header"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "object"
+        },
+        "tapeVersion": {
+          "const": "1"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$"
+        },
+        "fps": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "screenWidth": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "screenHeight": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "selfCapture": {
+          "type": "boolean"
+        },
+        "pipeline": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "seq",
+        "tMs",
+        "tapeVersion",
+        "sessionId",
+        "fps",
+        "width",
+        "height",
+        "screenWidth",
+        "screenHeight",
+        "selfCapture",
+        "pipeline"
+      ]
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "event"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "object"
+        },
+        "event": {
+          "$ref": "ui-event.schema.json"
+        }
+      },
+      "required": [
+        "kind",
+        "seq",
+        "tMs",
+        "event"
+      ]
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "frame"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "object"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "thumb": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{2731}=$"
+        },
+        "ownOverlay": {
+          "type": "array",
+          "items": {
+            "$ref": "rect.schema.json"
+          },
+          "maxItems": 64
+        }
+      },
+      "required": [
+        "kind",
+        "seq",
+        "tMs",
+        "frameId",
+        "thumb",
+        "ownOverlay"
+      ]
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "finding"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "object"
+        },
+        "finding": {
+          "$ref": "finding.schema.json"
+        }
+      },
+      "required": [
+        "kind",
+        "seq",
+        "tMs",
+        "finding"
+      ]
+    },
+    "fingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "fingerprint"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "object"
+        },
+        "embedding": {
+          "$ref": "embedding.schema.json"
+        }
+      },
+      "required": [
+        "kind",
+        "seq",
+        "tMs",
+        "embedding"
+      ]
+    },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "change"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "object"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "changedTiles": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sceneCut": {
+          "type": "boolean"
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "kind",
+        "seq",
+        "tMs",
+        "frameId",
+        "changedTiles",
+        "sceneCut",
+        "score"
+      ]
+    },
+    "look": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "look"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "object"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "look": {
+          "type": "boolean"
+        },
+        "reason": {
+          "enum": [
+            "sceneCut",
+            "appChange",
+            "swipe",
+            "revealedStrip",
+            "periodic",
+            "checkup",
+            "none",
+            "busy"
+          ]
+        },
+        "state": {
+          "enum": [
+            "idle",
+            "watching",
+            "hot",
+            "throttled"
+          ]
+        },
+        "rect": {
+          "$ref": "rect.schema.json"
+        }
+      },
+      "required": [
+        "kind",
+        "seq",
+        "tMs",
+        "frameId",
+        "look",
+        "reason",
+        "state"
+      ]
+    },
+    "tracks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "tracks"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "object"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tracks": {
+          "type": "array",
+          "items": {
+            "$ref": "track.schema.json"
+          }
+        }
+      },
+      "required": [
+        "kind",
+        "seq",
+        "tMs",
+        "frameId",
+        "tracks"
+      ]
+    },
+    "maskPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "maskPlan"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "object"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "plan": {
+          "$ref": "mask-plan.schema.json"
+        }
+      },
+      "required": [
+        "kind",
+        "seq",
+        "tMs",
+        "frameId",
+        "plan"
+      ]
+    },
+    "cache": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "cache"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "object"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hits": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "misses": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "kind",
+        "seq",
+        "tMs",
+        "frameId",
+        "hits",
+        "misses"
+      ]
+    }
+  }
+}

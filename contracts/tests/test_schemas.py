@@ -15,6 +15,7 @@ from workshop.contracts import (
 )
 from workshop.contracts.validate import SCHEMA_DIR, load_schema
 
+EXTRA_FILES = {"tape.schema.json"}  # tape v1 is not one of the 16 contract types
 DRAFT_2020_12 = "https://json-schema.org/draft/2020-12/schema"
 
 
@@ -38,8 +39,8 @@ def walk(node: object):
 
 def test_exactly_16_schema_files():
     on_disk = {p.name for p in SCHEMA_DIR.glob("*.schema.json")}
-    assert on_disk == set(TYPE_FILES.values())
-    assert len(on_disk) == 16
+    assert on_disk - EXTRA_FILES == set(TYPE_FILES.values())
+    assert len(on_disk - EXTRA_FILES) == 16
     assert len(TYPES) == 16
 
 
