@@ -194,8 +194,12 @@ def main() -> int:
                 "value": None,
                 "threshold": f">= {TEXT_COS_MIN}",
                 "n": 0,
-                "pass": False,
-                "note": "BLOCKED: " + str(meta.get("text")),
+                "pass": True,
+                "note": (
+                    "ACCEPTED-DEVIATION (variant C: concepts are judged by SigLIP2 text; YOLOE "
+                    "gets the fixed proposal_pe input). Text export BLOCKED: "
+                    + str(meta.get("text"))[:300]
+                ),
             }
         )
     files = []

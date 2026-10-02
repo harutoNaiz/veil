@@ -1,0 +1,5 @@
+{
+  "finderExporter": "torchscript",
+  "text": "BLOCKED: dynamo=False: RuntimeError: Tried to trace <__torch__.___torch_mangle_263.TextModelWithNormalization object at 0000020D2C782C80> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced. | dynamo=True: ModuleNotFoundError: No module named 'onnxscript'",
+  "changedVsPrevious": []
+}

@@ -1,0 +1,98 @@
+{
+  "contractVersion": "1.0",
+  "modelId": "yoloe-26s-embed-top100",
+  "name": "YOLOE-26s object finder (boxes + fingerprints, top-100)",
+  "version": "26s-embed-1",
+  "task": "objectFinder",
+  "inputs": [
+    {
+      "name": "images",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "dtype": "float32"
+    },
+    {
+      "name": "proposal_pe",
+      "shape": [
+        1,
+        8,
+        512
+      ],
+      "dtype": "float32"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "boxes",
+      "shape": [
+        1,
+        100,
+        4
+      ],
+      "dtype": "float32"
+    },
+    {
+      "name": "objectness",
+      "shape": [
+        1,
+        100
+      ],
+      "dtype": "float32"
+    },
+    {
+      "name": "fingerprint",
+      "shape": [
+        1,
+        100,
+        512
+      ],
+      "dtype": "float32"
+    },
+    {
+      "name": "fp_scale",
+      "shape": [
+        1,
+        100
+      ],
+      "dtype": "float32"
+    },
+    {
+      "name": "fp_bias",
+      "shape": [
+        1,
+        100
+      ],
+      "dtype": "float32"
+    }
+  ],
+  "precision": "float32",
+  "runtime": "onnxruntime-cpu",
+  "batch": 1,
+  "file": {
+    "path": "data/forge/yoloe/yoloe-26s-embed-top100.onnx",
+    "sha256": "52e32afe007f79ec43f61a69a22b62dc33e56d9996146cfd7a95eb76956e0a2a",
+    "bytes": 38852663
+  },
+  "preprocessing": {
+    "kind": "image",
+    "resizeWidth": 640,
+    "resizeHeight": 640,
+    "resizeMode": "letterbox",
+    "colorOrder": "RGB",
+    "layout": "NCHW",
+    "scale": 0.00392156862745098
+  },
+  "fingerprint": {
+    "spaceId": "yoloe-26s-mobileclip2-b",
+    "dim": 512,
+    "role": "region",
+    "pairedWith": "mobileclip2-b-text"
+  },
+  "sourceUrl": "https://github.com/ultralytics/ultralytics",
+  "licence": "AGPL-3.0",
+  "notes": "proposal_pe (1,8,512) is fed by the app. Concept score = sigmoid(fp_scale*cos(fingerprint, text)+fp_bias)."
+}
