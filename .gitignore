@@ -26,3 +26,7 @@ captures/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Model weights live in data/models (also ignored via /data/*); never commit them
+*.pt
+mobileclip*.ts
