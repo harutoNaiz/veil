@@ -1,0 +1,64 @@
+{
+  "contractVersion": "1.0",
+  "modelId": "siglip2-base-image-b4",
+  "name": "SigLIP2 base patch16 224 image encoder",
+  "version": "1.0",
+  "task": "imageEmbedding",
+  "inputs": [
+    {
+      "name": "pixel_values",
+      "shape": [
+        4,
+        3,
+        224,
+        224
+      ],
+      "dtype": "float32"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "fingerprint",
+      "shape": [
+        4,
+        768
+      ],
+      "dtype": "float32"
+    }
+  ],
+  "preprocessing": {
+    "kind": "image",
+    "resizeWidth": 224,
+    "resizeHeight": 224,
+    "resizeMode": "stretch",
+    "colorOrder": "RGB",
+    "layout": "NCHW",
+    "scale": 0.00392156862745098,
+    "mean": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "std": [
+      0.5,
+      0.5,
+      0.5
+    ]
+  },
+  "fingerprint": {
+    "spaceId": "siglip2-base-p16-224",
+    "dim": 768,
+    "role": "image",
+    "pairedWith": "siglip2-base-text"
+  },
+  "precision": "float32",
+  "runtime": "onnxruntime-cpu",
+  "batch": 4,
+  "file": {
+    "path": "data/forge/siglip2/siglip2-image-b4.onnx",
+    "sha256": "b8e4decc91e86ee570bcda61827b0d5eb1c19e7ff19448cd34a5eb93cc483152",
+    "bytes": 371694829
+  },
+  "sourceUrl": "https://huggingface.co/google/siglip2-base-patch16-224",
+  "licence": "Apache-2.0"
+}

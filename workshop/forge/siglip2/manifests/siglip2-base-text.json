@@ -1,0 +1,48 @@
+{
+  "contractVersion": "1.0",
+  "modelId": "siglip2-base-text",
+  "name": "SigLIP2 base patch16 224 text encoder",
+  "version": "1.0",
+  "task": "textEmbedding",
+  "inputs": [
+    {
+      "name": "input_ids",
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "int64"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "fingerprint",
+      "shape": [
+        1,
+        768
+      ],
+      "dtype": "float32"
+    }
+  ],
+  "preprocessing": {
+    "kind": "text",
+    "tokenizer": "siglip2 (lower-case, pad to 64)",
+    "maxTokens": 64
+  },
+  "fingerprint": {
+    "spaceId": "siglip2-base-p16-224",
+    "dim": 768,
+    "role": "text",
+    "pairedWith": "siglip2-base-image"
+  },
+  "precision": "float32",
+  "runtime": "onnxruntime-cpu",
+  "batch": 1,
+  "file": {
+    "path": "data/forge/siglip2/siglip2-text.onnx",
+    "sha256": "66ac86338ccb81e790e28bfd9869f6394ae18968253b927d4820664167f4ffd3",
+    "bytes": 1129352496
+  },
+  "sourceUrl": "https://huggingface.co/google/siglip2-base-patch16-224",
+  "licence": "Apache-2.0"
+}

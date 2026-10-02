@@ -1,0 +1,200 @@
+{
+  "model": "siglip2",
+  "subPhase": "3.1.1",
+  "created": "2026-10-02T12:21:47+00:00",
+  "tools": {
+    "torch": "2.14.1+cpu",
+    "transformers": "5.18.0",
+    "onnx": "1.23.1",
+    "onnxruntime": "1.30.0"
+  },
+  "source": {
+    "url": "https://huggingface.co/google/siglip2-base-patch16-224",
+    "licence": "Apache-2.0",
+    "revision": "75de2d55ec2d0b4efc50b3e9ad70dba96a7b2fa2"
+  },
+  "files": [
+    {
+      "path": "data/forge/siglip2/siglip2-image-b1.onnx",
+      "sha256": "6c6a89e2a15d8f5d389add81d857f4f663bbda2091bdd9542e6db000ee9bb47d",
+      "bytes": 371694829,
+      "opset": 17,
+      "fixed": true,
+      "inputs": [
+        {
+          "name": "pixel_values",
+          "shape": [
+            1,
+            3,
+            224,
+            224
+          ],
+          "dtype": "float32",
+          "fixed": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "fingerprint",
+          "shape": [
+            1,
+            768
+          ],
+          "dtype": "float32",
+          "fixed": true
+        }
+      ]
+    },
+    {
+      "path": "data/forge/siglip2/siglip2-image-b16.onnx",
+      "sha256": "0d34585c9f1368b885bd1986bf9342a0d2b560466c47fc4eb30fad32c717184a",
+      "bytes": 371694829,
+      "opset": 17,
+      "fixed": true,
+      "inputs": [
+        {
+          "name": "pixel_values",
+          "shape": [
+            16,
+            3,
+            224,
+            224
+          ],
+          "dtype": "float32",
+          "fixed": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "fingerprint",
+          "shape": [
+            16,
+            768
+          ],
+          "dtype": "float32",
+          "fixed": true
+        }
+      ]
+    },
+    {
+      "path": "data/forge/siglip2/siglip2-image-b4.onnx",
+      "sha256": "b8e4decc91e86ee570bcda61827b0d5eb1c19e7ff19448cd34a5eb93cc483152",
+      "bytes": 371694829,
+      "opset": 17,
+      "fixed": true,
+      "inputs": [
+        {
+          "name": "pixel_values",
+          "shape": [
+            4,
+            3,
+            224,
+            224
+          ],
+          "dtype": "float32",
+          "fixed": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "fingerprint",
+          "shape": [
+            4,
+            768
+          ],
+          "dtype": "float32",
+          "fixed": true
+        }
+      ]
+    },
+    {
+      "path": "data/forge/siglip2/siglip2-text.onnx",
+      "sha256": "66ac86338ccb81e790e28bfd9869f6394ae18968253b927d4820664167f4ffd3",
+      "bytes": 1129352496,
+      "opset": 17,
+      "fixed": true,
+      "inputs": [
+        {
+          "name": "input_ids",
+          "shape": [
+            1,
+            64
+          ],
+          "dtype": "int64",
+          "fixed": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "fingerprint",
+          "shape": [
+            1,
+            768
+          ],
+          "dtype": "float32",
+          "fixed": true
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "AC-3.1-02.image.b1.mean",
+      "value": 0.9999999999965344,
+      "threshold": ">= 0.98",
+      "n": 200,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "AC-3.1-02.image.b1.worst5",
+      "value": 0.9999999999851159,
+      "threshold": ">= 0.95",
+      "n": 200,
+      "pass": true,
+      "note": "min 1.000000"
+    },
+    {
+      "id": "AC-3.1-02.image.b4.mean",
+      "value": 0.9999999999965344,
+      "threshold": ">= 0.98",
+      "n": 200,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "AC-3.1-02.image.b4.worst5",
+      "value": 0.9999999999851159,
+      "threshold": ">= 0.95",
+      "n": 200,
+      "pass": true,
+      "note": "min 1.000000"
+    },
+    {
+      "id": "AC-3.1-02.image.b16.mean",
+      "value": 0.9999999999965344,
+      "threshold": ">= 0.98",
+      "n": 200,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "AC-3.1-02.image.b16.worst5",
+      "value": 0.9999999999851159,
+      "threshold": ">= 0.95",
+      "n": 200,
+      "pass": true,
+      "note": "min 1.000000"
+    },
+    {
+      "id": "AC-3.1-02.text.min",
+      "value": 0.9999999999993273,
+      "threshold": ">= 0.999",
+      "n": 100,
+      "pass": true,
+      "note": "mean 1.000000"
+    }
+  ],
+  "nondeterminism": "",
+  "pass": true
+}
