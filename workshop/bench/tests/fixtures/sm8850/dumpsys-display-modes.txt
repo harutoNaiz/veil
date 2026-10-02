@@ -1,0 +1,5 @@
+    mSupportedModes=[DisplayModeRecord{mMode={id=1, width=1440, height=3168, fps=60.0, alternativeRefreshRates=[90.0, 120.0, 144.0]}}
+    DisplayModeRecord{mMode={id=2, width=1440, height=3168, fps=90.0, alternativeRefreshRates=[60.0, 120.0, 144.0]}}
+    DisplayModeRecord{mMode={id=3, width=1440, height=3168, fps=120.0, alternativeRefreshRates=[60.0, 90.0, 144.0]}}
+    DisplayModeRecord{mMode={id=4, width=1440, height=3168, fps=144.0, alternativeRefreshRates=[60.0, 90.0, 120.0]}}]
+    mRefreshRate=144.0

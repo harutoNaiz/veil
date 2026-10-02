@@ -1,0 +1,3 @@
+List of devices attached
+SYNTHETICSERIAL01	device usb:1-1 product:synthetic_product model:SYNTHETIC_IQOO15 device:synthetic_device transport_id:1
+

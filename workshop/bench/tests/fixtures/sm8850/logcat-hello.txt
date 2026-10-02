@@ -1,0 +1,3 @@
+--------- beginning of main
+10-02 09:00:00.123  4321  4321 I VeilHello: VEIL_HELLO {"socModel":"SM8849","socManufacturer":"QTI","hardware":"qcom","board":"canoe","manufacturer":"vivo","model":"OLDER-RUN","androidRelease":"15","sdkInt":35,"buildDisplay":"OLD","ramTotalBytes":1,"screenWidthPx":1,"screenHeightPx":1,"densityDpi":1,"refreshRatesHz":[60.0]}
+10-02 09:05:10.456  4400  4400 I VeilHello: VEIL_HELLO {"socModel":"SM8850","socManufacturer":"QTI","hardware":"qcom","board":"canoe","manufacturer":"vivo","model":"SYNTHETIC-IQOO15","androidRelease":"16","sdkInt":36,"buildDisplay":"SYNTHETIC.16.0.0.000","ramTotalBytes":16106127360,"screenWidthPx":1440,"screenHeightPx":3168,"densityDpi":510,"refreshRatesHz":[60.0,90.0,120.0,144.0]}

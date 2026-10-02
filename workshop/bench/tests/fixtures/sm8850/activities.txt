@@ -1,0 +1,2 @@
+  topResumedActivity=ActivityRecord{1a2b3c4 u0 com.veil.console/.MainActivity t12}
+    mResumedActivity: ActivityRecord{1a2b3c4 u0 com.veil.console/.MainActivity t12}
