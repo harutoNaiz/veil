@@ -29,36 +29,36 @@ Real recordings: PENDING-HUMAN (HC-2.3).
 
 | mode | ttc median ms | ttc p95 ms | flicker | wrong/min | coverage % | glue px | frames analysed % | appearances | frames |
 |---|---|---|---|---|---|---|---|---|---|
-| light | 600 | 1000000000 | 0 | 20.384 | 60.56 | 2 | 10.44 | 162 | 1800 |
-| balanced | 366 | 1000000000 | 0 | 23.296 | 74.97 | 2 | 11.0 | 162 | 1800 |
-| strict | 100 | 1000000000 | 3 | 29.121 | 87.51 | 3 | 15.56 | 162 | 1800 |
+| light | 366 | 1000000000 | 0 | 8.736 | 76.42 | 2 | 12.61 | 162 | 1800 |
+| balanced | 233 | 1000000000 | 0 | 8.736 | 82.76 | 2 | 12.67 | 162 | 1800 |
+| strict | 100 | 1000000000 | 0 | 20.384 | 87.17 | 2 | 15.44 | 162 | 1800 |
 
 Acceptance (Balanced):
 
 - AC-2.3-01: FAIL (p95=1000000000ms)
 - AC-2.3-02: PASS (flicker=synth-test-3:0,synth-test-4:0)
-- AC-2.3-03: FAIL (23.296/min)
-- AC-2.3-04: FAIL (74.97%)
+- AC-2.3-03: FAIL (8.736/min)
+- AC-2.3-04: FAIL (82.76%)
 - AC-2.3-05: PASS (2px)
 
 Cache hit rate per situation (Balanced, near-duplicate crops from the truth):
 
 | situation | hits | misses | hit % |
 |---|---|---|---|
-| feedScroll | 215 | 80 | 72.9 |
-| reels | 3 | 24 | 11.1 |
-| static | 109 | 36 | 75.2 |
+| feedScroll | 285 | 87 | 76.6 |
+| reels | 7 | 24 | 22.6 |
+| static | 100 | 35 | 74.1 |
 | video | 0 | 0 | 0.0 |
 
 PT-2.3 torture (torture-22, Balanced):
 
 | mode | ttc median ms | ttc p95 ms | flicker | wrong/min | coverage % | glue px | frames analysed % | appearances | frames |
 |---|---|---|---|---|---|---|---|---|---|
-| light | 0 | 1000000000 | 7 | 30.769 | 64.33 | 2 | 10.28 | 30 | 720 |
-| balanced | 0 | 1000000000 | 5 | 61.538 | 75.58 | 2 | 9.86 | 30 | 720 |
-| strict | 0 | 1000000000 | 4 | 92.308 | 91.88 | 2 | 17.78 | 30 | 720 |
+| light | 0 | 1000000000 | 1 | 30.769 | 88.09 | 2 | 10.97 | 30 | 720 |
+| balanced | 0 | 1000000000 | 0 | 46.154 | 91.14 | 3 | 10.56 | 30 | 720 |
+| strict | 0 | 1000000000 | 0 | 30.769 | 93.97 | 2 | 17.64 | 30 | 720 |
 
-re-cover max 367 ms.
+re-cover max 234 ms.
 
 ### Chapter 2 gate decision
 
@@ -68,7 +68,7 @@ PLAN fallback run (`--fallback`: solid only, holds x2, rates x2; report-only):
 
 | mode | ttc median ms | ttc p95 ms | flicker | wrong/min | coverage % | glue px | frames analysed % | appearances | frames |
 |---|---|---|---|---|---|---|---|---|---|
-| balanced | 300 | 1000000000 | 4 | 23.296 | 77.76 | 2 | 15.06 | 162 | 1800 |
+| balanced | 233 | 1000000000 | 0 | 20.384 | 83.13 | 2 | 16.06 | 162 | 1800 |
 
 fallback GATE: FAIL
 

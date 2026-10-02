@@ -146,13 +146,21 @@ class MotionPipeline:
         change, look = self.gk.on_thumb(th, frame)
         if change["sceneCut"]:
             self.tracker.on_scene_cut(t)
+        rect = self._confirm_rect(frame)
+        fresh = any(
+            tr.state == "tentative" and tr.last_seen > self.last_start for tr in self.tracker.tracks
+        )
         if not look["look"]:
-            rect = self._confirm_rect(frame)
-            gap = self.gk.mp.min_immediate_gap_ms
-            if rect is not None and t - self.last_start >= gap and t >= self.gk.busy_until:
+            if rect is not None and fresh and t >= self.gk.busy_until:
                 look = dict(look, look=True, reason="periodic", rect=rect)
                 look["x"] = dict(look["x"], confirm=True)
                 self.gk.busy_until = t + self.oracle_p.latency_ms
+        elif rect is not None:
+            a, b = look["rect"], rect
+            x0, y0 = min(a["x"], b["x"]), min(a["y"], b["y"])
+            x1 = max(a["x"] + a["w"], b["x"] + b["w"])
+            y1 = max(a["y"] + a["h"], b["y"] + b["h"])
+            look = dict(look, rect={"x": x0, "y": y0, "w": x1 - x0, "h": y1 - y0})
         if look["look"]:
             self.last_start = t
             self.look_id += 1

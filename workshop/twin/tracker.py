@@ -103,10 +103,12 @@ class Tracker:
         self.rule = self_capture_rule
         self.tracks: list[_T] = []
         self.next_id = 1
+        self._dy = 0
 
     def on_scroll(self, dy: int, t_ms: int) -> None:
         for tr in self.tracks:
             tr.rect["y"] += dy
+        self._dy += dy
 
     def _sight(self, tr: _T, f: dict, t: int) -> None:
         p = self.p
@@ -164,8 +166,7 @@ class Tracker:
                 tr.hold_until = t_ms + self.p.hold_ms
 
     def on_scene_cut(self, t_ms: int) -> None:
-        for tr in self.tracks:
-            tr.cut = True
+        self.tracks = []
 
     def on_app_change(self, t_ms: int) -> None:
         self.tracks = []
@@ -187,6 +188,8 @@ class Tracker:
 
     def tick(self, t_ms: int, own_covers: list[dict]) -> list[dict]:
         p = self.p
+        own_covers = [dict(c, y=c["y"] + self._dy) for c in own_covers]
+        self._dy = 0
         keep: list[_T] = []
         for tr in sorted(self.tracks, key=lambda x: x.track_id):
             if not self._on_screen(tr.rect):

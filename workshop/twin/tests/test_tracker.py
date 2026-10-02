@@ -192,3 +192,23 @@ def _run(seed):
 def test_deterministic():
     for s in range(200):
         assert _run(s) == _run(s)
+
+
+def test_a1_self_capture_shifts_with_scroll():
+    tr = Tracker("balanced")
+    for i, t in enumerate((0, 100)):
+        tr.on_findings([F(R(100, 500, 200, 100), fid=f"f{i}")], t)
+    tr.on_scroll(-48, 2000)
+    # first scroll frame: our cover is still at the old position (52% of the
+    # shifted track unshifted, 100% once shifted by the scroll)
+    out = tr.tick(2000, [R(100, 500, 200, 100)])
+    assert len(out) == 1 and out[0]["selfCaptureFraction"] >= 0.8
+
+
+def test_a1_scene_cut_clears_all_tracks():
+    tr = Tracker("balanced")
+    tr.on_findings([F(R(0, 0, 100, 100), layer=1)], 0)
+    tr.on_findings([F(R(300, 300, 100, 100))], 0)
+    assert len(tr.tick(10, [])) == 2
+    tr.on_scene_cut(20)
+    assert tr.tick(30, []) == []

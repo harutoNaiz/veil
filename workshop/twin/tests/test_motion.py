@@ -16,7 +16,7 @@ FULL = {"x": 0, "y": 0, "w": 720, "h": 1600}
 @pytest.fixture(scope="module")
 def video_run(tmp_path_factory):
     d = tmp_path_factory.mktemp("motion")
-    sj = generate(d, "video", 5)
+    sj = generate(d, "video", 6)
     pipe = MotionPipeline(sj, "balanced", use_cache=False)
     res = replay(sj, pipe, d / "out", self_capture=True, video=False)
     return sj, pipe, res
@@ -68,3 +68,33 @@ def test_oracle_is_deterministic_and_respects_own_covers(video_run):
     assert a and a[0]["conceptId"] == "cats" and a[0]["layer"] == 2
     covered = {"frameId": 100, "tMs": 4000, "ownOverlay": [FULL]}
     assert [f for f in det.detect(covered, FULL, 1) if f["findingId"].endswith("-0")] == []
+
+
+def test_a1_confirm_look_fires_when_idle_after_tentative():
+    import numpy as np
+
+    pipe = MotionPipeline(None, "balanced", use_cache=False)
+    img = np.zeros((1600, 720, 3), dtype=np.uint8)
+
+    def fr(t, fid):
+        return {
+            "tMs": t, "frameId": fid, "screenWidth": 720, "screenHeight": 1600,
+            "width": 720, "height": 1600, "ownOverlay": [],
+        }  # fmt: skip
+
+    pipe.on_frame(img, fr(0, 1))
+    pipe.tracker.on_findings(
+        [
+            {
+                "findingId": "f",
+                "conceptId": "cats",
+                "layer": 2,
+                "rect": {"x": 100, "y": 400, "w": 200, "h": 200},
+                "decision": "hide",
+            }
+        ],
+        900,
+    )
+    recs = pipe.on_frame(img, fr(1000, 2))
+    look = next(r for r in recs if r["kind"] == "look")
+    assert look["look"] and look["x"].get("confirm")
