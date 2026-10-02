@@ -26,6 +26,9 @@ dev = [
 ]
 # Installed from Phase 1.3 with `uv sync --group ml` (DV-3). Pinned and locked now.
 ml = [
+  "clip",
+  "ftfy==6.3.1",
+  "sentencepiece==0.2.2",
   "torch==2.14.1",
   "torchvision==0.29.1",
   "transformers==5.18.0",
@@ -33,12 +36,15 @@ ml = [
 ]
 
 [tool.uv]
-default-groups = ["dev"]
+default-groups = ["dev", "ml"]
 # R4 deviation: transformers 5.18.0 (ml group) needs tokenizers>=0.23.1, which still declares
 # huggingface-hub<2.0, while the main pin is huggingface_hub 2.1.1 (transformers itself allows <3.0).
 # Without this override `uv lock` has no solution. Remove it once tokenizers lifts its cap.
 override-dependencies = ["huggingface-hub==2.1.1"]
 environments = ["sys_platform == 'win32'", "sys_platform == 'linux'"]
+
+[tool.uv.sources]
+clip = { git = "https://github.com/ultralytics/CLIP.git", rev = "a13192f8cb767260d7dfd98c843b0716593169e7" }
 
 [build-system]
 requires = ["hatchling==1.32.4"]
