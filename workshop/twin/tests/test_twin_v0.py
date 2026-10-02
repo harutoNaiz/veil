@@ -309,3 +309,14 @@ def test_describer_smoke():
     assert texts.shape == (1, 768) and np.linalg.norm(texts[0]) == pytest.approx(1, abs=1e-4)
     imgs = d.embed_images([Image.new("RGB", (120, 90), (200, 120, 60))] * 3, batch=2)
     assert imgs.shape == (3, 768) and np.allclose(np.linalg.norm(imgs, axis=1), 1, atol=1e-4)
+
+
+def test_corrupt_cache_entry_is_recomputed(tmp_path, monkeypatch):
+    monkeypatch.setattr(run, "CACHE", tmp_path / "cache")
+    screens = data.load_split("synthetic", "dev")[:1]
+    bad = tmp_path / "cache" / "k" / f"{screens[0].image.stem}.npz"
+    bad.parent.mkdir(parents=True)
+    bad.write_bytes(b"PK garbage")
+    out = run.embed_set(screens, stub_piece_fn, "k")
+    assert len(out) == 1 and out[0][1].shape[1] == 768
+    assert run._load_cache(bad, run._sig(screens[0].image)) is not None

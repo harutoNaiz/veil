@@ -74,7 +74,7 @@ def _load_cache(file: Path, sig: str):
                 return None
             regions = json.loads(bytes(z["regions"]).decode("utf-8"))
             return regions, z["vecs"].astype(np.float32), float(z["sec"])
-    except (OSError, ValueError, KeyError):
+    except Exception:  # corrupt or truncated entry: treat as a cache miss
         return None
 
 
