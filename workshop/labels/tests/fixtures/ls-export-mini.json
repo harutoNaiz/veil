@@ -1,0 +1,59 @@
+[
+  {
+    "id": 1,
+    "data": {"image": "/data/local-files/?d=screens/instagram-explore-0001.png", "name": "instagram-explore-0001.png"},
+    "annotations": [
+      {
+        "id": 11,
+        "was_cancelled": false,
+        "result": [
+          {"id": "a1", "type": "rectanglelabels", "from_name": "box", "to_name": "image", "original_width": 360, "original_height": 780,
+           "value": {"x": 10, "y": 10, "width": 50, "height": 50, "rotation": 0, "rectanglelabels": ["cats"]}},
+          {"id": "a1", "type": "choices", "from_name": "kind", "to_name": "image", "value": {"choices": ["cartoon"]}},
+          {"id": "a1", "type": "choices", "from_name": "scope", "to_name": "image", "value": {"choices": ["wholeElement"]}},
+          {"id": "a2", "type": "rectanglelabels", "from_name": "box", "to_name": "image", "original_width": 360, "original_height": 780,
+           "value": {"x": 50, "y": 50, "width": 10, "height": 5, "rotation": 0, "rectanglelabels": ["cat-emoji"]}},
+          {"type": "choices", "from_name": "lookalikes", "to_name": "image", "value": {"choices": ["dog"]}}
+        ]
+      }
+    ],
+    "predictions": [
+      {
+        "model_version": "prelabel",
+        "result": [
+          {"id": "p1", "type": "rectanglelabels", "from_name": "box", "to_name": "image", "original_width": 360, "original_height": 780,
+           "value": {"x": 0, "y": 0, "width": 99, "height": 99, "rotation": 0, "rectanglelabels": ["spiders"]}}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "data": {"image": "/data/local-files/?d=screens/instagram-explore-0002.png", "name": "instagram-explore-0002.png"},
+    "annotations": [
+      {
+        "id": 12,
+        "result": [
+          {"type": "choices", "from_name": "clean", "to_name": "image", "value": {"choices": ["clean"]}},
+          {"type": "choices", "from_name": "lookalikes", "to_name": "image", "value": {"choices": ["fox", "stuffed-toy"]}}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "data": {"image": "/data/local-files/?d=screens/youtube-home-0003.png", "name": "youtube-home-0003.png"},
+    "annotations": [
+      {
+        "id": 13,
+        "result": [
+          {"id": "b1", "type": "rectanglelabels", "from_name": "box", "to_name": "image", "original_width": 360, "original_height": 780,
+           "value": {"x": 25, "y": 20, "width": 20, "height": 10, "rotation": 0, "rectanglelabels": ["spiders"]}},
+          {"id": "b2", "type": "rectanglelabels", "from_name": "box", "to_name": "image", "original_width": 360, "original_height": 780,
+           "value": {"x": 0, "y": 0, "width": 0.1, "height": 0.05, "rotation": 0, "rectanglelabels": ["spider-emoji"]}},
+          {"id": "b2", "type": "choices", "from_name": "kind", "to_name": "image", "value": {"choices": ["sticker"]}}
+        ]
+      }
+    ]
+  }
+]

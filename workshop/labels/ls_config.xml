@@ -1,0 +1,36 @@
+<View>
+  <Image name="image" value="$image"/>
+  <RectangleLabels name="box" toName="image">
+    <Label value="cats" background="#ff9900"/>
+    <Label value="cat-emoji" background="#ffcc00"/>
+    <Label value="cat-text" background="#ff6600"/>
+    <Label value="spiders" background="#222222"/>
+    <Label value="spider-emoji" background="#666666"/>
+  </RectangleLabels>
+  <Choices name="kind" toName="image" perRegion="true" choice="single">
+    <Choice value="photo"/>
+    <Choice value="cartoon"/>
+    <Choice value="drawing"/>
+    <Choice value="sticker"/>
+    <Choice value="emoji"/>
+    <Choice value="text"/>
+    <Choice value="other"/>
+  </Choices>
+  <Choices name="scope" toName="image" perRegion="true" choice="single">
+    <Choice value="object"/>
+    <Choice value="wholeElement"/>
+  </Choices>
+  <Choices name="clean" toName="image" choice="single">
+    <Choice value="clean"/>
+  </Choices>
+  <Choices name="lookalikes" toName="image" choice="multiple">
+    <Choice value="dog"/>
+    <Choice value="fox"/>
+    <Choice value="lion"/>
+    <Choice value="tiger"/>
+    <Choice value="stuffed-toy"/>
+    <Choice value="cat-logo"/>
+    <Choice value="crab"/>
+    <Choice value="other"/>
+  </Choices>
+</View>
