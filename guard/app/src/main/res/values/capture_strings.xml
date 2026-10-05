@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="capture_channel_name">Screen capture status</string>
+    <string name="capture_notification_title">Veil is watching the screen</string>
+    <string name="capture_resume_action">Resume Veil</string>
+</resources>
