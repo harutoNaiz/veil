@@ -79,5 +79,15 @@
                 <action android:name="com.veil.guard.LOG" />
             </intent-filter>
         </receiver>
+
+        <!-- Phase 4.3.1: overlay debug command receiver. -->
+        <receiver
+            android:name=".overlay.OverlayCmdReceiver"
+            android:exported="true"
+            android:permission="android.permission.DUMP">
+            <intent-filter>
+                <action android:name="com.veil.guard.overlay.CMD" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

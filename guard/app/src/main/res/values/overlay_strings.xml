@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="overlay_a11y_label">Veil Overlay (debug)</string>
+    <string name="overlay_a11y_description">Debug-only host for the Veil cover overlay.</string>
+</resources>
