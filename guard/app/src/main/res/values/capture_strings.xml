@@ -3,4 +3,6 @@
     <string name="capture_channel_name">Screen capture status</string>
     <string name="capture_notification_title">Veil is watching the screen</string>
     <string name="capture_resume_action">Resume Veil</string>
+    <string name="capture_text_restarted">Veil stopped unexpectedly. Tap Resume Veil.</string>
+    <string name="capture_text_keyguard">Paused while locked. Tap Resume Veil.</string>
 </resources>
