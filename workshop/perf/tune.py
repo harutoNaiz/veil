@@ -10,9 +10,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 TWIN = ROOT / "workshop" / "twin" / "params.json"
 ANDROID = ROOT / "guard" / "app" / "src" / "androidTest" / "assets" / "params.json"
+MAIN = ROOT / "guard" / "app" / "src" / "main" / "assets" / "params.json"
 
 
-def apply(sets: list[str], twin: Path = TWIN, android: Path = ANDROID) -> None:
+def apply(
+    sets: list[str], twin: Path = TWIN, android: Path = ANDROID, main: Path | None = None
+) -> None:
     if sets:
         data = json.loads(twin.read_text(encoding="utf-8"))
         for s in sets:
@@ -29,10 +32,13 @@ def apply(sets: list[str], twin: Path = TWIN, android: Path = ANDROID) -> None:
                 node[keys[-1]] = raw
         twin.write_text(json.dumps(data, indent=1) + "\n", encoding="utf-8")
     android.write_bytes(twin.read_bytes())
+    if main is not None:
+        main.write_bytes(twin.read_bytes())
 
 
-def in_sync(twin: Path = TWIN, android: Path = ANDROID) -> bool:
-    return android.exists() and twin.read_bytes() == android.read_bytes()
+def in_sync(twin: Path = TWIN, android: Path = ANDROID, main: Path | None = None) -> bool:
+    want = twin.read_bytes()
+    return all(q.exists() and q.read_bytes() == want for q in (android, main) if q is not None)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -41,8 +47,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--check", action="store_true")
     a = p.parse_args(argv)
     if a.set:
-        apply(a.set)
-    if a.check and not in_sync():
+        apply(a.set, main=MAIN)
+    if a.check and not in_sync(main=MAIN):
         print("params differ")
         return 1
     print("params in sync")

@@ -40,3 +40,13 @@ def test_tune_sync(tmp_path: Path):
     android.write_text("{}", encoding="utf-8")
     assert not tune.in_sync(twin, android)
     assert tune.in_sync()
+
+
+def test_tune_main_assets_sync(tmp_path: Path):
+    twin, android, main = tmp_path / "t.json", tmp_path / "a.json", tmp_path / "m.json"
+    shutil.copy(tune.TWIN, twin)
+    tune.apply([], twin, android, main)
+    assert tune.in_sync(twin, android, main)
+    main.write_text("{}", encoding="utf-8")
+    assert not tune.in_sync(twin, android, main)
+    assert tune.in_sync(main=tune.MAIN)
