@@ -10,6 +10,15 @@ import android.os.Build
 import android.os.SystemClock
 import android.view.accessibility.AccessibilityEvent
 import com.veil.guard.capture.ScreenshotBridge
+import com.veil.guard.overlay.OverlayCommands
+import com.veil.guard.overlay.OverlayRenderer
+import com.veil.guard.overlay.glue.GlueController
+import com.veil.guard.overlay.self.SelfCapture
+import com.veil.guard.overlay.touch.CoverTouchLayer
+import com.veil.guard.wire.EventAdapter
+import com.veil.guard.wire.LayoutFeed
+import com.veil.guard.wire.LiveOverlay
+import com.veil.guard.wire.WireHub
 import java.io.File
 import java.util.concurrent.atomic.AtomicLong
 
@@ -29,6 +38,10 @@ class GuardAccessibilityService : AccessibilityService() {
     private val mapper = EventMapper(ScrollTracker())
     private val foreground = ForegroundTracker()
     private var screenReceiver: BroadcastReceiver? = null
+    private var glue: GlueController? = null
+    private var touch: CoverTouchLayer? = null
+    private var liveOverlay: LiveOverlay? = null
+    private val layoutFeed = LayoutFeed()
 
     override fun onServiceConnected() {
         EventLogger.instance = EventLogger(File(filesDir, "signals"))
@@ -38,8 +51,20 @@ class GuardAccessibilityService : AccessibilityService() {
         SignalsHub.snapshotter =
             BoundedSnapshotter(A11yNode.rootOf(this), SystemClock::uptimeMillis, ids = { ids.getAndIncrement() })
         registerScreenReceiver()
+        if (OverlayHostRegistry.host == null) OverlayHostRegistry.host = OverlayRenderer()
         OverlayHostRegistry.host?.onServiceConnected(this)
+        SelfCapture.install(this)
+        OverlayCommands.handlers["selfcap"]?.invoke("on")
+        val b = windowManager().currentWindowMetrics.bounds
+        glue = GlueController(File(filesDir, "overlay"), b.width(), b.height()).also { it.register() }
+        val t = CoverTouchLayer(this, File(filesDir, "overlay/touch.jsonl"))
+        touch = t
+        liveOverlay = LiveOverlay(t)
+        WireHub.overlay = liveOverlay
+        WireHub.layout = layoutFeed::latest
     }
+
+    private fun windowManager() = getSystemService(android.view.WindowManager::class.java)
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
@@ -47,6 +72,7 @@ class GuardAccessibilityService : AccessibilityService() {
         if (raw.type == EventMapper.TYPE_WINDOW_STATE_CHANGED) {
             SignalsHub.foregroundPackage = foreground.onWindowState(raw.packageName, raw.className)
         }
+        if (raw.type == AccessibilityEvent.TYPE_VIEW_SCROLLED) glue?.onEvent(raw)
         emit(mapper.map(raw) { ids.getAndIncrement() })
     }
 
@@ -72,7 +98,9 @@ class GuardAccessibilityService : AccessibilityService() {
     }
 
     private fun emit(event: UiEvent?) {
-        if (event != null) EventLogger.instance?.write(event)
+        if (event == null) return
+        EventLogger.instance?.write(event)
+        EventAdapter.toBrain(event)?.let { WireHub.events?.invoke(it) }
     }
 
     private fun registerScreenReceiver() {
@@ -102,6 +130,15 @@ class GuardAccessibilityService : AccessibilityService() {
     override fun onInterrupt() {}
 
     override fun onUnbind(intent: Intent?): Boolean {
+        WireHub.overlay = null
+        WireHub.layout = { emptyList() }
+        liveOverlay?.close()
+        liveOverlay = null
+        touch?.clear()
+        touch = null
+        SelfCapture.uninstall()
+        OverlayCommands.handlers.remove("glue")
+        glue = null
         OverlayHostRegistry.host?.onServiceDisconnected()
         screenReceiver?.let { unregisterReceiver(it) }
         screenReceiver = null

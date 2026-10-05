@@ -5,7 +5,8 @@ import android.content.Context
 import android.content.Intent
 
 /**
- * `am broadcast -a com.veil.guard.capture.CMD --es cmd start|pause|resume|stop|source|saveFrames [--es value <v>]`.
+ * `am broadcast -a com.veil.guard.capture.CMD --es cmd start|pause|resume|stop|source|saveFrames|mode|skip|concepts|status
+ * [--es value <v>]` (source a11y|mp; mode light|balanced|strict|off; skip pkg,pkg; concepts reloads lanes).
  * Exported, protected by android.permission.DUMP (shell/system only). Forwards to CaptureService.
  */
 class CaptureCommandReceiver : BroadcastReceiver() {

@@ -1,0 +1,110 @@
+{
+ "params_version": "1",
+ "modes": {
+  "light": {
+   "change": {
+    "ignore_top_rows": 2,
+    "ignore_bottom_rows": 2,
+    "tile_level": 8,
+    "cut_tile_level": 24,
+    "cut_pct": 60,
+    "cut_global": 30,
+    "cut_min_tiles": 8
+   },
+   "sched": {
+    "rate": 1,
+    "checkup_ms": 10000,
+    "min_immediate_gap_ms": 250,
+    "hot_ms": 3000,
+    "hot_rate_mul": 2,
+    "throttle_div": 2,
+    "burst_gap_ms": 150,
+    "deadline_ms": 300,
+    "skip_packages": []
+   }
+  },
+  "balanced": {
+   "change": {
+    "ignore_top_rows": 2,
+    "ignore_bottom_rows": 2,
+    "tile_level": 8,
+    "cut_tile_level": 24,
+    "cut_pct": 60,
+    "cut_global": 30,
+    "cut_min_tiles": 8
+   },
+   "sched": {
+    "rate": 3,
+    "checkup_ms": 5000,
+    "min_immediate_gap_ms": 250,
+    "hot_ms": 3000,
+    "hot_rate_mul": 2,
+    "throttle_div": 2,
+    "burst_gap_ms": 150,
+    "deadline_ms": 200,
+    "skip_packages": []
+   }
+  },
+  "strict": {
+   "change": {
+    "ignore_top_rows": 2,
+    "ignore_bottom_rows": 2,
+    "tile_level": 8,
+    "cut_tile_level": 24,
+    "cut_pct": 60,
+    "cut_global": 30,
+    "cut_min_tiles": 8
+   },
+   "sched": {
+    "rate": 8,
+    "checkup_ms": 2000,
+    "min_immediate_gap_ms": 250,
+    "hot_ms": 3000,
+    "hot_rate_mul": 2,
+    "throttle_div": 2,
+    "burst_gap_ms": 150,
+    "deadline_ms": 100,
+    "skip_packages": []
+   }
+  }
+ },
+ "tuned": {
+  "by": "2.2.3",
+  "on": [
+   "synth-dev-1",
+   "synth-dev-2"
+  ],
+  "metrics": {
+   "light": {
+    "tile_level": 8,
+    "min_immediate_gap_ms": 250,
+    "looksPerMin": 163.63909322924485,
+    "pctAnalysed": 9.083333333333334,
+    "pctWithin200": 98.23788546255507,
+    "p95Ms": 166,
+    "cutRecall": 100.0,
+    "falseCutsPerMin": 0.0
+   },
+   "balanced": {
+    "tile_level": 8,
+    "min_immediate_gap_ms": 250,
+    "looksPerMin": 163.63909322924485,
+    "pctAnalysed": 9.083333333333334,
+    "pctWithin200": 98.23788546255507,
+    "p95Ms": 166,
+    "cutRecall": 100.0,
+    "falseCutsPerMin": 0.0
+   },
+   "strict": {
+    "tile_level": 8,
+    "min_immediate_gap_ms": 250,
+    "looksPerMin": 247.71055397087522,
+    "pctAnalysed": 13.75,
+    "pctWithin200": 100.0,
+    "p95Ms": 100,
+    "cutRecall": 100.0,
+    "falseCutsPerMin": 0.0
+   }
+  }
+ }
+}

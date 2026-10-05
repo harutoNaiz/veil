@@ -75,6 +75,16 @@ class OverlayRenderer :
 
     @Suppress("DEPRECATION")
     private fun render(plan: CoverPlan, recvMs: Long) {
+        android.os.Trace.beginSection("veil.draw")
+        try {
+            renderInner(plan, recvMs)
+        } finally {
+            android.os.Trace.endSection()
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun renderInner(plan: CoverPlan, recvMs: Long) {
         val v = view ?: return
         val delta = PlanDiff.diff(last, plan)
         last = plan
