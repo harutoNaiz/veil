@@ -1,0 +1,51 @@
+{
+  "contractVersion": "1.0",
+  "modelId": "toxicity-seq256",
+  "name": "Toxicity classifier (Horizon-Labs/multilingual-toxicity-small) seq256",
+  "version": "3baf7739b9ba",
+  "task": "toxicityClassifier",
+  "inputs": [
+    {
+      "name": "input_ids",
+      "shape": [
+        1,
+        256
+      ],
+      "dtype": "int64"
+    },
+    {
+      "name": "attention_mask",
+      "shape": [
+        1,
+        256
+      ],
+      "dtype": "int64"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "logits",
+      "shape": [
+        1,
+        7
+      ],
+      "dtype": "float32"
+    }
+  ],
+  "preprocessing": {
+    "kind": "text",
+    "tokenizer": "TokenizersBackend",
+    "maxTokens": 256
+  },
+  "precision": "float32",
+  "runtime": "onnxruntime-cpu",
+  "batch": 1,
+  "file": {
+    "path": "data/forge/toxicity/toxicity-seq256.onnx",
+    "sha256": "63358d7e9b3133a396008f6685176d1b401706ad88aab0c86c97bb1e62d6a338",
+    "bytes": 563534449
+  },
+  "sourceUrl": "https://huggingface.co/Horizon-Labs/multilingual-toxicity-small",
+  "licence": "Apache-2.0",
+  "notes": "Tokenizer and softmax/sigmoid in app code."
+}

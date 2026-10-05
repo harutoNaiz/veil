@@ -1,0 +1,119 @@
+{
+  "model": "toxicity",
+  "subPhase": "3.1.3",
+  "created": "2026-10-02T13:01:26.870026+00:00",
+  "tools": {
+    "torch": "2.14.1+cpu",
+    "onnx": "1.23.1",
+    "onnxruntime": "1.30.0"
+  },
+  "source": {
+    "url": "https://huggingface.co/Horizon-Labs/multilingual-toxicity-small",
+    "licence": "Apache-2.0",
+    "revision": "3baf7739b9ba7d49dc389851bb336f8a03a6cbef"
+  },
+  "dataset": {
+    "id": "malexandersalazar/toxicity-multilingual-binary-classification-dataset",
+    "url": "https://huggingface.co/datasets/malexandersalazar/toxicity-multilingual-binary-classification-dataset",
+    "licence": "apache-2.0",
+    "file": "data/test-00000-of-00001.parquet"
+  },
+  "files": [
+    {
+      "path": "data/forge/toxicity/toxicity-seq128.onnx",
+      "sha256": "641464d2a245848a1b63f348e310608bd76f17c35d877427d24c34c34728ef1c",
+      "bytes": 563138673,
+      "opset": 17,
+      "inputs": [
+        {
+          "name": "input_ids",
+          "shape": [
+            1,
+            128
+          ],
+          "dtype": "int64",
+          "fixed": true
+        },
+        {
+          "name": "attention_mask",
+          "shape": [
+            1,
+            128
+          ],
+          "dtype": "int64",
+          "fixed": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "logits",
+          "shape": [
+            1,
+            7
+          ],
+          "dtype": "float32",
+          "fixed": true
+        }
+      ],
+      "fixed": true
+    },
+    {
+      "path": "data/forge/toxicity/toxicity-seq256.onnx",
+      "sha256": "63358d7e9b3133a396008f6685176d1b401706ad88aab0c86c97bb1e62d6a338",
+      "bytes": 563534449,
+      "opset": 17,
+      "inputs": [
+        {
+          "name": "input_ids",
+          "shape": [
+            1,
+            256
+          ],
+          "dtype": "int64",
+          "fixed": true
+        },
+        {
+          "name": "attention_mask",
+          "shape": [
+            1,
+            256
+          ],
+          "dtype": "int64",
+          "fixed": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "logits",
+          "shape": [
+            1,
+            7
+          ],
+          "dtype": "float32",
+          "fixed": true
+        }
+      ],
+      "fixed": true
+    }
+  ],
+  "checks": [
+    {
+      "id": "AC-3.1-05.toxicity-seq128.auc_drop",
+      "value": 0.000253,
+      "threshold": "<= 0.005",
+      "n": 1000,
+      "pass": true,
+      "note": "torch AUC 0.6122, onnx AUC 0.6119"
+    },
+    {
+      "id": "AC-3.1-05.toxicity-seq256.auc_drop",
+      "value": 0.0,
+      "threshold": "<= 0.005",
+      "n": 1000,
+      "pass": true,
+      "note": "torch AUC 0.6122, onnx AUC 0.6122"
+    }
+  ],
+  "nondeterminism": "",
+  "pass": true
+}

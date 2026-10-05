@@ -11,7 +11,7 @@ from workshop.forge.common import FORGE_DATA, sha256_file
 BASE = "https://github.com/notAI-tech/NudeNet/releases/download/v3.4-weights/"
 API = "https://api.github.com/repos/notAI-tech/NudeNet/releases/tags/v3.4-weights"
 FILES = ("320n.onnx", "640m.onnx")
-SRC = FORGE_DATA / "nudenet" / "src"
+SRC = FORGE_DATA.parent / "forge-src" / "nudenet"
 
 
 def fetch() -> dict:
