@@ -7,6 +7,14 @@ class StatusScreen extends StatelessWidget {
   final GuardClient guard;
   const StatusScreen({super.key, required this.guard});
 
+  Future<void> _resume() async {
+    await guard.connect();
+    if (guard.current.permissions[Perm.screenCapture] != true) {
+      await guard.requestPermission(Perm.screenCapture);
+    }
+    await guard.start();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<GuardState>(
@@ -23,6 +31,15 @@ class StatusScreen extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text('Capture: ${st.captureState.name}'),
+            if (st.connection == Connection.unavailable ||
+                st.captureState == CaptureState.awaitingPermission) ...[
+              const SizedBox(height: 8),
+              FilledButton(
+                key: const Key('resume-veil'),
+                onPressed: _resume,
+                child: const Text('Resume Veil'),
+              ),
+            ],
             const SizedBox(height: 16),
             for (final p in Perm.values)
               _row(context, p, st.permissions[p] == true),

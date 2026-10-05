@@ -34,6 +34,8 @@ class FakeGuard implements GuardClient {
   String? _packSha;
   Connection _conn = Connection.connecting;
   GuardState? _last;
+  bool _wasRunning = false;
+  bool _crashed = false;
 
   StreamController<GuardState> _states =
       StreamController<GuardState>.broadcast();
@@ -49,6 +51,8 @@ class FakeGuard implements GuardClient {
     mode: _mode,
     captureState: _running
         ? CaptureState.running
+        : _crashed
+        ? CaptureState.stopped
         : (_granted.contains(Perm.screenCapture)
               ? CaptureState.stopped
               : CaptureState.awaitingPermission),
@@ -74,6 +78,10 @@ class FakeGuard implements GuardClient {
       throw GuardIncompatible(protocolVersion);
     }
     _conn = Connection.connected;
+    if (_crashed) {
+      _crashed = false;
+      _running = _wasRunning;
+    }
     _emit();
     final p = statsPeriod;
     _timer?.cancel();
@@ -95,6 +103,22 @@ class FakeGuard implements GuardClient {
 
   void emitStats(StatsTick t) {
     if (!_stats.isClosed) _stats.add(t);
+  }
+
+  /// Test hook: the Guard process dies. Next connect() restores it.
+  void simulateCrash() {
+    _wasRunning = _running;
+    _running = false;
+    _crashed = true;
+    _conn = Connection.unavailable;
+    _emit();
+  }
+
+  /// Test hook: screen lock drops the capture grant.
+  void simulateLock() {
+    _running = false;
+    _granted.remove(Perm.screenCapture);
+    _emit();
   }
 
   void grant(Perm p) {
