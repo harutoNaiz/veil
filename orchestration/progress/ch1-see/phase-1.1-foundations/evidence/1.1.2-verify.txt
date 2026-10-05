@@ -1,0 +1,74 @@
+﻿=== ROW 1 Â· 2026-10-02 07:28:19 Â· 0s Â· exit 0
+CMD: (Get-ChildItem contracts\*.schema.json).Count
+16
+
+=== ROW 2 Â· 2026-10-02 07:28:23 Â· 4s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked pytest contracts -q
+........................................................................ [ 16%]
+........................................................................ [ 33%]
+........................................................................ [ 50%]
+........................................................................ [ 66%]
+........................................................................ [ 83%]
+......................................................................   [100%]
+430 passed in 2.27s
+
+=== ROW 3 Â· 2026-10-02 07:28:24 Â· 1s Â· exit 1
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked pytest contracts/tests/test_examples.py -q -k "counts or invalid"
+
+no tests ran in 0.00s
+ERROR: file or directory not found: or
+System.Management.Automation.RemoteException
+
+=== ROW 4 Â· 2026-10-02 07:28:26 Â· 2s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked pytest contracts/tests/test_schemas.py -q
+........................................................................ [ 47%]
+........................................................................ [ 94%]
+.........                                                                [100%]
+153 passed in 0.42s
+
+=== ROW 5 Â· 2026-10-02 07:28:28 Â· 2s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked python contracts/scripts/gen_python.py --check
+UP TO DATE: D:\iqoo finale\veil\workshop\contracts\models.py
+
+=== ROW 6 Â· 2026-10-02 07:28:28 Â· 1s Â· exit 1
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked python -c "from workshop.contracts import TYPES; print(len(TYPES))"
+TYPES : The term 'TYPES' is not recognized as the name of a cmdlet, function, script file, or operable program. Check 
+the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:146
++ ... ked python -c from workshop.contracts import TYPES; print(len(TYPES))
++                                                                   ~~~~~
+    + CategoryInfo          : ObjectNotFound: (TYPES:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+
+=== ROW 7 Â· 2026-10-02 07:28:29 Â· 1s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked python -m workshop.contracts.validate contracts/examples/rect/valid-01-basic.json contracts/examples/ui-event/valid-04-nodes-snapshot.json
+OK Rect contracts\examples\rect\valid-01-basic.json
+OK UiEvent contracts\examples\ui-event\valid-04-nodes-snapshot.json
+
+=== ROW 8 Â· 2026-10-02 07:28:30 Â· 1s Â· exit 1
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked python -m workshop.contracts.validate contracts/examples/mask/invalid-01-layer1-peekable.json
+INVALID Mask contracts\examples\mask\invalid-01-layer1-peekable.json: False was expected [at peekable, keyword const]
+
+=== ROW 9a Â· 2026-10-02 07:28:31 Â· 1s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked ruff check contracts workshop/contracts
+All checks passed!
+
+=== ROW 9b Â· 2026-10-02 07:28:32 Â· 1s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked ruff format --check contracts workshop/contracts
+12 files already formatted
+
+=== ROW 10 Â· 2026-10-02 07:28:32 Â· 0s Â· exit 0
+CMD: (Select-String -Path contracts\README.md -Pattern 'Review checklist \(AC-1.1-04\)','ScreenLabel' | Select-Object -First 3).Line
+| `ScreenLabel` | `screen-label.schema.json` | Ground-truth labels for one screenshot (the Phase 1.2 label format) | Workshop labelling tools | Offline scorer, evaluation | no |
+## Why `ScreenLabel` is the 16th type
+The plan's step list names 15 types, while its acceptance criteria and deliverables say 16. The 16th is `ScreenLabel`, the screenshot label format, because Phase 1.2's entry condition reads "Phase 1.1 accepted (the label format schema exists)". The other candidates belong to later phases: `Tape` is a named Phase 2.1 deliverable (`contracts/tape.schema.json`) and `LookRequest` is fixed by Phase 2.2's guarantee. This choice is recorded as decision D-003 in `docs/decisions.md` and needs the owner's approval together with the rest of v1.0 (AC-1.1-05).
+
+=== ROWS 3/6 (direct, fixed quoting) · 2026-10-02 07:28:41
+ROW 3 exit 0
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed, 73 deselected in 0.26s
+ROW 6 exit 0
+16
+

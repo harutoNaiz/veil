@@ -1,0 +1,1 @@
+﻿JAVA_HOME(User)=C:\Program Files\Eclipse Adoptium\jdk-11.0.31.11-hotspot

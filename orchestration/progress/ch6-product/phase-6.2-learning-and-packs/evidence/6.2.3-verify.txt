@@ -1,0 +1,11 @@
+=== 6.2.3 verify · 2026-10-05 17:55:14
+ok    (1) ruff
+    spiders: PASS  image recall 0.88, clean false-cover 0.00 on public-photos (8 spider, 42 clean); text recall 0.91, text false 0.00.
+    needles: PENDING-HUMAN  image rows PENDING-HUMAN (text-only pack, no images); text recall 1.00, text false 0.04 on 21+50 hand-written lines.
+    gore: PENDING-HUMAN  image rows PENDING-HUMAN (text-only pack, no images); text recall 1.00, text false 0.00 on 21+51 hand-written lines.
+    alcohol: PENDING-HUMAN  image rows PENDING-HUMAN (no licensed photo set); text recall 1.00, text false 0.00 on 22+52 hand-written lines.
+    spoiler-breaking-bad: PENDING-HUMAN  image rows PENDING-HUMAN (text-only pack, no images); text recall 1.00, text false 0.00 on 20+53 hand-written lines.
+ok    (2) build + eval (cached)
+ok    (3) pytest
+VERIFY 6.2.3: PASS
+exit 0

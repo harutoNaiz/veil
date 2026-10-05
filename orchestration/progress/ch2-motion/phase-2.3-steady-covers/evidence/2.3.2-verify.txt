@@ -1,0 +1,8 @@
+=== 2.3.2 verify · 2026-10-02 17:28:51
+All checks passed!
+4 files already formatted
+.....CACHE near-dup hit 83% wrong 0/2000 (photo 641/656, synth 196/344)
+...
+8 passed in 7.11s
+VERIFY 2.3.2: PASS
+exit 0

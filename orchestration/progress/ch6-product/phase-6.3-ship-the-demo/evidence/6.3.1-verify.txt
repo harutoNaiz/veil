@@ -1,0 +1,8 @@
+=== 6.3.1 verify · 2026-10-05 17:57:02
+ok    (1) flutter analyze
+ok    (2) flutter test (RECOVERY line)
+ok    (3) ruff
+ok    (4) pytest
+ok    (5) edge-cases rows
+VERIFY 6.3.1: PASS
+exit 0

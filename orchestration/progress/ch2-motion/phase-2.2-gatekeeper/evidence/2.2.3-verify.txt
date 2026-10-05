@@ -1,0 +1,13 @@
+=== 2.2.3 verify · 2026-10-02 17:29:26
+ok    (1) ruff check + format check
+ok    (2) pytest test_gatekeeper
+    light: tile_level=8 gap=250 analysed=9.1% within200=98.2%
+    balanced: tile_level=8 gap=250 analysed=9.1% within200=98.2%
+    strict: tile_level=8 gap=250 analysed=13.8% within200=100.0%
+ok    (3) budget tune writes params, chart, report
+    AC-2.2-02: PASS recall 100% false 0.00/min
+    AC-2.2-05: PASS 9.1% frames analysed
+    AC-2.2-06: PASS 98.2% within 200 ms
+ok    (4) budget eval: AC-02 PASS, AC-06 PASS, AC-05 PASS or WAIVER
+VERIFY 2.2.3: PASS
+exit 0

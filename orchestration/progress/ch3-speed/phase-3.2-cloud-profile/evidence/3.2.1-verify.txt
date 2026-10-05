@@ -1,0 +1,13 @@
+=== 3.2.1 verify · 2026-10-05 09:16:51
+All checks passed!
+ok    1 ruff check
+4 files already formatted
+ok    2 ruff format --check
+....                                                                     [100%]
+4 passed in 1.37s
+ok    3 pytest
+profile: 21 rows -> D:\iqoo finale\veil\workshop\forge\cloud\out\profile.json
+ok    4 profile --fixture
+ok    5 profile.json keys
+VERIFY 3.2.1: PASS
+exit 0

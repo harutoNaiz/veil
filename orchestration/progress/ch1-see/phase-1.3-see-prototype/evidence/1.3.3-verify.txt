@@ -1,0 +1,40 @@
+=== 1.3.3 verify · 2026-10-02 13:51:41
+ok    (1) ruff check + format check on the 1.3.3 files
+ok    (2) pytest test_calibrate: offset formula, threshold order, decision block replaced not duplicated
+ok    (3) wiring: report and calibrate CLIs start, ch1_see.ps1 parses, JSON files parse
+ok    (4) ch1_see.ps1 -Set synthetic -Test (cache on)
+ok    (5) calibration/thresholds ordered, AC-1.3-04 ordering, report headings, decision block, <= 3 test runs
+ok    (6) -NoCache rerun (no -Test): every number within 0.005 of the first run
+ok    (7) outputs consistent after the rewrite
+    Loading weights:   3%|▎         | 12/408 [00:00<00:04, 87.54it/s]
+    Loading weights:   8%|▊         | 31/408 [00:00<00:02, 126.83it/s]
+    Loading weights:  11%|█         | 44/408 [00:00<00:03, 103.66it/s]
+    Loading weights: 100%|██████████| 408/408 [00:00<00:00, 944.96it/s]
+    {
+      "cats": {
+        "recall": null,
+        "precision": null,
+        "cleanFalseCover": null,
+        "covers": 8,
+        "labels": 0
+      },
+      "spiders": {
+        "recall": null,
+        "precision": null,
+        "cleanFalseCover": null,
+        "covers": 12,
+        "labels": 0
+      },
+      "secPerScreen": 4.32934573333326,
+      "gallery": "D:\\iqoo finale\\veil\\data\\ch1\\gallery\\fresh-_verify-smoke-cats+spiders\\index.html",
+      "out": "data\\ch1\\runs\\fresh-_verify-smoke-cats+spiders"
+    }
+    GALLERY: D:\iqoo finale\veil\data\ch1\gallery\fresh-_verify-smoke-cats+spiders\index.html
+    TALLY: D:\iqoo finale\veil\data\ch1\gallery\fresh-_verify-smoke-cats+spiders\tally.md
+FAIL  (8) -Fresh smoke on 3 synthetic images: gallery index.html and tally.md exist
+VERIFY 1.3.3: FAIL
+exit 1
+=== 1.3.3 verify -Only 8 (orchestrator re-run after fix round 1) · 2026-10-02 14:29:48
+ok    (8) -Fresh smoke on 3 synthetic images: gallery index.html and tally.md exist
+VERIFY 1.3.3: PASS
+exit 0

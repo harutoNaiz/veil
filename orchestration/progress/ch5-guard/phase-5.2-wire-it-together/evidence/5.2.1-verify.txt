@@ -1,0 +1,11 @@
+=== 5.2.1 verify · 2026-10-05 19:08:18
+ok    (1) ConductorTest + ReplayParityTest
+    <testsuite name="com.veil.conductor.ReplayParityTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-05T13:38:34.891Z" hostname="DESKTOP-4NA8D29" time="0.258">
+    <testcase name="goldenTapes" classname="com.veil.conductor.ReplayParityTest" time="0.258"/>
+    <system-out><![CDATA[PARITY feed-scroll masks=449 matched=100.0% direct=0
+    PARITY reels masks=79 matched=100.0% direct=0
+    PARITY video masks=0 matched=100.0% direct=0
+ok    (2) app compileDebugKotlin
+ok    (3) ktlint
+VERIFY 5.2.1: PASS
+exit 0

@@ -1,0 +1,36 @@
+=== PT-1.2 machine 08:24:07
+Veil env: toolchain=D:\veil-toolchain
+ok    synth 75 + 2 near-dupes into data/synth/pt (exit 0)
+ok    labels.check on truth: LABELS OK (exit 0)
+ok    to-ls with truth as prelabels (exit 0)
+ok    from-ls --accept-predictions (exit 0)
+ok    agree compare truth vs round-tripped labels: rate 0, pass (exit 0)
+ok      agree report: rate 0, disagreements 0, coverage 1 (exit 0)
+ok    drop one box from a copy of truth (exit 0)
+ok    agree compare with 1 box dropped: rate = 1/items (still pass) (exit 0)
+ok      agree report: 1 disagreement, items = number of truth boxes, rate = 1/items (exit 0)
+ok    split (seed 12): every concept and app within 60 +/- 5, no cluster straddles (exit 0)
+ok    dupes: no near-dupe pair straddles dev/test (exit 0)
+ok      both near-dupe pairs are clustered and sit on one side (exit 0)
+ok    freeze write to a temp doc (exit 0)
+ok    freeze check ok (exit 0)
+ok    freeze check after tampering one test PNG byte fails (exit 1)
+ok    freeze check after restoring the byte is ok again (exit 0)
+ok    fake_preds perfect (exit 0)
+ok    score_screens perfect (exit 0)
+ok    fake_preds empty (exit 0)
+ok    score_screens empty (exit 0)
+ok    fake_preds mistakes (exit 0)
+ok    score_screens mistakes (exit 0)
+ok      scores: perfect 1.0 / 1.0 / 0, empty recall 0, mistakes (C-2)/C, (C-2)/C, 2/K (exit 0)
+--- counts (informational: the synthetic set is below the real-set thresholds) ---
+ok    counts prints (exit 0)
+    total: 77 (>= 300) LOW
+    cats: 27 (>= 100) LOW
+    spiders: 25 (>= 50) LOW
+    clean: 25 (>= 150) LOW
+    hard: 13 (>= 30) LOW
+    apps: 5 (>= 5) OK
+    dark share: 0.34 (>= 0.2) OK
+    landscape: 6 (info, a few expected)
+PT-1.2 MACHINE: PASS

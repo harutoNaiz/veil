@@ -1,0 +1,7 @@
+=== 4.1.1 verify · 2026-10-05 09:47:21
+ok    (1) ktlint owned Kotlin
+ok    (2) state machine unit tests
+ok    (3) app assembleDebug
+ok    (4) manifest has mediaProjection service type + permission
+VERIFY 4.1.1: PASS
+exit 0

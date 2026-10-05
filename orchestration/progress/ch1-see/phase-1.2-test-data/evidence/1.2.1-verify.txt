@@ -1,0 +1,16 @@
+=== 1.2.1 verify · 2026-10-02 08:23:58
+...........                                                              [100%]
+11 passed in 3.20s
+ok    1 pytest workshop/screens
+wrote 77 screenshots to data\synth\1.2.1
+ok    2 synth CLI (75 + 2 near-dupes)
+META OK 77
+ok    3 meta_check on the synthetic set
+no adb device (connect the phone: HC-002)
+ok    4 capture without a phone exits 3
+ok    5a data/screens is git-ignored
+ok    5b git tracks only data/README.md
+All checks passed!
+ok    6 ruff
+VERIFY 1.2.1: PASS
+exit 0

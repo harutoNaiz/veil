@@ -1,0 +1,9 @@
+=== 5.3.3 verify · 2026-10-05 17:57:38
+ok    (1) pytest battery + report/tune
+ok    (2) tune --check
+ok    (3) twin tapes
+ok    (4) report empty dir -> PENDING-HUMAN
+ok    (5) session no device -> exit 2
+ok    (6) ruff
+VERIFY 5.3.3: PASS
+exit 0

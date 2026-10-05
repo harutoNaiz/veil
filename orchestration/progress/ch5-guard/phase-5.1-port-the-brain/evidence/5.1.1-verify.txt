@@ -1,0 +1,28 @@
+=== 5.1.1 verify · 2026-10-05 09:25:24
+D:\iqoo finale\veil\guard\brain\src\test\resources\judge-golden.json
+ok    1 regenerate judge fixture
+D:\iqoo finale\veil\guard\brain\src\test\resources\cache-golden.json
+ok    2 regenerate cache fixture
+ok    3 fixtures reproducible
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.3.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :brain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :brain:compileKotlin UP-TO-DATE
+> Task :brain:compileJava NO-SOURCE
+> Task :brain:processResources NO-SOURCE
+> Task :brain:classes UP-TO-DATE
+> Task :brain:jar UP-TO-DATE
+> Task :brain:compileTestKotlin UP-TO-DATE
+> Task :brain:compileTestJava NO-SOURCE
+> Task :brain:processTestResources UP-TO-DATE
+> Task :brain:testClasses UP-TO-DATE
+> Task :brain:test UP-TO-DATE
+
+BUILD SUCCESSFUL in 18s
+5 actionable tasks: 5 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html
+ok    4 gradle brain unit tests
+ok    5 ktlint brain
+ok    6 brain build has no android
+VERIFY 5.1.1: PASS
+exit 0

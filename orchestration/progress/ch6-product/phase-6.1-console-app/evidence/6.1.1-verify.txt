@@ -1,0 +1,9 @@
+=== 6.1.1 verify · 2026-10-05 09:38:05
+ok    (1) pigeon regen produces no diff
+ok    (2) flutter analyze lib/guard test/guard
+ok    (3) flutter test test/guard
+ok    (4) no network in lib or manifest
+    TaskQueue=12 methods=12
+ok    (5) TaskQueue count equals HostApi method count
+VERIFY 6.1.1: PASS
+exit 0

@@ -1,0 +1,65 @@
+﻿=== H2 3.1.2 -Heavy · 2026-10-02 17:52:25
+    All checks passed!
+    6 files already formatted
+ok    (1) ruff check + format check
+    .......                                                                  [100%]
+    7 passed in 3.12s
+ok    (2) pytest test_yoloe.py (numpy NMS/regions, concept score, proposal_pe)
+    D:\iqoo finale\veil\.venv\Lib\site-packages\torch\jit\_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.
+      warnings.warn(
+    D:\iqoo finale\veil\workshop\forge\yoloe\export.py:65: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter has become the default. Learn more about the new export logic: https://docs.pytorch.org/docs/stable/onnx_export.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html
+      torch.onnx.export(
+    TEXT ENCODER BLOCKED: BLOCKED: dynamo=False: RuntimeError: Tried to trace <__torch__.___torch_mangle_263.TextModelWithNormalization object at 000001E3606BCF80> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced. | dynamo=True: ModuleNotFoundError: No module named 'onnxscript'
+    export done: {'finderExporter': 'torchscript', 'text': "BLOCKED: dynamo=False: RuntimeError: Tried to trace <__torch__.___torch_mangle_263.TextModelWithNormalization object at 000001E3606BCF80> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced. | dynamo=True: ModuleNotFoundError: No module named 'onnxscript'", 'changedVsPrevious': []}
+ok    (3) export (finder + text encoder)
+    D:\iqoo finale\veil\.venv\Lib\site-packages\torch\jit\_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.
+      warnings.warn(
+    ok   AC-3.1-03.boxes.proposal 1.0 minIou=1.0000 maxDScore=0.0001 screens=60
+    ok   AC-3.1-03.norm.proposal 7.152557373046875e-07 max | ||fingerprint|| - 1 |
+    ok   AC-3.1-03.boxes.list1 1.0 minIou=1.0000 maxDScore=0.0000 screens=60
+    ok   AC-3.1-03.norm.list1 7.152557373046875e-07 max | ||fingerprint|| - 1 |
+    ok   AC-3.1-03.boxes.list2 1.0 minIou=1.0000 maxDScore=0.0000 screens=60
+    ok   AC-3.1-03.norm.list2 5.960464477539062e-07 max | ||fingerprint|| - 1 |
+    ok   AC-3.1-04.list-not-baked-in 1.0 one file sha256=52e32afe007f79ec43f61a69a22b62dc33e56d9996146cfd7a95eb76956e0a2a
+    FAIL AC-3.1-03.text.min None BLOCKED: BLOCKED: dynamo=False: RuntimeError: Tried to trace <__torch__.___torch_mangle_263.TextModelWithNormalization object at 000001E3606BCF80> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced. | dynamo=True: ModuleNotFoundError: No module named 'onnxscript'
+FAIL  (4) parity (AC-3.1-03, AC-3.1-04)
+FAIL  (5) report pass
+    ok data/forge/yoloe/yoloe-26s-embed-top100.onnx opset=17 in=[('images', [1, 3, 640, 640]), ('proposal_pe', [1, 8, 512])] out=[('boxes', [1, 100, 4]), ('objectness', [1, 100]), ('fingerprint', [1, 100, 512]), ('fp_scale', [1, 100]), ('fp_bias', [1, 100])]
+ok    (6) shapes fixed, opset 17-20
+    []
+ok    (7) checksums
+VERIFY 3.1.2: FAIL
+exit 1 · 17:54:50
+
+=== H2 re-run after fix round 1 · 2026-10-02 17:56:06
+    All checks passed!
+    6 files already formatted
+ok    (1) ruff check + format check
+    .......                                                                  [100%]
+    7 passed in 2.18s
+ok    (2) pytest test_yoloe.py (numpy NMS/regions, concept score, proposal_pe)
+    D:\iqoo finale\veil\.venv\Lib\site-packages\torch\jit\_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.
+      warnings.warn(
+    D:\iqoo finale\veil\workshop\forge\yoloe\export.py:65: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter has become the default. Learn more about the new export logic: https://docs.pytorch.org/docs/stable/onnx_export.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html
+      torch.onnx.export(
+    TEXT ENCODER BLOCKED: BLOCKED: dynamo=False: RuntimeError: Tried to trace <__torch__.___torch_mangle_263.TextModelWithNormalization object at 0000020D2C782C80> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced. | dynamo=True: ModuleNotFoundError: No module named 'onnxscript'
+    export done: {'finderExporter': 'torchscript', 'text': "BLOCKED: dynamo=False: RuntimeError: Tried to trace <__torch__.___torch_mangle_263.TextModelWithNormalization object at 0000020D2C782C80> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced. | dynamo=True: ModuleNotFoundError: No module named 'onnxscript'", 'changedVsPrevious': []}
+ok    (3) export (finder + text encoder)
+    D:\iqoo finale\veil\.venv\Lib\site-packages\torch\jit\_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.
+      warnings.warn(
+    ok   AC-3.1-03.boxes.proposal 1.0 minIou=1.0000 maxDScore=0.0001 screens=60
+    ok   AC-3.1-03.norm.proposal 7.152557373046875e-07 max | ||fingerprint|| - 1 |
+    ok   AC-3.1-03.boxes.list1 1.0 minIou=1.0000 maxDScore=0.0000 screens=60
+    ok   AC-3.1-03.norm.list1 7.152557373046875e-07 max | ||fingerprint|| - 1 |
+    ok   AC-3.1-03.boxes.list2 1.0 minIou=1.0000 maxDScore=0.0000 screens=60
+    ok   AC-3.1-03.norm.list2 5.960464477539062e-07 max | ||fingerprint|| - 1 |
+    ok   AC-3.1-04.list-not-baked-in 1.0 one file sha256=52e32afe007f79ec43f61a69a22b62dc33e56d9996146cfd7a95eb76956e0a2a
+    ok   AC-3.1-03.text.min None ACCEPTED-DEVIATION (variant C: concepts are judged by SigLIP2 text; YOLOE gets the fixed proposal_pe input). Text export BLOCKED: BLOCKED: dynamo=False: RuntimeError: Tried to trace <__torch__.___torch_mangle_263.TextModelWithNormalization object at 0000020D2C782C80> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced. | dynamo=True: ModuleNo
+ok    (4) parity (AC-3.1-03, AC-3.1-04)
+ok    (5) report pass
+    ok data/forge/yoloe/yoloe-26s-embed-top100.onnx opset=17 in=[('images', [1, 3, 640, 640]), ('proposal_pe', [1, 8, 512])] out=[('boxes', [1, 100, 4]), ('objectness', [1, 100]), ('fingerprint', [1, 100, 512]), ('fp_scale', [1, 100]), ('fp_bias', [1, 100])]
+ok    (6) shapes fixed, opset 17-20
+    []
+ok    (7) checksums
+VERIFY 3.1.2: PASS
+exit 0

@@ -1,0 +1,9 @@
+=== 5.1.2 verify · 2026-10-05 09:26:06
+    Starting process 'Gradle Test Executor 1'. Working directory: D:\iqoo finale\veil\guard\brain Command: D:\veil-toolchain\jdk17\bin\java.exe -Dorg.gradle.internal.worker.tmpdir=D:\iqoo finale\veil\guard\brain\build\tmp\tapeTest\work -Dveil.repo=D:\iqoo finale\veil -Dveil.tapes=D:\iqoo finale\veil\contracts\tapes @D:\veil-toolchain\cache\gradle\.tmp\gradle-worker-classpath16839598048063193429txt -Xmx512m -Dfile.encoding=UTF-8 -Duser.country=IN -Duser.language=en -Duser.variant -ea worker.org.gradle.process.internal.worker.GradleWorkerMain 'Gradle Test Executor 1'
+    GoldenTapesTest > summary STANDARD_OUT
+        TAPES 3/3 exact
+ok    (1) gradle :brain:tapeTest prints TAPES 3/3 exact
+ok    (2) ktlint guard/brain
+ok    (3) workflow yaml parses
+VERIFY 5.1.2: PASS
+exit 0

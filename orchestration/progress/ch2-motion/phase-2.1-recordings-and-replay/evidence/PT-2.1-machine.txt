@@ -1,0 +1,272 @@
+=== PT-2.1 machine · 2026-10-02 14:45:25
+data\evidence\pt-2.1\session\synth-known-scroll.session.json
+ok    1 synth_session 60 s
+SYNC synth-known-scroll: PASS max=0
+ok    2a sync_check PASS at offset 0
+data\evidence\pt-2.1\offset100\synth-known-scroll.session.json
+SYNC synth-known-scroll: FAIL max=100
+ok    2b sync_check FAIL at +100 ms
+REPLAY frames=1800 events=756 late=0 maxLagMs=0
+ok    3.1 replay oracle --markers
+REPLAY frames=1800 events=756 late=0 maxLagMs=0
+ok    3.2 replay oracle --markers
+REPLAY frames=1800 events=756 late=0 maxLagMs=0
+ok    3.3 replay oracle --markers
+ok    4 three replays byte-identical
+bursts 30
+ok    5 scroll totals match driver
+SELF-CAPTURE error=0px
+ok    6 self-capture error <= 1
+REPLAY frames=1800 events=756 late=0 maxLagMs=0
+ok    7 replay --self-capture
+OK data\evidence\pt-2.1\run1\synth-known-scroll.tape-in.jsonl 2557 lines
+OK data\evidence\pt-2.1\run1\synth-known-scroll.tape-out.jsonl 1801 lines
+OK data\evidence\pt-2.1\selfcap\synth-known-scroll.tape-in.jsonl 2557 lines
+OK data\evidence\pt-2.1\selfcap\synth-known-scroll.tape-out.jsonl 1801 lines
+ok    8 tape validate
+INVALID data/evidence/pt-2.1/session/labels/synth-known-scroll.json
+  clean 1000-8316 overlaps track feed-spider-0
+  clean 1000-8316 overlaps track feed-cat-1
+  clean 1000-8316 overlaps track feed-spider-2
+  clean 1000-8316 overlaps track feed-dog-3
+  clean 1000-8316 overlaps track feed-spider-4
+  clean 1000-8316 overlaps track feed-cat-5
+  clean 1000-8316 overlaps track grid-cat-0
+  clean 1000-8316 overlaps track grid-spider-1
+  clean 1000-8316 overlaps track grid-cat-2
+  clean 1000-8316 overlaps track grid-cat-3
+  clean 1000-8316 overlaps track grid-cat-4
+  clean 1000-8316 overlaps track grid-cat-5
+  clean 1000-8316 overlaps track grid-spider-6
+  clean 1000-8316 overlaps track grid-cat-7
+  clean 1000-8316 overlaps track grid-cat-8
+  clean 1000-8316 overlaps track grid-dog-9
+  clean 1000-8316 overlaps track grid-dog-10
+  clean 1000-8316 overlaps track grid-dog-11
+  clean 1000-8316 overlaps track grid-cat-12
+  clean 1000-8316 overlaps track grid-cat-13
+  clean 1000-8316 overlaps track grid-cat-14
+  clean 1000-8316 overlaps track grid-dog-15
+  clean 1000-8316 overlaps track grid-cat-16
+  clean 1000-8316 overlaps track grid-cat-17
+  clean 1000-8316 overlaps track grid-spider-18
+  clean 1000-8316 overlaps track grid-cat-19
+  clean 1000-8316 overlaps track grid-dog-20
+  clean 1000-8316 overlaps track grid-cat-21
+  clean 1000-8316 overlaps track grid-cat-23
+  clean 1000-8316 overlaps track grid-dog-22
+  clean 1000-8316 overlaps track reels-spider-0
+  clean 1000-8316 overlaps track reels-spider-1
+  clean 1000-8316 overlaps track reels-cat-2
+  clean 10950-18116 overlaps track feed-spider-2
+  clean 10950-18116 overlaps track feed-dog-3
+  clean 10950-18116 overlaps track feed-spider-4
+  clean 10950-18116 overlaps track feed-cat-5
+  clean 10950-18116 overlaps track grid-cat-3
+  clean 10950-18116 overlaps track grid-cat-4
+  clean 10950-18116 overlaps track grid-cat-5
+  clean 10950-18116 overlaps track grid-spider-6
+  clean 10950-18116 overlaps track grid-cat-7
+  clean 10950-18116 overlaps track grid-cat-8
+  clean 10950-18116 overlaps track grid-dog-9
+  clean 10950-18116 overlaps track grid-dog-10
+  clean 10950-18116 overlaps track grid-dog-11
+  clean 10950-18116 overlaps track grid-cat-12
+  clean 10950-18116 overlaps track grid-cat-13
+  clean 10950-18116 overlaps track grid-cat-14
+  clean 10950-18116 overlaps track grid-dog-15
+  clean 10950-18116 overlaps track grid-cat-16
+  clean 10950-18116 overlaps track grid-cat-17
+  clean 10950-18116 overlaps track grid-spider-18
+  clean 10950-18116 overlaps track grid-cat-19
+  clean 10950-18116 overlaps track grid-dog-20
+  clean 10950-18116 overlaps track grid-cat-21
+  clean 10950-18116 overlaps track grid-cat-23
+  clean 10950-18116 overlaps track grid-dog-22
+  clean 10950-18116 overlaps track reels-cat-2
+  clean 10950-18116 overlaps track feed-spider-6
+  clean 10950-18116 overlaps track feed-spider-7
+  clean 10950-18116 overlaps track grid-cat-25
+  clean 10950-18116 overlaps track grid-spider-24
+  clean 10950-18116 overlaps track grid-spider-26
+  clean 10950-18116 overlaps track grid-cat-29
+  clean 10950-18116 overlaps track grid-spider-27
+  clean 10950-18116 overlaps track grid-dog-28
+  clean 10950-18116 overlaps track reels-cat-3
+  clean 10950-18116 overlaps track reels-spider-4
+  clean 20750-27916 overlaps track feed-spider-4
+  clean 20750-27916 overlaps track feed-cat-5
+  clean 20750-27916 overlaps track grid-dog-9
+  clean 20750-27916 overlaps track grid-dog-10
+  clean 20750-27916 overlaps track grid-dog-11
+  clean 20750-27916 overlaps track grid-cat-12
+  clean 20750-27916 overlaps track grid-cat-13
+  clean 20750-27916 overlaps track grid-cat-14
+  clean 20750-27916 overlaps track grid-dog-15
+  clean 20750-27916 overlaps track grid-cat-16
+  clean 20750-27916 overlaps track grid-cat-17
+  clean 20750-27916 overlaps track grid-spider-18
+  clean 20750-27916 overlaps track grid-cat-19
+  clean 20750-27916 overlaps track grid-dog-20
+  clean 20750-27916 overlaps track grid-cat-21
+  clean 20750-27916 overlaps track grid-cat-23
+  clean 20750-27916 overlaps track grid-dog-22
+  clean 20750-27916 overlaps track feed-spider-6
+  clean 20750-27916 overlaps track feed-spider-7
+  clean 20750-27916 overlaps track grid-cat-25
+  clean 20750-27916 overlaps track grid-spider-24
+  clean 20750-27916 overlaps track grid-spider-26
+  clean 20750-27916 overlaps track grid-cat-29
+  clean 20750-27916 overlaps track grid-spider-27
+  clean 20750-27916 overlaps track grid-dog-28
+  clean 20750-27916 overlaps track reels-spider-4
+  clean 20750-27916 overlaps track feed-cat-8
+  clean 20750-27916 overlaps track feed-dog-9
+  clean 20750-27916 overlaps track grid-spider-30
+  clean 20750-27916 overlaps track grid-dog-31
+  clean 20750-27916 overlaps track grid-spider-32
+  clean 20750-27916 overlaps track reels-dog-5
+  clean 20750-27916 overlaps track reels-spider-6
+  clean 30550-37716 overlaps track grid-cat-12
+  clean 30550-37716 overlaps track grid-cat-13
+  clean 30550-37716 overlaps track grid-cat-14
+  clean 30550-37716 overlaps track grid-dog-15
+  clean 30550-37716 overlaps track grid-cat-16
+  clean 30550-37716 overlaps track grid-cat-17
+  clean 30550-37716 overlaps track grid-spider-18
+  clean 30550-37716 overlaps track grid-cat-19
+  clean 30550-37716 overlaps track grid-dog-20
+  clean 30550-37716 overlaps track grid-cat-21
+  clean 30550-37716 overlaps track grid-cat-23
+  clean 30550-37716 overlaps track grid-dog-22
+  clean 30550-37716 overlaps track feed-spider-6
+  clean 30550-37716 overlaps track feed-spider-7
+  clean 30550-37716 overlaps track grid-cat-25
+  clean 30550-37716 overlaps track grid-spider-24
+  clean 30550-37716 overlaps track grid-spider-26
+  clean 30550-37716 overlaps track grid-cat-29
+  clean 30550-37716 overlaps track grid-spider-27
+  clean 30550-37716 overlaps track grid-dog-28
+  clean 30550-37716 overlaps track feed-cat-8
+  clean 30550-37716 overlaps track feed-dog-9
+  clean 30550-37716 overlaps track grid-spider-30
+  clean 30550-37716 overlaps track grid-dog-31
+  clean 30550-37716 overlaps track grid-spider-32
+  clean 30550-37716 overlaps track reels-spider-6
+  clean 30550-37716 overlaps track feed-spider-10
+  clean 30550-37716 overlaps track feed-dog-11
+  clean 30550-37716 overlaps track grid-cat-33
+  clean 30550-37716 overlaps track grid-spider-34
+  clean 30550-37716 overlaps track grid-dog-35
+  clean 30550-37716 overlaps track grid-spider-36
+  clean 30550-37716 overlaps track grid-dog-37
+  clean 30550-37716 overlaps track grid-dog-38
+  clean 30550-37716 overlaps track reels-cat-7
+  clean 30550-37716 overlaps track reels-cat-8
+  clean 40350-47516 overlaps track grid-spider-18
+  clean 40350-47516 overlaps track grid-cat-19
+  clean 40350-47516 overlaps track grid-dog-20
+  clean 40350-47516 overlaps track grid-cat-21
+  clean 40350-47516 overlaps track grid-cat-23
+  clean 40350-47516 overlaps track grid-dog-22
+  clean 40350-47516 overlaps track grid-cat-25
+  clean 40350-47516 overlaps track grid-spider-24
+  clean 40350-47516 overlaps track grid-spider-26
+  clean 40350-47516 overlaps track grid-cat-29
+  clean 40350-47516 overlaps track grid-spider-27
+  clean 40350-47516 overlaps track grid-dog-28
+  clean 40350-47516 overlaps track feed-cat-8
+  clean 40350-47516 overlaps track feed-dog-9
+  clean 40350-47516 overlaps track grid-spider-30
+  clean 40350-47516 overlaps track grid-dog-31
+  clean 40350-47516 overlaps track grid-spider-32
+  clean 40350-47516 overlaps track feed-spider-10
+  clean 40350-47516 overlaps track feed-dog-11
+  clean 40350-47516 overlaps track grid-cat-33
+  clean 40350-47516 overlaps track grid-spider-34
+  clean 40350-47516 overlaps track grid-dog-35
+  clean 40350-47516 overlaps track grid-spider-36
+  clean 40350-47516 overlaps track grid-dog-37
+  clean 40350-47516 overlaps track grid-dog-38
+  clean 40350-47516 overlaps track reels-cat-8
+  clean 40350-47516 overlaps track feed-cat-12
+  clean 40350-47516 overlaps track feed-cat-13
+  clean 40350-47516 overlaps track grid-dog-39
+  clean 40350-47516 overlaps track grid-spider-40
+  clean 40350-47516 overlaps track grid-spider-41
+  clean 40350-47516 overlaps track reels-dog-9
+  clean 40350-47516 overlaps track reels-dog-10
+  clean 50150-57316 overlaps track grid-cat-21
+  clean 50150-57316 overlaps track grid-cat-23
+  clean 50150-57316 overlaps track grid-dog-22
+  clean 50150-57316 overlaps track grid-cat-25
+  clean 50150-57316 overlaps track grid-spider-24
+  clean 50150-57316 overlaps track grid-spider-26
+  clean 50150-57316 overlaps track grid-cat-29
+  clean 50150-57316 overlaps track grid-spider-27
+  clean 50150-57316 overlaps track grid-dog-28
+  clean 50150-57316 overlaps track grid-spider-30
+  clean 50150-57316 overlaps track grid-dog-31
+  clean 50150-57316 overlaps track grid-spider-32
+  clean 50150-57316 overlaps track feed-spider-10
+  clean 50150-57316 overlaps track feed-dog-11
+  clean 50150-57316 overlaps track grid-cat-33
+  clean 50150-57316 overlaps track grid-spider-34
+  clean 50150-57316 overlaps track grid-dog-35
+  clean 50150-57316 overlaps track grid-spider-36
+  clean 50150-57316 overlaps track grid-dog-37
+  clean 50150-57316 overlaps track grid-dog-38
+  clean 50150-57316 overlaps track feed-cat-12
+  clean 50150-57316 overlaps track feed-cat-13
+  clean 50150-57316 overlaps track grid-dog-39
+  clean 50150-57316 overlaps track grid-spider-40
+  clean 50150-57316 overlaps track grid-spider-41
+  clean 50150-57316 overlaps track reels-dog-10
+  clean 50150-57316 overlaps track feed-cat-14
+  clean 50150-57316 overlaps track feed-dog-15
+  clean 50150-57316 overlaps track grid-spider-42
+  clean 50150-57316 overlaps track grid-dog-43
+  clean 50150-57316 overlaps track grid-spider-44
+  clean 50150-57316 overlaps track grid-cat-45
+  clean 50150-57316 overlaps track grid-cat-47
+  clean 50150-57316 overlaps track grid-spider-46
+  clean 50150-57316 overlaps track reels-cat-11
+  clean 50150-57316 overlaps track reels-spider-12
+  clean 59950-60966 overlaps track feed-cat-12
+  clean 59950-60966 overlaps track feed-cat-13
+  clean 59950-60966 overlaps track feed-cat-14
+  clean 59950-60966 overlaps track feed-dog-15
+FAIL  9 recording label validates (exit 1, wanted 0)
+PT 2.1: FAIL
+exit 1
+
+=== PT-2.1 machine re-run after fix · 2026-10-02 14:50:00
+data\evidence\pt-2.1\session\synth-known-scroll.session.json
+ok    1 synth_session 60 s
+SYNC synth-known-scroll: PASS max=0
+ok    2a sync_check PASS at offset 0
+data\evidence\pt-2.1\offset100\synth-known-scroll.session.json
+SYNC synth-known-scroll: FAIL max=100
+ok    2b sync_check FAIL at +100 ms
+REPLAY frames=1800 events=756 late=0 maxLagMs=0
+ok    3.1 replay oracle --markers
+REPLAY frames=1800 events=756 late=0 maxLagMs=0
+ok    3.2 replay oracle --markers
+REPLAY frames=1800 events=756 late=0 maxLagMs=0
+ok    3.3 replay oracle --markers
+ok    4 three replays byte-identical
+bursts 30
+ok    5 scroll totals match driver
+SELF-CAPTURE error=0px
+ok    6 self-capture error <= 1
+REPLAY frames=1800 events=756 late=0 maxLagMs=0
+ok    7 replay --self-capture
+OK data\evidence\pt-2.1\run1\synth-known-scroll.tape-in.jsonl 2557 lines
+OK data\evidence\pt-2.1\run1\synth-known-scroll.tape-out.jsonl 1801 lines
+OK data\evidence\pt-2.1\selfcap\synth-known-scroll.tape-in.jsonl 2557 lines
+OK data\evidence\pt-2.1\selfcap\synth-known-scroll.tape-out.jsonl 1801 lines
+ok    8 tape validate
+OK data/evidence/pt-2.1/session/labels/synth-known-scroll.json
+ok    9 recording label validates
+PT 2.1: PASS
+exit 0

@@ -1,0 +1,7 @@
+=== 4.2.3 verify · 2026-10-05 18:35:26
+ok    (1) ktlint
+ok    (2) ruff
+ok    (3) pytest
+ok    (4) gradle build + BoundedSnapshotterTest
+VERIFY 4.2.3: PASS
+exit 0

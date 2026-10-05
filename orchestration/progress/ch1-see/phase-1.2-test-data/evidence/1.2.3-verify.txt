@@ -1,0 +1,7 @@
+=== 1.2.3 verify · 2026-10-02 08:19:35
+Veil env: toolchain=D:\veil-toolchain
+ok    (1) pytest workshop/eval: scorer, hand-worked case, dhash, split, freeze, counts
+ok    (2) docs/datasets.md has the veil:testset block, seed 12, dHash 256 / 20 and the scoring rules
+ok    (3) ruff check workshop/eval
+VERIFY 1.2.3: PASS
+exit 0

@@ -1,0 +1,13 @@
+=== 3.2.2 verify · 2026-10-05 09:16:16
+All checks passed!
+ok    1 ruff check
+3 files already formatted
+ok    2 ruff format --check
+....                                                                     [100%]
+4 passed in 0.77s
+ok    3 pytest
+wrote D:\iqoo finale\veil\workshop\forge\cloud\out\precision.json
+ok    4 precision --fixture
+ok    5 json keys
+VERIFY 3.2.2: PASS
+exit 0

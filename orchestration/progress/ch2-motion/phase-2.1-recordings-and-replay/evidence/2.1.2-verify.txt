@@ -1,0 +1,11 @@
+=== 2.1.2 verify · 2026-10-02 14:41:12
+.....                                                                    [100%]
+5 passed in 0.16s
+ok    1 pytest recordings
+OK C:\Users\Tushar\AppData\Local\Temp\veil-212-label.json
+OK C:\Users\Tushar\AppData\Local\Temp\veil-212-label.json
+ok    2 from-ls CLI + validate
+All checks passed!
+ok    3 ruff
+VERIFY 2.1.2: PASS
+exit 0

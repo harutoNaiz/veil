@@ -1,0 +1,21 @@
+﻿AC-1.1-03 · 2026-10-02T07:38:39
+--- full contracts suite:
+430 passed in 2.26s
+--- per-type counts (-k counts -rA):
+PASSED contracts/tests/test_examples.py::test_counts[Rect]
+PASSED contracts/tests/test_examples.py::test_counts[Frame]
+PASSED contracts/tests/test_examples.py::test_counts[UiEvent]
+PASSED contracts/tests/test_examples.py::test_counts[Region]
+PASSED contracts/tests/test_examples.py::test_counts[Embedding]
+PASSED contracts/tests/test_examples.py::test_counts[Concept]
+PASSED contracts/tests/test_examples.py::test_counts[ConceptPack]
+PASSED contracts/tests/test_examples.py::test_counts[CompiledConcept]
+PASSED contracts/tests/test_examples.py::test_counts[Finding]
+PASSED contracts/tests/test_examples.py::test_counts[Track]
+PASSED contracts/tests/test_examples.py::test_counts[Mask]
+PASSED contracts/tests/test_examples.py::test_counts[MaskPlan]
+PASSED contracts/tests/test_examples.py::test_counts[Feedback]
+PASSED contracts/tests/test_examples.py::test_counts[ModelManifest]
+PASSED contracts/tests/test_examples.py::test_counts[EngineStats]
+PASSED contracts/tests/test_examples.py::test_counts[ScreenLabel]
+16 passed, 414 deselected in 0.33s

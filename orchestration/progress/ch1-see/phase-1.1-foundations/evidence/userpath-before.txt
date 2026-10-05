@@ -1,0 +1,1 @@
+﻿C:\Users\Tushar\mingw64\bin;C:\Users\Tushar\AppData\Local\Python\bin;[Environment]::GetEnvironmentVariable('PATH', 'User');C:\Users\Tushar\.local\bin;C:\Users\Tushar\AppData\Local\Programs\Ollama;C:\Users\Tushar\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Tushar\AppData\Local\Programs\gh-cli\bin

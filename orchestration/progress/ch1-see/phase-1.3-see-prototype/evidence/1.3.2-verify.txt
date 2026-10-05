@@ -1,0 +1,28 @@
+=== 1.3.2 verify · 2026-10-02 13:12:16
+ok    (1) ruff check + format check on the 1.3.2 files
+ok    (2) pytest test_finder: valid boxes, normalised vectors, B on a few images, list switch, chooser
+ok    (3) variants CLI synthetic/dev cats,spiders writes variants-synthetic.json (full)
+    | variant | concept | recall | precision | clean false-cover | t | s/screen | note |
+    | --- | --- | --- | --- | --- | --- | --- | --- |
+    | A | cats | 100.0% | 78.7% | 0.0% | 0.85 | 5.42 |  |
+    | A | spiders | 100.0% | 81.2% | 0.0% | 0.95 | 5.42 |  |
+    | B | cats | 46.5% | 43.5% | 6.7% | 0.95 | 0.15 | no point at <=5% clean false-cover; lowest shown |
+    | B | spiders | 8.0% | 8.3% | 13.3% | 0.95 | 0.15 | no point at <=5% clean false-cover; lowest shown |
+    | C | cats | 100.0% | 83.7% | 0.0% | 0.85 | 5.95 |  |
+    | C | spiders | 100.0% | 85.7% | 0.0% | 0.95 | 5.95 |  |
+    chosen: A - A chosen: best mean recall at <=5% clean false-cover; A, C tied within 0.005, the faster one won (A: recall 1.000, 5.42 s/screen, B: recall 0.273, 0.15 s/screen (over 5% false-cover), C: recall 1.000, 5.95 s/screen)
+    variants rows: 6 chosen: A
+ok    (3b) variants CLI public/dev (A1 real-photo set) cats,spiders (full)
+    | variant | concept | recall | precision | clean false-cover | t | s/screen | note |
+    | --- | --- | --- | --- | --- | --- | --- | --- |
+    | A | cats | 100.0% | 45.5% | 0.0% | 0.90 | 6.26 |  |
+    | A | spiders | 80.0% | 58.3% | 0.0% | 0.95 | 6.26 |  |
+    | B | cats | 72.7% | 42.1% | 35.0% | 0.95 | 0.17 | no point at <=5% clean false-cover; lowest shown |
+    | B | spiders | 0.0% | 0.0% | 5.0% | 0.95 | 0.17 |  |
+    | C | cats | 100.0% | 53.3% | 0.0% | 0.95 | 7.72 |  |
+    | C | spiders | 100.0% | 63.6% | 0.0% | 0.90 | 7.72 |  |
+    chosen: C - C chosen: best mean recall at <=5% clean false-cover (A: recall 0.900, 6.26 s/screen, B: recall 0.364, 0.17 s/screen (over 5% false-cover), C: recall 1.000, 7.72 s/screen)
+    variants rows: 6 chosen: C
+ok    (4) git: weights are ignored and no *.pt / *.ts file shows in status
+VERIFY 1.3.2: PASS
+exit 0

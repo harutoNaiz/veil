@@ -1,0 +1,17 @@
+=== PT-2.2 machine · 2026-10-02 17:29:58
+OK data\evidence\pt-2.2\normal\pt22-idle.tape-in.jsonl 7291 lines
+OK data\evidence\pt-2.2\normal\pt22-idle.tape-out.jsonl 10801 lines
+OK data\evidence\pt-2.2\slow\pt22-idle.tape-in.jsonl 7291 lines
+OK data\evidence\pt-2.2\slow\pt22-idle.tape-out.jsonl 10801 lines
+PASS  tape validate (0 errors)
+PASS  idle only check-ups 6 looks
+PASS  trigger looks within 200 ms (normal) 135/135 []
+PASS  trigger looks within 700 ms (slow) 135/135 []
+PASS  video <= 3 periodic/strip looks per second max 0
+PASS  slow: looks >= 500 ms apart
+PASS  slow: queue always 0
+PASS  slow: busy records == skipped > 0 1080/1080
+INFO  AC-2.2-05 7.6% analysed (PASS)
+PASS  AC-2.2-06 >= 95% within 200 ms 96.7%
+PT 2.2: PASS (machine)
+exit 0

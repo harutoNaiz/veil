@@ -1,0 +1,7 @@
+=== 2.3.1 verify · 2026-10-02 17:24:25
+All checks passed!
+2 files already formatted
+...........                                                              [100%]
+11 passed in 1.65s
+VERIFY 2.3.1: PASS
+exit 0

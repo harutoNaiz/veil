@@ -1,0 +1,19 @@
+=== 3.2.3 verify · 2026-10-05 09:18:11
+All checks passed!
+ok    1 ruff check
+4 files already formatted
+ok    2 ruff format --check
+...                                                                      [100%]
+3 passed in 1.70s
+ok    3 pytest
+budget fixture: 28.6 ms pass=True
+ok    4 budget --fixture
+manifests written to C:\Users\Tushar\AppData\Local\Temp\veil-3.2.3
+ok    5 manifests --fixture
+manifests check: ok
+ok    6 manifests --check
+report written to D:\iqoo finale\veil\docs\reports\ch3-profile.md
+ok    7 report
+ok    8 report has Source
+VERIFY 3.2.3: PASS
+exit 0

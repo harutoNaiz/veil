@@ -1,0 +1,7 @@
+=== 6.3.3 verify · 2026-10-05 17:55:49
+ok    (1) ruff
+ok    (2) pytest
+    using report: D:\iqoo finale\veil\workshop\demo\tests\fixture_final.md
+ok    (3) trace_claims
+VERIFY 6.3.3: PASS
+exit 0

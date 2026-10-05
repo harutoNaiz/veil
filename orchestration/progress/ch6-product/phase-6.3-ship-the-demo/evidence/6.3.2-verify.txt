@@ -1,0 +1,7 @@
+=== 6.3.2 verify · 2026-10-05 17:56:55
+ok    (1) ruff
+ok    (2) pytest
+ok    (3) final_report.ps1 (generate + lint)
+ok    (4) content
+VERIFY 6.3.2: PASS
+exit 0

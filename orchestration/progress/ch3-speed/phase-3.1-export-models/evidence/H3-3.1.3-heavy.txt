@@ -1,0 +1,26 @@
+﻿=== H3 3.1.3 -Heavy · 2026-10-02 17:58:44
+ok    (1) ruff check
+ok    (2) pytest: decode, agreement, AUC, pad/truncate
+ok    (3) export NudeNet
+ok    (4) export toxicity
+ok    (5) NudeNet parity (harmless images)
+
+=== H3 re-run after session restart · 2026-10-02 18:10:02
+ok    (1) ruff check
+ok    (2) pytest: decode, agreement, AUC, pad/truncate
+ok    (3) export NudeNet
+ok    (4) export toxicity
+ok    (5) NudeNet parity (harmless images)
+
+=== H3 re-run #2 · 2026-10-02 18:21:06
+ok    (1) ruff check
+ok    (2) pytest: decode, agreement, AUC, pad/truncate
+ok    (3) export NudeNet
+ok    (4) export toxicity
+ok    (5) NudeNet parity (harmless images)
+ok    (6) toxicity parity
+ok    (7) parity.json pass
+FAIL  (8) shapes
+ok    (9) checksums re-check
+VERIFY 3.1.3: FAIL
+exit 1 · 18:31:35

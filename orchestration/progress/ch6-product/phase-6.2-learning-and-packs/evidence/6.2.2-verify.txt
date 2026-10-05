@@ -1,0 +1,6 @@
+=== 6.2.2 verify · 2026-10-05 09:50:27
+ok    (1) ruff
+ok    (2) pytest
+ok    (3) live server + client
+VERIFY 6.2.2: PASS
+exit 0

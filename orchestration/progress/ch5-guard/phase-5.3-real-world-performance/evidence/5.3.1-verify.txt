@@ -1,0 +1,14 @@
+=== 5.3.1 verify · 2026-10-05 17:56:36
+All checks passed!
+8 files already formatted
+ok    0 ruff
+.....                                                                    [100%]
+5 passed in 0.20s
+ok    1 pytest
+ok    2 regenerate fixtures
+P95 213 n=120 slowest=draw
+ok    3 CLI P95
+NO DEVICE
+ok    4 capture no device exits 2
+VERIFY 5.3.1: PASS
+exit 0

@@ -1,0 +1,12 @@
+﻿== uv sync --group ml 08:19:12
+powershell : Resolved 132 packages in 2ms
+At C:\Users\Tushar\AppData\Local\Temp\claude\D--iqoo-finale\d02cdfe4-2925-41dc-8f31-a2557f5c2be2\scratchpad\prestep13.p
+s1:5 char:1
++ powershell -NoProfile -ExecutionPolicy Bypass -File $WE uv sync --gro ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Resolved 132 packages in 2ms:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Checked 113 packages in 12ms
+exit 0
+== siglip2 08:20:39

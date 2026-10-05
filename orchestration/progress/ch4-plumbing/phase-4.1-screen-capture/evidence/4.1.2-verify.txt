@@ -1,0 +1,5 @@
+=== 4.1.2 verify · 2026-10-05 09:48:38
+ok    (1) ktlint capture/source
+ok    (2) unit tests capture.source
+VERIFY 4.1.2: PASS
+exit 0

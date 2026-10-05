@@ -1,0 +1,5 @@
+=== 6.1.2 verify · 2026-10-05 09:39:32
+ok    (1) flutter analyze
+ok    (2) flutter test
+VERIFY 6.1.2: PASS
+exit 0

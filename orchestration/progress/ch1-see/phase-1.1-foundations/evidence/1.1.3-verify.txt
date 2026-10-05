@@ -1,0 +1,55 @@
+﻿=== ROW 1 · 2026-10-02 07:37:26 · 20s · exit 0
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:packageDebug UP-TO-DATE
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :app:assembleDebug UP-TO-DATE
+
+BUILD SUCCESSFUL in 18s
+74 actionable tasks: 74 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html
+apk: True
+
+=== ROW 2 · 2026-10-02 07:37:29 · 2s · exit 0
+..................................................                       [100%]
+50 passed in 0.77s
+
+=== ROW 3 · 2026-10-02 07:37:31 · 2s · exit 0
+
+=== ROW 4a · 2026-10-02 07:37:32 · 0s · exit 0
+All checks passed!
+
+=== ROW 4b · 2026-10-02 07:37:32 · 0s · exit 0
+17 files already formatted
+
+=== ROW 5 · 2026-10-02 07:37:33 · 1s · exit 3
+no adb device (connect the phone: HC-002)
+
+=== ROW 6 · 2026-10-02 07:37:33 · 1s · exit 0
+| Chip | SM8850 (QTI), platform canoe, hardware qcom; 8 Elite Gen 5 family: YES |
+| OS skin | OriginOS 6.0 |
+  "osSkinName": "OriginOS",
+
+=== ROW 7 · 2026-10-02 07:37:48 · 14s · exit 2
+[PASS] toolchain      BOOTSTRAP OK
+[PASS] python-tests   pytest workshop: 54 passed in 0.85s
+[PASS] contracts      pytest contracts: 430 passed in 2.26s
+[PASS] build-guard    present, build skipped: app-debug.apk 4.1 MB, testfeed-debug.apk 2.7 MB
+[PASS] build-console  present, build skipped: console app-debug.apk 150.5 MB
+[SKIP] adb            no adb device (connect the phone: HC-002)
+[SKIP] scrcpy         adb not PASS (no adb device (connect the phone: HC-002))
+[SKIP] guard-app      adb not PASS (no adb device (connect the phone: HC-002))
+[SKIP] console-app    adb not PASS (no adb device (connect the phone: HC-002))
+[SKIP] testfeed       adb not PASS (no adb device (connect the phone: HC-002))
+[SKIP] aihub-devices  AI Hub not configured (HC-003)
+[SKIP] aihub-profile  AI Hub not configured (HC-003)
+[PASS] huggingface    anonymous download of google/siglip2-base-patch16-224/config.json ok (253 bytes); token: not configured (optional)
+RESULT: 6 PASS, 0 FAIL, 7 SKIP
+
+=== ROW 8 · 2026-10-02 07:37:48 · 0s · exit 2
+2
+

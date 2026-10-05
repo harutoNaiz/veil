@@ -1,0 +1,19 @@
+=== 5.3.2 verify · 2026-10-05 17:56:43
+.....                                                                    [100%]
+5 passed in 0.05s
+ok    1 pytest
+PASS
+ok    2 section PASS
+ok    2b status PASS
+FAIL
+ok    3 section fail dir
+ok    3b status FAIL
+NO DEVICE
+ok    4 sample no device
+NO DEVICE
+ok    5 kill no device
+All checks passed!
+7 files already formatted
+ok    6 ruff
+VERIFY 5.3.2: PASS
+exit 0

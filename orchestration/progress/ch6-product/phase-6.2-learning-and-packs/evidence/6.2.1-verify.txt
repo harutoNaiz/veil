@@ -1,0 +1,10 @@
+=== 6.2.1 verify · 2026-10-05 18:47:37
+ok    (1) ruff
+ok    (2) pytest
+    fox scenario: card=loose-no-fox-butNot fox[0]=leave repost=leave ok=True
+    wrote guard\brain\src\test\resources\corrections\fox.json (77054 bytes)
+ok    (3) fox scenario (3 = skipped, SigLIP2 cache absent)
+ok    (4) gradle brain + teacher
+ok    (5) no network import in learn/ or CorrectionStore
+VERIFY 6.2.1: PASS
+exit 0

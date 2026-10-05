@@ -1,0 +1,37 @@
+﻿powershell : [transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 
+and 31999), got 49406. This may result in unexpected behavior.
+At line:1 char:381
++ ... 0=Get-Date; powershell -NoProfile -ExecutionPolicy Bypass -File tools ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([transformers] ...ected behavior.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), 
+got 49407. This may result in unexpected behavior.
+Error while downloading from https://huggingface.co/google/siglip2-base-patch16-224/resolve/75de2d55ec2d0b4efc50b3e9ad7
+0dba96a7b2fa2/model.safetensors: The read operation timed out
+Trying to resume download...
+D:\iqoo finale\veil\.venv\Lib\site-packages\huggingface_hub\file_download.py:149: UserWarning: `huggingface_hub` 
+cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in 
+D:\veil-toolchain\cache\huggingface\hub\models--google--siglip2-base-patch16-224. Caching files will still work but in 
+a degraded version that might require more space on your disk. This warning can be disabled by setting the 
+`HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see 
+https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
+To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In 
+order to activate developer mode, see this article: 
+https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
+  warnings.warn(message)
+
+Loading weights:   0%|          | 0/408 [00:00<?, ?it/s]
+Loading weights:   1%|▏         | 6/408 [00:00<00:07, 57.28it/s]
+Loading weights:   5%|▌         | 22/408 [00:00<00:03, 112.33it/s]
+Loading weights:   8%|▊         | 34/408 [00:00<00:04, 85.67it/s] 
+Loading weights:  11%|█         | 44/408 [00:00<00:04, 82.62it/s]
+Loading weights:  13%|█▎        | 55/408 [00:00<00:04, 86.95it/s]
+Loading weights:  17%|█▋        | 70/408 [00:00<00:03, 101.24it/s]
+Loading weights:  23%|██▎       | 92/408 [00:00<00:02, 131.98it/s]
+Loading weights:  26%|██▌       | 106/408 [00:01<00:02, 119.01it/s]
+Loading weights: 100%|██████████| 408/408 [00:01<00:00, 378.31it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits 
+and faster downloads.
+siglip2 ok

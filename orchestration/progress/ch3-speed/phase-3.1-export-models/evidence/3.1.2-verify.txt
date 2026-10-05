@@ -1,0 +1,5 @@
+=== 3.1.2 verify · 2026-10-02 17:34:19
+ok    (1) ruff check + format check
+ok    (2) pytest test_yoloe.py (numpy NMS/regions, concept score, proposal_pe)
+VERIFY 3.1.2: PASS
+exit 0

@@ -1,0 +1,1 @@
+﻿HKCU:\Software\Python\Astral exists: False

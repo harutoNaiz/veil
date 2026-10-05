@@ -1,0 +1,14 @@
+=== 2.1.1 verify · 2026-10-02 14:49:20
+ok    (1) ruff check + format check
+ok    (2) pytest workshop/recordings
+ok    (3) generate 20 s session (CLI)
+ok    (4) every events line validates as UiEvent
+    360,800,600
+ok    (5) working copy 360x800, 600 frames (ffprobe)
+    SYNC synth-known-scroll: FAIL max=100
+ok    (6) sync check PASS at offset 0, FAIL at 100 ms
+ok    (7) record.py --dry-run prints screenrecord
+    AC-2.1-01: FAIL total=20s slowScroll=2 fling=2 reelsSwipe=4 exploreGrid=2 videoSceneCut=2 appSwitch=2 lockUnlock=2 AC-2.1-02: FAIL logged=0
+ok    (8) index reports synthetic situations
+VERIFY 2.1.1: PASS
+exit 0

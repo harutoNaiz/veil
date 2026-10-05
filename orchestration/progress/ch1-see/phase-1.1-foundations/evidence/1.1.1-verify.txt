@@ -1,0 +1,229 @@
+﻿=== ROW 1 Â· 2026-10-02 07:11:09 Â· 9s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\bootstrap.ps1 -CheckOnly
+Toolchain: D:\veil-toolchain
+
+component   | expected                           | found                                                        | status
+uv          | 0.12.21 under toolchain            | 0.12.21 @ D:\veil-toolchain\uv\uv.exe                        | OK
+java        | "17.0.20.1" under toolchain        | 17.0.20.1 @ D:\veil-toolchain\jdk17\bin\java.exe             | OK
+gradle      | Gradle 9.3.1                       | Gradle 9.3.1                                                 | OK
+android-sdk | platforms;android-36, build-tools;36.0.0, ndk;28.2.13676358, platform-tools | platforms;android-36, build-tools;36.0.0, ndk;28.2.13676358, platform-tools | OK
+adb         | Android Debug Bridge under toolchain | Android Debug Bridge 1.0.41 @ D:\veil-toolchain\android-sdk\platform-tools\adb.exe | OK
+flutter     | frameworkVersion 3.47.6            | 3.47.6                                                       | OK
+scrcpy      | scrcpy 4.1                         | scrcpy 4.1 <https://github.com/Genymobile/scrcpy>            | OK
+ffmpeg      | 9.0.2                              | ffmpeg version 9.0.2-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers | OK
+ktlint      | 1.8.0                              | ktlint version 1.8.0                                         | OK
+python      | 3.11.16 under toolchain\python     | D:\veil-toolchain\python\cpython-3.11.16-windows-x86_64-none\python.exe | OK
+repo-venv   | Python 3.11.16                     | Python 3.11.16                                               | OK
+BOOTSTRAP OK
+
+=== ROW 2 Â· 2026-10-02 07:11:26 Â· 17s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\bootstrap.ps1
+android-cmdline-tools 23.0: already installed
+flutter 3.47.6: already installed
+scrcpy 4.1: already installed
+ffmpeg 9.0.2: already installed
+ktlint 1.8.0: already installed
+Android SDK: accepting licences (see bootstrap.log)
+Android SDK: installing platform-tools, platforms;android-36, build-tools;36.0.0, ndk;28.2.13676358
+Python: installing 3.11.16 via uv
+Flutter: first run (Dart SDK) and precache for Android
+Repo: uv sync --locked
+Repo: installing the pre-commit hook
+
+component   | expected                           | found                                                        | status
+uv          | 0.12.21 under toolchain            | 0.12.21 @ D:\veil-toolchain\uv\uv.exe                        | OK
+java        | "17.0.20.1" under toolchain        | 17.0.20.1 @ D:\veil-toolchain\jdk17\bin\java.exe             | OK
+gradle      | Gradle 9.3.1                       | Gradle 9.3.1                                                 | OK
+android-sdk | platforms;android-36, build-tools;36.0.0, ndk;28.2.13676358, platform-tools | platforms;android-36, build-tools;36.0.0, ndk;28.2.13676358, platform-tools | OK
+adb         | Android Debug Bridge under toolchain | Android Debug Bridge 1.0.41 @ D:\veil-toolchain\android-sdk\platform-tools\adb.exe | OK
+flutter     | frameworkVersion 3.47.6            | 3.47.6                                                       | OK
+scrcpy      | scrcpy 4.1                         | scrcpy 4.1 <https://github.com/Genymobile/scrcpy>            | OK
+ffmpeg      | 9.0.2                              | ffmpeg version 9.0.2-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers | OK
+ktlint      | 1.8.0                              | ktlint version 1.8.0                                         | OK
+python      | 3.11.16 under toolchain\python     | D:\veil-toolchain\python\cpython-3.11.16-windows-x86_64-none\python.exe | OK
+repo-venv   | Python 3.11.16                     | Python 3.11.16                                               | OK
+BOOTSTRAP OK
+
+=== ROW 3a Â· 2026-10-02 07:11:27 Â· 1s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv lock --locked
+Resolved 132 packages in 1ms
+
+=== ROW 3b Â· 2026-10-02 07:11:27 Â· 1s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv sync --locked
+Resolved 132 packages in 1ms
+Checked 81 packages in 6ms
+
+=== ROW 4 Â· 2026-10-02 07:11:28 Â· 1s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked python -m workshop.hello
+Python 3.11.16
+numpy==2.4.6
+opencv-python==4.14.0.94
+pillow==12.3.0
+pydantic==2.13.5
+jsonschema==4.26.0
+referencing==0.37.0
+flask==3.1.3
+onnx==1.23.1
+onnxruntime==1.30.0
+huggingface_hub==2.1.1
+qai-hub==0.56.0
+ml group: not installed (installed from Phase 1.3)
+Veil workshop OK
+
+=== ROW 5 Â· 2026-10-02 07:11:31 Â· 2s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked pytest workshop -q
+....                                                                     [100%]
+4 passed in 0.83s
+
+=== ROW 11 Â· 2026-10-02 07:11:31 Â· 0s Â· exit 0
+CMD: git check-ignore -v data/x.png
+.gitignore:2:/data/*	data/x.png
+
+=== ROW 12 Â· 2026-10-02 07:11:31 Â· 0s Â· exit 1
+CMD: git status --short --untracked-files=all | Select-String -Pattern '/build/','\.venv/','\.dart_tool/','\.gradle/','local\.properties'; "matches: $((git status --short --untracked-files=all | Select-String -Pattern '/build/','\.venv/','\.dart_tool/','\.gradle/','local\.properties').Count)"
+matches: : The term 'matches:' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:135
++ ... nv/','\.dart_tool/','\.gradle/','local\.properties'; matches: $((git  ...
++                                                          ~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (matches::String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+
+=== ROW 13 Â· 2026-10-02 07:11:31 Â· 0s Â· exit 0
+CMD: (Select-String -Path docs\decisions.md -Pattern '^## D-00[123] ') | ForEach-Object { $_.Line }
+## D-001 · Hackathon build, licences reviewed before any commercial release
+## D-002 · Portable, project-local toolchain
+## D-003 · Contract v1.0 covers 16 types
+
+=== ROW 14 Â· 2026-10-02 07:11:32 Â· 0s Â· exit 1
+CMD: (Select-String -Path README.md -Pattern '^## ') | ForEach-Object { $_.Line }; "count: $((Select-String -Path README.md -Pattern '^## ').Count)"
+## What is in this repository
+## Before you start
+## One-command setup
+## Every new terminal
+## Workshop (Python)
+## Contracts
+## Guard (Android app)
+## Test Feed app
+## Console (Flutter app)
+## Connect the phone
+## Device profile
+## Bench check
+## Accounts: Qualcomm AI Hub and Hugging Face
+## Formatting and the pre-commit hook
+## Low-memory laptops
+## Private data
+## Troubleshooting
+count: : The term 'count:' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:79
++ ... ADME.md -Pattern '^## ') | ForEach-Object { $_.Line }; count: $((Sele ...
++                                                            ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (count::String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+
+=== ROW 16 Â· 2026-10-02 07:11:32 Â· 0s Â· exit 1
+CMD: $p=[Environment]::GetEnvironmentVariable('Path','User'); $b=(Get-Content 'D:\iqoo finale\progress\ch1-see\phase-1.1-foundations\evidence\userpath-before.txt' -Raw).Trim(); "PATH same: $($p.Trim() -eq $b)"; "JAVA_HOME(User)=" + [Environment]::GetEnvironmentVariable('JAVA_HOME','User')
+PATH : The term 'PATH' is not recognized as the name of a cmdlet, function, script file, or operable program. Check 
+the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:173
++ ... -foundations\evidence\userpath-before.txt' -Raw).Trim(); PATH same: $ ...
++                                                              ~~~~
+    + CategoryInfo          : ObjectNotFound: (PATH:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+User : The term 'User' is not recognized as the name of a cmdlet, function, script file, or operable program. Check 
+the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:215
++ ...  -Raw).Trim(); PATH same: $($p.Trim() -eq $b); JAVA_HOME(User)= + [En ...
++                                                              ~~~~
+    + CategoryInfo          : ObjectNotFound: (User:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+
+=== ROW 17 Â· 2026-10-02 07:11:32 Â· 0s Â· exit 0
+CMD: Test-Path HKCU:\Software\Python\Astral
+False
+
+=== ROW 18 Â· 2026-10-02 07:11:33 Â· 0s Â· exit 0
+CMD: git -C . rev-parse --is-inside-work-tree; Test-Path .git\hooks\pre-commit
+true
+True
+
+=== ROWS 12/13/14/16 (direct) · 2026-10-02 07:11:49
+ROW 12 forbidden-path matches: 0
+ROW 13:
+## D-001 · Hackathon build, licences reviewed before any commercial release
+## D-002 · Portable, project-local toolchain
+## D-003 · Contract v1.0 covers 16 types
+ROW 14 count: 17
+## What is in this repository
+## Before you start
+## One-command setup
+## Every new terminal
+## Workshop (Python)
+## Contracts
+## Guard (Android app)
+## Test Feed app
+## Console (Flutter app)
+## Connect the phone
+## Device profile
+## Bench check
+## Accounts: Qualcomm AI Hub and Hugging Face
+## Formatting and the pre-commit hook
+## Low-memory laptops
+## Private data
+## Troubleshooting
+ROW 16 user PATH unchanged: True
+ROW 16 JAVA_HOME(User)=
+C:\Program Files\Eclipse Adoptium\jdk-11.0.31.11-hotspot
+
+=== ROW 6 Â· 2026-10-02 07:12:21 Â· 20s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 --cd guard .\gradlew.bat --no-daemon :app:assembleDebug :app:testDebugUnitTest; Test-Path guard\app\build\outputs\apk\debug\app-debug.apk
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :app:assembleDebug UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest UP-TO-DATE
+
+BUILD SUCCESSFUL in 18s
+40 actionable tasks: 40 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html
+True
+
+=== ROW 7 Â· 2026-10-02 07:12:26 Â· 5s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 --cd console flutter test
+00:00 +0: loading D:/iqoo finale/veil/console/test/widget_test.dart
+00:00 +0: shows the Veil Console title
+00:00 +1: All tests passed!
+
+=== ROW 8 Â· 2026-10-02 07:12:59 Â· 32s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 --cd console flutter build apk --debug; Test-Path console\build\app\outputs\flutter-apk\app-debug.apk
+Running Gradle task 'assembleDebug'...                          
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+Running Gradle task 'assembleDebug'...                             28.2s
+√ Built build\app\outputs\flutter-apk\app-debug.apk
+True
+
+=== ROW 9 Â· 2026-10-02 07:13:11 Â· 13s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 --cd console flutter analyze
+Analyzing console...                                            
+No issues found! (ran in 9.8s)
+
+=== ROW 10 Â· 2026-10-02 07:13:15 Â· 4s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 uv run --locked pre-commit run --all-files
+ruff format (Python).....................................................Passed
+ruff check --fix (Python)................................................Passed
+ktlint --format (Kotlin, guard/).........................................Passed
+dart format (Flutter, console/)..........................................Passed
+
+=== ROW 15 Â· 2026-10-02 07:13:18 Â· 2s Â· exit 0
+CMD: powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 java -jar D:\veil-toolchain\ktlint\ktlint.jar "guard/**/*.kt" "guard/**/*.kts" "!guard/**/build/**"
+

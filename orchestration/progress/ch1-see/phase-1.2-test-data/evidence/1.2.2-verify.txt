@@ -1,0 +1,13 @@
+=== 1.2.2 verify · 2026-10-02 08:17:59
+Veil env: toolchain=D:\veil-toolchain
+............                                                             [100%]
+12 passed in 0.53s
+PASS 1 pytest workshop/labels
+LS CONFIG OK
+PASS 2 ls_config.xml matches constants
+PASS 3 docs/labelling-rules.md
+PASS 4 tools/label-studio.ps1 parses
+All checks passed!
+PASS 5 ruff
+VERIFY 1.2.2: PASS
+exit 0

@@ -1,0 +1,26 @@
+=== 2.3.3 verify · 2026-10-02 18:13:16
+ok    (1) ruff check + format check
+ok    (2) pytest test_motion + test_score_motion
+ok    (3) ensure_test_set
+    MODE light: {"appearances": 162, "ttc_median_ms": 366, "ttc_p95_ms": 1000000000, "coverage_pct": 76.42, "flicker": 0, "wrong_covers": 3, "wrong_per_min": 8.736, "clean_min": 0.343, "glue_median_px": 2, "analysed_pct": 12.61, "recover_max_ms": 100, "frames": 1800}
+    MODE balanced: {"appearances": 162, "ttc_median_ms": 233, "ttc_p95_ms": 1000000000, "coverage_pct": 82.76, "flicker": 0, "wrong_covers": 3, "wrong_per_min": 8.736, "clean_min": 0.343, "glue_median_px": 2, "analysed_pct": 12.67, "recover_max_ms": 100, "frames": 1800}
+    MODE strict: {"appearances": 162, "ttc_median_ms": 100, "ttc_p95_ms": 1000000000, "coverage_pct": 87.17, "flicker": 0, "wrong_covers": 7, "wrong_per_min": 20.384, "clean_min": 0.343, "glue_median_px": 2, "analysed_pct": 15.44, "recover_max_ms": 100, "frames": 1800}
+    AC-2.3-01: FAIL p95=1000000000ms
+    AC-2.3-02: PASS flicker=synth-test-3:0,synth-test-4:0
+    AC-2.3-03: FAIL 8.736/min
+    AC-2.3-04: FAIL 82.76%
+    AC-2.3-05: PASS 2px
+    GATE ch2 (synthetic): FAIL
+ok    (4) motion eval prints AC lines and the gate line
+    gate FAIL: running the PLAN fallback once (report-only)
+    MODE balanced: {"appearances": 162, "ttc_median_ms": 233, "ttc_p95_ms": 1000000000, "coverage_pct": 83.13, "flicker": 0, "wrong_covers": 7, "wrong_per_min": 20.384, "clean_min": 0.343, "glue_median_px": 2, "analysed_pct": 16.06, "recover_max_ms": 100, "frames": 1800}
+    AC-2.3-01: FAIL p95=1000000000ms
+    AC-2.3-02: PASS flicker=synth-test-3:0,synth-test-4:0
+    AC-2.3-03: FAIL 20.384/min
+    AC-2.3-04: FAIL 83.13%
+    AC-2.3-05: PASS 2px
+    GATE ch2 (synthetic, fallback): FAIL
+ok    (5) torture eval + report section
+ok    (6) goldens check (>= 3 tapes)
+VERIFY 2.3.3: PASS
+exit 0

@@ -1,0 +1,708 @@
+# Veil Orchestrator
+
+This file is two things at once:
+
+1. **The runbook.** It tells the orchestrator agent exactly how to turn `PLAN.md` into working, verified software, one phase at a time.
+2. **The tracker.** Sections 1 and 2 always say where the project is right now. The orchestrator updates them after every step, so any new session can pick up where the last one stopped.
+
+The orchestrator does not write product code. It plans with an **Opus 5.5 Refiner**, builds with **Sonnet 5.5 Builders**, checks everything itself, asks you only for what needs a human, and writes down what happened under `progress/`.
+
+Words used here: **chapter → phase → sub-phase** (you called these "pages" and "sub-pages"). IDs come from `PLAN.md`: Phase `1.1`, sub-phase `1.1.2`.
+
+---
+
+## Start here: the only thing you type
+
+Open Claude Code in `D:\iqoo finale` and paste:
+
+```
+You are the Veil orchestrator. Read "D:\iqoo finale\ORCHESTRATOR.md" and follow it exactly. Resume from the YOU ARE HERE block and keep going until nothing can move without me.
+```
+
+Before the very first run, do the setup items in `progress/HUMAN_CHECKS.md` (HC-001 to HC-005). Between runs, check that file: it lists everything waiting on you, with exact steps and time estimates.
+
+---
+
+## 0. FAST TRACK: hard rules (they override anything below that conflicts)
+
+Added 2026-10-02 after Phase 1.1 took about 4 hours. **Hard rule from the user: each phase takes 20-30 minutes, wall clock, from its Refiner starting to the phase closing.**
+
+| # | Rule |
+| --- | --- |
+| F1 | **Time box per phase: 20-30 min.** Refine ≤ 8 min · build ≤ 15 min (all sub-phases in parallel) · verify and record ≤ 5 min. If a phase passes 30 min, log `OVERRUN <reason>`, cut scope (defer what's left, see F6) and close it. Never keep polishing. |
+| F2 | **Pipeline.** In the same message that spawns phase N's Builders, spawn the Refiner for the next phase in the section 7 order (the phase that will be startable once N is built). At most one phase BUILDING plus one REFINING at a time. When N closes, the next spec is already waiting. |
+| F3 | **Lean spec: ≤ 250 lines.** For each sub-phase: goal, owned paths, the files and key interfaces (signatures only), short steps, the verify script and its expected output, and any human needs. A compact AC table. **No exhaustive version research:** reuse the pinned toolchain and `uv.lock`, and let Builders pin new deps with `uv add`. Search the web only for a genuinely unknown API. Design all three sub-phases to run **in parallel**: define shared interfaces and stubs in the spec, so no sub-phase waits for another (one-file stubs are fine). |
+| F4 | **Lean build.** Build the minimum that meets PLAN's "Done when" and the AC rows. No extra features, no extra tests beyond what the verify script needs (a handful of meaningful tests, not hundreds). Each Builder writes **one verify script**, `veil/tools/verify/<x.y.z>.ps1`. It runs all its checks and ends with `VERIFY <x.y.z>: PASS` or `FAIL`. Builder reply ≤ 10 lines; record ≤ 30 lines. |
+| F5 | **Lean verify.** The orchestrator runs each sub-phase's verify script once (still an independent re-run), plus a `git status` boundary check. Then **one** fix round at most (prompt F). If it still fails, mark it BLOCKED with the evidence, raise a human check, and move on. No Opus repair unless the whole phase is blocked. |
+| F6 | **Deferred heavy checks.** Anything that takes more than 5 min or is heavy goes into `progress/DEFERRED.md` and never runs inline. Examples: clean-room re-installs, soak tests, battery runs, long recordings, full re-downloads, big model downloads beyond what the phase needs. Deferred checks run as one batch at a chapter's end or while you're away. The AC row is marked `DEFERRED` and the phase still closes. |
+| F7 | **Phone and human checks never block the flow.** Mark them PENDING-HUMAN, batch them into `HUMAN_CHECKS.md` (one short item per phase), and keep going. |
+| F8 | **Lean records.** Sub-phase record = the Builder's ≤ 30 lines + the orchestrator's 1-3 verification lines. `PHASE.md` ≤ 40 lines. Update sections 1-2 only at sub-phase and phase transitions, with one LOG line per transition. Write `veil/docs/acceptance/<x.y>.md` only when the phase becomes ACCEPTED. |
+| F9 | **One commit per sub-phase** (user's rule, 2026-10-02), right after its verify script passes. Stage only that sub-phase's owned paths: `git add <owned paths>`, message `[x.y.z] <name>`. Records and state in `progress/` are not in git. |
+| F10 | **Orchestrator context.** Never read a whole spec or long logs: read the spec's summary, its waves and its verify lines. Run verification in one tool call per sub-phase. |
+| F11 | **Models and effort** (user's rule, 2026-10-02 18:40, for token economy and speed). Planning only: Opus at **medium** effort (`subagent_type: "veil-planner-medium"`) for routine phases, or **high** effort (`"veil-planner-high"`) for hard ones (bit-exact ports, Android platform edge cases, repairs). All coding: Sonnet 5.5 at **medium** effort (`"veil-builder"`). Agent definitions live in `D:\iqoo finale\.claude\agents\`. Specs ≤ 150 lines. The model-line check still applies. |
+| F12 | **Throughput.** Up to two phases may build at once if at most one of them runs Gradle or Flutter builds and no heavy model job is running. Refiners (light) may run alongside anything. |
+
+---
+
+## 1. YOU ARE HERE
+
+<!-- STATE:BEGIN (orchestrator: rewrite this block after every step) -->
+| Field | Value |
+| --- | --- |
+| STANDING ORDER (user) | Keep working every session until the WEEKLY usage limit (it resets Tuesday 2026-10-06 morning). When close to it: commit everything (per sub-phase), update this block, then shut down the laptop (`shutdown /s /t 60`) |
+| Active phases | 5.2-W NOT BUILT: its 3 Builders were cut off by the session limit at about 22:15 before writing code (only MODEL-line records exist). Restart them FRESH from SPEC-W.md · next: 3.3 (spec approved) · 3.1 needs H4 · D-4.2-pt |
+| Running agents | none |
+| Waiting on you | progress/HUMAN_CHECKS.md: Sitting 1 (Phase 1.1) and HC-002 to HC-026 (HC-016 = Chapter 2 gate decision). HC-002 (phone) and HC-003 (AI Hub token) unblock the most; HC-026 (live Guard) unblocks HC-020/021/024/025 |
+| Deferred heavy checks | `progress/DEFERRED.md`: D-1.1-01, D-1.3-07, D-6.1-apk, D-4.2-pt, D-5.3-perfetto, D-6.3-*, D-5.2W-* |
+| Phone at last boot | NOT connected |
+| Phases accepted | 0 of 18 · built (WAITING_HUMAN): 1.1-1.3, 2.1-2.3, 3.2, 4.1-4.3, 5.1, 5.2 (wiring in progress), 5.3, 6.1-6.3 · not built: 3.3; 3.1 needs H4 |
+| Next action | (1) Spawn veil-builder for 5.2-W.1, W.2, W.3 (prompts as in LOG 2026-10-05 19:10; SPEC-W.md §3; Gradle only via tools\gradle-locked.ps1). (2) Verify and commit each with `bash veil/tools/orchestrator/vc.sh`, then close 5.2. (3) 3.3 (3 Builders). (4) H4 = `tools\verify\pt-3.1.ps1` alone. (5) D-4.2-pt, then the DEFERRED items. Run `bash veil/tools/orchestrator/sync.sh` + commit + push after each batch |
+| Session notes | Agent types: veil-planner-medium/high (Opus), veil-builder (Sonnet, medium); definitions in .claude/agents (mirrored at veil/orchestration/claude-agents). Remote: private GitHub harutoNaiz/veil. User 2026-10-05 22:30: commit AND push everything so another agent can resume from a fresh clone; mirror via `veil/tools/orchestrator/sync.sh`. Commit per sub-phase via `bash veil/tools/orchestrator/vc.sh`. ALL Gradle via `tools\gradle-locked.ps1` (mutex Global\veil-gradle); never wait on java.exe (VS Code Java server + its Gradle daemon never exit); close VS Code Java import during builds |
+| Sessions run | 5 |
+| Last updated | 2026-10-05 22:45 |
+<!-- STATE:END -->
+
+## 2. Ledger
+
+<!-- LEDGER:BEGIN (orchestrator: update a row whenever a status changes) -->
+| Phase | Name | Status | .1 | .2 | .3 | Open HCs | Last commit |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1.1 | Foundations | WAITING_HUMAN | VERIFIED | VERIFIED | VERIFIED | 001-011 | 8003058 |
+| 1.2 | Test data (ground truth) | WAITING_HUMAN | VERIFIED | VERIFIED | VERIFIED | 012 | d6531ad |
+| 1.3 | The SEE prototype | WAITING_HUMAN | VERIFIED | VERIFIED | VERIFIED | 013 | bc3a1bd |
+| 2.1 | Recordings and replay | WAITING_HUMAN | VERIFIED | VERIFIED | VERIFIED | 014 | 4095bfb |
+| 2.2 | Deciding when to look (Gatekeeper) | WAITING_HUMAN | VERIFIED | VERIFIED | VERIFIED | 015 | d521a07 |
+| 2.3 | Steady covers (Follower and Painter) | WAITING_HUMAN (gate decision HC-016) | VERIFIED | VERIFIED | VERIFIED | 016 | c9bbc4a |
+| 3.1 | Export the models | VERIFYING (H4 = pt-3.1 pending) | VERIFIED | VERIFIED (text enc. = accepted deviation) | VERIFIED | – | 71d67c9 |
+| 3.2 | Profile on cloud phones | WAITING_HUMAN (live run HC-017) | VERIFIED | VERIFIED | VERIFIED | 017 | 5830edf |
+| 3.3 | Runtime on the real phone | SPEC APPROVED (Gradle queue) | TODO | TODO | TODO | – | – |
+| 4.1 | Screen capture | WAITING_HUMAN (phone, HC-020) | VERIFIED | VERIFIED | VERIFIED | 020 | 0f6ff20 |
+| 4.2 | Screen signals | BUILDING | TODO | TODO | TODO | – | – |
+| 4.3 | Drawing covers | REFINING | TODO | TODO | TODO | – | – |
+| 5.1 | Port the brain | WAITING_HUMAN (phone, HC-018) | VERIFIED | VERIFIED | VERIFIED | – | – |
+| 5.2 | Wire it together | SPEC APPROVED (after 4.1) | TODO | TODO | TODO | – | – |
+| 5.3 | Real-world performance | TODO | TODO | TODO | TODO | – | – |
+| 6.1 | The Console app (Flutter) | WAITING_HUMAN (real Guard + HC-019) | VERIFIED | VERIFIED | VERIFIED | – | – |
+| 6.2 | Learning and packs | BUILDING | QUEUED (Gradle) | VERIFIED | BUILDING | – | – |
+| 6.3 | Ship the demo | TODO | TODO | TODO | TODO | – | – |
+<!-- LEDGER:END -->
+
+Status values are defined in [section 6](#6-status-values).
+
+---
+
+## 3. The team
+
+| Role | Model | How it is started | How many | Writes | Never |
+| --- | --- | --- | --- | --- | --- |
+| **Orchestrator** | The session you start (Opus 5.5 recommended) | You paste the start prompt | 1 | Sections 1-2 of this file; everything in `progress/` except `SPEC.md` and the Builder sections of records; `veil/docs/acceptance/*.md`; git commits | Product code, tests or scripts (even a one-line fix goes back to a Builder); marking a human check passed; granting a waiver; editing `PLAN.md` |
+| **Refiner** | Opus 5.5: Agent tool, `subagent_type: "general-purpose"`, `model: "opus"` | By the orchestrator, once per phase | 1 per phase, plus at most 1 repair | That phase's `SPEC.md` only | Code |
+| **Builder** | Sonnet 5.5: Agent tool, `subagent_type: "general-purpose"`, `model: "sonnet"` | By the orchestrator, per sub-phase | 1 per sub-phase, up to 3 in parallel | Its owned paths in `veil/`, plus the Builder sections of its sub-phase record | Paths it does not own; git commits; spawning agents |
+| **Checker** | Sonnet 5.5, `model: "sonnet"` | Only when a check needs "someone who did not build it" | As needed | Evidence files only | Fixing anything |
+| **You** | Human | – | – | Answers in `progress/HUMAN_CHECKS.md` | – |
+
+### The model rule (hard rule)
+
+- Every agent prompt starts with: *"The first line of your final reply must be `MODEL: <your exact model id>`."*
+- Expected: the Refiner prints `claude-opus-5-5`. Builders and Checkers print `claude-sonnet-5-5`.
+- Builders also write that line as the very first line of their sub-phase record when they start, so a wrong model shows up early.
+- **Mismatch or missing line:**
+  1. Stop the agent (TaskStop).
+  2. Throw away its uncommitted changes in its owned paths.
+  3. Start it again with the same prompt and an explicit `model`.
+  4. If it mismatches a second time, log it, mark the sub-phase BLOCKED, and tell the user.
+- Every spawn and its model line go into `progress/LOG.md`.
+
+---
+
+## 4. Files and folders
+
+```
+D:\iqoo finale\
+  PLAN.md                 WHAT to build: chapters, phases, contracts, proof tests. Nobody edits it.
+  ORCHESTRATOR.md         HOW, plus WHERE WE ARE (this file). Orchestrator edits sections 1-2 only.
+  progress\
+    HUMAN_CHECKS.md       everything waiting on you
+    LOG.md                append-only event log
+    ch1-see\
+      phase-1.1-foundations\
+        SPEC.md                           the Refiner's exact build spec
+        1.1.1-repository-and-tools.md     one record per sub-phase (Builder + orchestrator)
+        1.1.2-shared-contracts-first-version.md
+        1.1.3-device-check-and-accounts.md
+        PHASE.md                          phase summary, acceptance results, proof test result
+        evidence\                         command outputs, reports, small screenshots
+  veil\                   THE PRODUCT REPOSITORY (git). Created by sub-phase 1.1.1, using PLAN.md's layout:
+                          contracts\  workshop\  guard\  console\  data\ (git-ignored)  docs\
+```
+
+**Folder names (fixed):**
+
+| Chapter folder | Phase folders |
+| --- | --- |
+| `ch1-see` | `phase-1.1-foundations`, `phase-1.2-test-data`, `phase-1.3-see-prototype` |
+| `ch2-motion` | `phase-2.1-recordings-and-replay`, `phase-2.2-gatekeeper`, `phase-2.3-steady-covers` |
+| `ch3-speed` | `phase-3.1-export-models`, `phase-3.2-cloud-profile`, `phase-3.3-runtime-on-phone` |
+| `ch4-plumbing` | `phase-4.1-screen-capture`, `phase-4.2-screen-signals`, `phase-4.3-drawing-covers` |
+| `ch5-guard` | `phase-5.1-port-the-brain`, `phase-5.2-wire-it-together`, `phase-5.3-real-world-performance` |
+| `ch6-product` | `phase-6.1-console-app`, `phase-6.2-learning-and-packs`, `phase-6.3-ship-the-demo` |
+
+Sub-phase record names follow the pattern `<id>-<heading in kebab-case>.md`, using the sub-phase heading from `PLAN.md` (for example `2.2.1-change-detector.md`).
+
+Large media (videos, frame dumps, battery traces) stay in `veil/data/evidence/<phase>/`, which git ignores. Records link to them.
+
+---
+
+## 5. The session loop
+
+The orchestrator runs these steps in order. **Checkpoint rule:** after any step that changes something, update section 1 (and section 2 if a status changed) *before* doing anything else. If the session dies at any moment, the next session resumes from section 1 and loses at most one step.
+
+### Step 0 · Boot
+
+1. Read this whole file.
+2. Read `progress/HUMAN_CHECKS.md` and the last 30 lines of `progress/LOG.md`.
+3. If `veil/` exists, run `git -C "D:/iqoo finale/veil" status --short` and `git -C "D:/iqoo finale/veil" log --oneline -5`.
+4. Run `adb devices` and note whether the iQOO is connected (PHONE checks need it). Write the result into section 1.
+5. Append `SESSION START` to the log and increase "Sessions run" by one.
+
+### Step 1 · Reconcile
+
+1. **Your answers.** For every human check you have changed (PASS, FAIL, DONE or WAIVED, with a note), apply it:
+   - update the affected record, `PHASE.md`, the ledger and the statuses;
+   - a FAIL counts as a failed check and goes into the fix loop (Step 5.6) for that item;
+   - move the answered item to the "Answered" part of `HUMAN_CHECKS.md`.
+2. **Work in flight.** If section 1 lists running agents, check whether they are still alive (ListAgents).
+   - If one is still running, wait for its notification.
+   - If one has gone (the last session ended):
+     - a sub-phase that was BUILDING gets a new Builder, using the *resume* version of prompt B;
+     - a phase that was REFINING without a finished `SPEC.md` gets a new Refiner.
+
+### Step 2 · Pick the work
+
+Apply [section 7](#7-choosing-the-next-phase). If nothing can move, go to Step 8.
+
+### Step 3 · Refine (once per phase)
+
+Skip this step if the phase already has a `SPEC.md` marked `Status: APPROVED`.
+
+1. Create the phase folder and its `evidence\` folder.
+2. Find the phase's line range in `PLAN.md` (grep `^## Phase x.y` and the next `^## ` or `^# `).
+3. Spawn the Refiner with **prompt R** ([section 11](#11-agent-prompts)). Set the phase to REFINING and record the agent ID in section 1.
+4. When it returns:
+   - check the model line;
+   - review `SPEC.md` against the checklist in [section 10.1](#101-specmd-the-refiners-output);
+   - if anything is missing, send it back with SendMessage, at most 2 rounds.
+5. If the spec needs something only a human can provide before building (for example a token or a phone tap), raise human checks now. Batch them into one sitting. Build whatever doesn't depend on them.
+6. Any "Proposed waivers" in the spec become human checks. The orchestrator never accepts a waiver itself.
+7. Write `Status: APPROVED (orchestrator, <date>)` in the spec header.
+
+### Step 4 · Build
+
+1. Take the wave plan from the spec. For the current wave, spawn one Builder per sub-phase (**prompt B**), all in a single message so they run in parallel.
+   - Only do this if their owned paths don't overlap and at most one of them uses the phone.
+   - If the spec breaks either rule, run them one at a time.
+2. Set the sub-phases to BUILDING and record the agent IDs in section 1.
+3. Wait for completion notifications; don't poll.
+4. As each Builder returns, run Step 5 for its sub-phase.
+5. The next wave starts only when every sub-phase in the current wave is VERIFIED, or is WAITING_HUMAN on something the next wave doesn't need.
+
+### Step 5 · Verify a sub-phase
+
+1. **Model line.** Check it is correct.
+2. **Boundaries.** Run `git status --short`; every changed path must be inside the Builder's owned paths. A change anywhere else is a failure.
+3. **Re-run the checks.** Run every command in the sub-phase's Verification table yourself. Save the command, time, exit code and the end of the output to `evidence/<x.y.z>-verify.txt`, and compare with the expected result.
+4. **"Done when".** Check that the sub-phase's "Done when" line in `PLAN.md` is really met, not just the spec's commands.
+5. **Pass.** Fill in "Independent verification" and "Outcome" in the record. Commit (format in [section 12](#12-ground-rules-for-all-agents)), set the sub-phase to VERIFIED, and checkpoint.
+6. **Fail: the fix loop.**
+   - a. Send the same Builder the failing checks with **prompt F** (SendMessage). Up to 2 rounds.
+   - b. If it still fails, spawn the Refiner for a repair with **prompt P**. It appends an amendment to the spec. Then run one more Builder round (a new Builder if the old one has gone).
+   - c. If it still fails, set the sub-phase to BLOCKED and raise a human check with the evidence and the options. Then go on to other work that is allowed to move.
+7. **SPEC_ISSUE.** If the Builder reports one, go straight to 6b.
+8. **NEEDS_HUMAN.** If the Builder reports this, verify everything that can be verified, raise human checks for the rest, and set the sub-phase to WAITING_HUMAN.
+
+### Step 6 · Verify the phase
+
+Start when all three sub-phases are VERIFIED or WAITING_HUMAN.
+
+1. **Acceptance criteria.** Go through every `AC-x.y-nn` row in the spec's acceptance plan.
+   - Run AUTO and PHONE checks yourself.
+   - CLEAN checks go to a Checker (**prompt C**).
+   - HUMAN checks become human checks.
+   - Record the measured value and the evidence path for each row.
+2. **Proof test.** Run its machine parts (the scripts named in the spec). Its human parts become human checks.
+3. **Batch the human work.** Put every human item for the phase into **one sitting** where possible: an ordered checklist, a time estimate and exact commands.
+4. **Write the records.**
+   - Write `PHASE.md` ([section 10.3](#103-phasemd)).
+   - Write `veil/docs/acceptance/<x.y>.md` in `PLAN.md`'s acceptance-record template, with the results so far.
+   - Commit them.
+
+### Step 7 · Close the phase
+
+| Situation | New status |
+| --- | --- |
+| Every criterion passes or is waived, the proof test passes, and every phase in "accept needs" ([section 7](#7-choosing-the-next-phase)) is ACCEPTED | **ACCEPTED** |
+| Machine work verified; only human checks open, or an upstream phase is not yet accepted | **WAITING_HUMAN** (counts as "built", so later phases may start) |
+| A criterion fails and the fix loop can't fix it | **BLOCKED**, plus a human check: "Apply `PLAN.md`'s *If rejected* / chapter fallback?", with evidence. Apply a fallback only after you answer PASS. Meanwhile, work on other phases. |
+
+Update the ledger, section 1 and the log. If later work ever breaks a guarantee of an ACCEPTED phase (`PLAN.md` acceptance rule 6), set that phase to REOPENED and re-run its affected checks.
+
+### Step 8 · Continue or stop
+
+Go back to Step 2. Stop the session only when:
+
+- nothing can move without you; or
+- a BLOCKED item needs your decision and nothing else can move.
+
+When stopping:
+
+1. Write "Next action" in section 1.
+2. Log `SESSION END`.
+3. Print the session report ([section 10.4](#104-session-report)).
+
+If the session is cut off (usage limit, closed terminal or laptop sleep), nothing extra is needed: the checkpoints already hold the state.
+
+---
+
+## 6. Status values
+
+| Level | Status | Meaning |
+| --- | --- | --- |
+| Phase | `TODO` | Not started |
+| Phase | `REFINING` | The Refiner is writing `SPEC.md` |
+| Phase | `BUILDING` | Builders are working on sub-phases |
+| Phase | `VERIFYING` | The orchestrator is running acceptance checks and the proof test |
+| Phase | `WAITING_HUMAN` | All machine work verified; human checks open (or an upstream phase not yet accepted) |
+| Phase | `BLOCKED` | Can't pass without a decision from you |
+| Phase | `ACCEPTED` | Every criterion and the proof test passed (or waived by you); upstream accepted |
+| Phase | `REOPENED` | Was accepted, but a guarantee was broken later; affected checks being re-run |
+| Sub-phase | `TODO` → `BUILDING` → `VERIFIED` / `WAITING_HUMAN` / `BLOCKED` | Same meanings, one level down |
+
+**"Built"** means WAITING_HUMAN or ACCEPTED. Later phases may *start* on built phases. They may only be *accepted* once their upstream phases are ACCEPTED (from `PLAN.md`: "Work may start earlier; sign-off may not").
+
+Only one phase may be REFINING, BUILDING or VERIFYING at a time. Phases that are WAITING_HUMAN or BLOCKED don't count towards that limit.
+
+---
+
+## 7. Choosing the next phase
+
+1. If a phase is REFINING, BUILDING or VERIFYING, keep working on it.
+2. Otherwise pick the **first** row in the table below whose status is TODO (or REOPENED) and whose "Can start when" condition holds.
+3. If no row qualifies, stop the session (Step 8).
+
+| Order | Phase | Can start when (built = WAITING_HUMAN or ACCEPTED) | Accept needs (`PLAN.md` entry conditions) | Runs on | Human load |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1.1 Foundations | Now | – | Laptop, phone, cloud | Light |
+| 2 | 1.2 Test data | 1.1 built | 1.1 | Laptop, phone | **Heavy** |
+| 3 | 4.1 Screen capture | 1.1 built | 1.1 | Phone | Medium |
+| 4 | 4.2 Screen signals | 1.1 built | 1.1 | Phone | Light |
+| 5 | **3.3.1 only** (runtime smoke test, early risk check) | 1.1 built and the phone connected | – (3.3 is accepted later as a whole) | Phone | None |
+| 6 | 2.1 Recordings and replay | 1.1 built (4.2 built preferred, for logged scroll) | 1.1 | Phone, laptop | **Heavy** |
+| 7 | 4.3 Drawing covers | 4.1 and 4.2 built | 4.1, 4.2 | Phone | Light |
+| 8 | 1.3 SEE prototype | 1.2 built (the dev labels exist) | 1.2 | Laptop | Light |
+| 9 | 3.1 Export the models | 1.3 built (model choice recorded) | 1.3 | Laptop | None |
+| 10 | 2.2 Gatekeeper | 2.1 and 1.3 built | 2.1, 1.3 | Laptop | Light |
+| 11 | 3.2 Cloud profile | 3.1 built | 3.1 | Cloud | None |
+| 12 | 2.3 Steady covers | 2.2 built | 2.2 | Laptop | Medium |
+| 13 | 3.3 Runtime on the phone (the rest) | 3.2 built | 3.2 | Phone | Light |
+| 14 | 6.1 Console app | 1.1 built (works against the fake Guard) | 1.1; rows marked "real Guard" need 5.2 | Phone | **Heavy** (3 new users) |
+| 15 | 5.1 Port the brain | 2.3 and 1.3 built | 2.3, 1.3 | Laptop, phone | None |
+| 16 | 5.2 Wire it together | 5.1, 3.3 and 4.3 built | 5.1, 3.3, 4.3 | Phone | Medium |
+| 17 | 5.3 Real-world performance | 5.2 built | 5.2 | Phone | Medium (long waits) |
+| 18 | 6.2 Learning and packs | 5.2 built and 6.1.1 verified | 5.2, 6.1.1 | Phone, laptop | Light |
+| 19 | 6.3 Ship the demo | 5.3, 6.1 and 6.2 built | 5.3, 6.1, 6.2 | Phone, laptop | **Heavy** |
+
+**Why this order:**
+
+- **Human-heavy phases go early.** 1.2 and 2.1 need hours of your time for screenshots, recordings and labels. Starting them early lets that time overlap with agent work on the phone plumbing.
+- **3.3.1 goes early.** "Does ONNX Runtime + QNN actually run on this chip?" is the biggest technical risk, and that sub-phase needs nothing else. Its Refiner is scoped to 3.3.1 only, and its record lives in `phase-3.3-runtime-on-phone/`. The ledger then shows 3.3 as `TODO` with `.1 VERIFIED`.
+- **6.1 fills gaps.** It is late in the order, but it gets picked automatically whenever everything earlier is waiting on you.
+
+**The phone:**
+
+- Phone phases may be refined and built without the phone. Their PHONE checks wait until `adb devices` shows the iQOO.
+- The session report puts "connect the phone" first when that is what's holding things up.
+
+---
+
+## 8. Verification
+
+### Check types
+
+| Type | Who runs it | Needs |
+| --- | --- | --- |
+| `AUTO` | Orchestrator, on the laptop | Nothing |
+| `PHONE` | Orchestrator, through `adb` and the driver scripts | The iQOO connected, unlocked and set to stay awake. No human taps; taps are scripted with `adb shell input`, or the check becomes HUMAN |
+| `CLEAN` | A fresh Checker agent that did not build it | A fresh clone of `veil/` |
+| `HUMAN` | You or a teammate | Eyes, judgement, other people, accounts, physical handling |
+
+### Rules
+
+1. **Re-run, don't read.** A check passes only if the orchestrator (or a Checker) ran it and saw the result. What a Builder says is never evidence.
+2. **Thresholds are copied word for word** from `PLAN.md`. Only you can change one, through a waiver.
+3. **Every check leaves evidence:** a file in `evidence/` with the command, time, exit code, the measured value and the end of the output.
+4. **Honest results.**
+   - A failure is written down as a failure.
+   - If a check is re-run, every run is recorded (for example "passed 2 of 3").
+   - A "10 out of 10" criterion means 10 consecutive successes in one recorded run.
+5. **Frozen test sets are used sparingly.** The orchestrator logs every run of a frozen test set (`PLAN.md` caps the Chapter 1 test set at 3 runs). Builders tune on dev data only.
+6. **Clean-room approximation.** Where `PLAN.md` asks for "a teammate on a laptop that has never built Veil", a CLEAN Checker on a fresh clone counts for the machine part. The record notes that it ran on the same laptop. If a teammate can do it for real, that is better: raise it as an optional human check.
+
+---
+
+## 9. Human checks
+
+All in `progress/HUMAN_CHECKS.md`. Item format:
+
+```markdown
+### HC-012 · Phase 1.2 · Label the screenshots  [OPEN]
+- Why a human: <one line>
+- Blocks: START of x.y / ACCEPTANCE of x.y / nothing (FYI)
+- Time: ~<estimate>
+- Do:
+  1. <exact step, with copy-paste commands>
+  2. ...
+- How to answer: change [OPEN] to [PASS], [FAIL], [DONE] or [WAIVED], and write below.
+- Your answer:
+```
+
+Rules:
+
+- **Only you change a status tag.** The orchestrator never marks anything PASS.
+- **One sitting per phase** where possible. Steps go in the order you'd actually do them.
+- **Every item says what it blocks**, so you can do the most important ones first.
+- **FAIL** means "it didn't work". Write what you saw; the orchestrator treats it as a failed check.
+- **WAIVED** needs a written reason, the risk you accept, and a plan to close it (`PLAN.md` acceptance rule 4).
+- **IDs** go up from HC-001 and are never reused.
+
+---
+
+## 10. Record formats
+
+### 10.1 SPEC.md (the Refiner's output)
+
+```markdown
+# SPEC · Phase x.y <name>
+MODEL: claude-opus-5-5
+Status: DRAFT | APPROVED (orchestrator, <date>)
+Based on: PLAN.md Phase x.y (lines a-b) · veil commit <hash or "none"> · records read: <list>
+
+## 1. Reality check
+- Already exists and will be reused: <paths>
+- Facts verified: <tool / library / API / model / version → source URL>
+- Deviations from PLAN.md: <what and why>. None may change a threshold, a deliverable or a guarantee.
+- Risks and how this spec handles them
+
+## 2. Waves
+Wave 1: x.y.1                  (phone: no)
+Wave 2: x.y.2 ∥ x.y.3          (phone: x.y.3 only)
+
+## 3. Shared setup
+Environment and dependencies every sub-phase relies on, assigned to exactly one sub-phase's owned paths.
+
+## 4. Sub-phase x.y.z <name>          (repeat for each sub-phase)
+- Goal: <one line>
+- Owned paths: <files and folders this Builder alone may create or change>
+- Read-only inputs: <paths from earlier phases>
+- Steps: <numbered and exact: files, interfaces as code signatures, data shapes, pinned versions, commands>
+- Must not: <out of scope>
+- Verification (the orchestrator runs these):
+  | # | Command (run from veil/) | Expected result | Covers (PLAN "Done when" / AC id) |
+- Needs a human: <exact steps, or "none">, and how the Builder works around it until then
+- Size: S / M / L
+
+## 5. Acceptance plan
+| AC | Type (AUTO/PHONE/CLEAN/HUMAN) | Procedure or command | Threshold (verbatim from PLAN) | Evidence file |
+
+## 6. Proof test plan
+- Fixtures needed, and which sub-phase builds them
+- Machine part: scripts and expected output
+- Human part: steps and time
+- Pass rule (verbatim from PLAN)
+
+## 7. Human sitting
+One checklist you can do in one go, with a total time estimate.
+
+## 8. Proposed waivers
+<"none", or: criterion · why it can't be met as written · risk · alternative>
+
+## Amendments
+<appended by repairs; earlier text is never rewritten>
+```
+
+**The orchestrator's review checklist for a spec:**
+
+- [ ] Every "Do" step in `PLAN.md` is mapped to a spec step, or the deviation is given with a reason.
+- [ ] Every `AC-x.y-nn` row is in the acceptance plan, with thresholds word for word.
+- [ ] Owned paths don't overlap within a wave, and at most one sub-phase per wave uses the phone.
+- [ ] Every verification step has a concrete command and expected result.
+- [ ] Versions are pinned, and facts cite sources.
+- [ ] Human steps are exact, batched, and come with a time estimate.
+- [ ] Nothing frozen (contracts v1.0, frozen test sets, golden tapes) changes without a proposed waiver.
+
+### 10.2 Sub-phase record (`<x.y.z>-<slug>.md`)
+
+```markdown
+MODEL: <written by the Builder as its first action>
+# x.y.z <name>
+Status: BUILDING | VERIFIED | WAITING_HUMAN | BLOCKED
+Builders: <agent id · model line · started> (one line per Builder, including resumed ones)
+
+## What was asked
+<2-4 lines summarising SPEC section 4 for this sub-phase>
+
+## What was implemented            (Builder)
+- Files created or changed: <list>
+- How it works: <short, plain words>
+- Deviations from the spec and why: <list, or "none">
+
+## How the builder tested it       (Builder)
+| Command | Result |
+
+## Fix rounds                      (Builder, if any)
+- Round n: <what failed → what changed>
+
+## Independent verification        (orchestrator)
+| # | Command | Expected | Got | Result |
+- PLAN "Done when": <met / not met, and why>
+- Evidence: evidence/<x.y.z>-verify.txt
+
+## Human checks raised
+<HC ids, or "none">
+
+## Outcome                         (orchestrator)
+<VERIFIED / WAITING_HUMAN / BLOCKED> · commit <hash> · <date>
+```
+
+### 10.3 PHASE.md
+
+```markdown
+# Phase x.y <name> · <STATUS>
+Updated: <date> · Commits: <first>..<last> · Spec: SPEC.md
+
+## Summary
+<3-5 plain-language lines: what now works and how we know>
+
+## Sub-phases
+| Sub-phase | Status | Builder model | Fix rounds | Record |
+
+## Acceptance criteria
+| AC | Type | Result (pass / fail / waived / pending) | Measured | Evidence |
+
+## Proof test PT-x.y "<name>": PASS / FAIL / PENDING-HUMAN
+<what was run, the result, and the evidence links>
+
+## Human checks
+<HC ids and statuses>
+
+## Deviations from PLAN.md
+## What later phases can rely on
+<the PLAN.md guarantees, confirmed or not>
+
+## Notes for the next Refiner
+<gotchas, useful paths, things that took several tries>
+```
+
+### 10.4 Session report
+
+Printed to you at the end of every session:
+
+```
+VEIL · session <n> · <date>
+Done this session:  1.1 ACCEPTED · 4.1 built (waiting on you)
+Waiting on you (most important first; then paste the start prompt again):
+  HC-007  Connect the phone                              ~2 min    unblocks 4.1, 4.2 checks
+  HC-009  Label 300 screenshots (pre-labelled)           ~3 h      unblocks 1.2, then 1.3
+Next up:            4.2 Screen signals
+Problems:           <BLOCKED items with one line each, or "none">
+```
+
+---
+
+## 11. Agent prompts
+
+Fill in the `{...}` parts. Always set `model` explicitly on the Agent call.
+
+### R · Refiner (`model: "opus"`, description `Refine phase x.y`) · FAST TRACK
+
+```
+RULE 1: The first line of your final reply must be `MODEL: <your exact model id>`.
+TIME BOX: about 8 minutes. The whole phase must be built and verified in 20-30 minutes, so your spec must be short and buildable in about 15 minutes by three parallel Sonnet Builders.
+
+You are the Refiner for Veil Phase {x.y} "{name}". You turn PLAN.md's phase into a short, exact build spec. You do not write product code.
+
+Read only:
+1. D:\iqoo finale\ORCHESTRATOR.md section 0 (FAST TRACK) and section 12 (Ground rules).
+2. D:\iqoo finale\PLAN.md lines {a}-{b} (Phase {x.y}: sub-phases, proof test, acceptance contract), plus the chapter intro lines {c}-{d}.
+3. The "Notes for the next Refiner" and "What later phases can rely on" sections of: {PHASE.md paths, or "none"}.
+4. The repository D:\iqoo finale\veil: tree, `git log --oneline -5`, and only the files you need for interfaces.
+Facts: the toolchain is at D:\veil-toolchain. Run commands with `powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 <cmd>` from D:\iqoo finale\veil. Python 3.11 is managed by uv with a locked `pyproject.toml`; add deps with `uv add`. The laptop has 7.4 GB RAM and a GTX 1650 Ti (4 GB). The phone is {connected / NOT connected}. AI Hub token: {yes / no}. Never download, generate or view explicit material; Layer 1 uses harmless stand-ins.
+
+Write {phase folder}\SPEC.md, at most 250 lines:
+- Header: MODEL line, status, PLAN lines used.
+- 1. Deviations and risks: at most 10 bullets. Anything the time box forces out goes to "Deferred" (heavy or slow work, more than 5 min) or "Human" (phone, judgement, accounts, labelling).
+- 2. Interfaces shared by the sub-phases: signatures and data shapes, so all three Builders can work in parallel from the start.
+- 3. One section per sub-phase {x.y}.1-3:
+  - goal;
+  - owned paths (disjoint from the other sub-phases);
+  - files to create;
+  - steps (short);
+  - the verify script `veil/tools/verify/{x.y}.N.ps1`: what it checks, and that it ends with `VERIFY {x.y}.N: PASS`;
+  - human needs.
+- 4. AC table: AC id | AUTO / PHONE / HUMAN / DEFERRED | how it is checked | threshold copied word for word.
+- 5. Proof test: the machine part (a script) and the human part (exact steps, a time estimate).
+- 6. Human items: a ready-to-paste checklist.
+Copy PLAN thresholds word for word; never change them. Minimum viable scope that meets "Done when". Use synthetic or public, harmless data where real human-collected data is not available yet, and say so.
+
+Write only SPEC.md. Do not spawn agents. Do not commit. Do not install anything.
+Final reply: the MODEL line, then at most 8 lines.
+```
+
+### B · Builder (`model: "sonnet"`, description `Build x.y.z`) · FAST TRACK
+
+```
+RULE 1: The first line of your final reply must be `MODEL: <your exact model id>`.
+RULE 2: Your very first action: create {record path} with `MODEL: <your exact model id>` as its first line.
+TIME BOX: about 15 minutes. Build the minimum that passes your verify script. No extras, no gold-plating, only a handful of meaningful tests.
+
+You are the Builder for Veil sub-phase {x.y.z} "{name}". Your instructions: sections 1, 2 and "{x.y.z}" of {SPEC path}, and ORCHESTRATOR.md section 12 (Ground rules).
+Run commands from D:\iqoo finale\veil with `powershell -NoProfile -ExecutionPolicy Bypass -File tools\with-env.ps1 <cmd>`. The laptop has 7.4 GB RAM, so no parallel heavy builds.
+- Create or change only: {owned paths}, plus your verify script veil/tools/verify/{x.y.z}.ps1. Other Builders work in parallel on other paths.
+- If a dependency is missing, add it with `uv add <pkg>==<ver>` only if the spec allows it; otherwise report SPEC_ISSUE.
+- If the spec is wrong or impossible, report SPEC_ISSUE with the evidence; don't work around it at length.
+- Human-only steps (phone, judgement, accounts): build around them, list exact steps, and report NEEDS_HUMAN.
+- Make your verify script pass. Do not commit.
+- Record (≤ 30 lines): what you built (files), deviations, the verify result.
+{Resume note, only when resuming: "A previous Builder stopped early; check `git status` on your paths and finish."}
+
+Final reply: the MODEL line; DONE / SPEC_ISSUE / NEEDS_HUMAN; the verify script result. At most 10 lines.
+```
+
+### F · Fix round (SendMessage to the same Builder)
+
+```
+Verification of {x.y.z} failed (round {n} of 2). Failing checks:
+- {check}: ran `{command}`, expected {expected}, got {actual}. Full output: {evidence path}
+Fix only what makes these fail. Stay inside your owned paths. Re-run your whole Verification table and add a "Round {n}" line under "Fix rounds" in the record.
+Reply with the MODEL line and at most 10 lines.
+```
+
+### P · Repair (Refiner, `model: "opus"`, description `Repair spec x.y.z`)
+
+```
+RULE 1: The first line of your final reply must be `MODEL: <your exact model id>`.
+
+Sub-phase {x.y.z} of Veil still fails after 2 fix rounds (or: its Builder reported SPEC_ISSUE).
+Evidence: {evidence paths}. Builder's notes: {summary}. Spec: {SPEC path}. Record: {record path}.
+Find the root cause; read the code and run read-only commands as needed. Append "Amendment {n}" to the spec, without rewriting earlier text. Include the cause, the exact changed steps, and the changed verification if the old one was wrong. Thresholds from PLAN.md stay word for word.
+Final reply: the MODEL line and at most 10 lines.
+```
+
+### C · Clean-room Checker (`model: "sonnet"`, description `Check x.y clean-room`)
+
+```
+RULE 1: The first line of your final reply must be `MODEL: <your exact model id>`.
+
+You are an independent Checker for Veil Phase {x.y}. You did not build any of this, and you must not fix anything, even when the fix is obvious.
+Check: {AC id or proof-test step}: {what to do}.
+Use only: {allowed inputs, e.g. veil/README.md}. Work in a fresh clone:
+  git clone "D:/iqoo finale/veil" "%TEMP%\veil-clean-{x.y}"
+Write every command, its result, and every place where the instructions were unclear, wrong or missing to {evidence path}.
+Final reply: the MODEL line, then PASS/FAIL per item with a one-line reason. At most 15 lines.
+```
+
+---
+
+## 12. Ground rules for all agents
+
+1. **The model line** comes first in every final reply (section 3).
+2. **Only the orchestrator spawns agents and commits.**
+   - Commit message: `[x.y.z] <sub-phase name>` (or `[x.y] acceptance record`). The body links the record and ends with the Co-Authored-By line Claude Code gives the session.
+   - Never force, rewrite history, or change branches. The remote `origin` is the PRIVATE repo https://github.com/harutoNaiz/veil (created 2026-10-02 at the user's request); push to it only when the user asks.
+3. **Stay in your lane.**
+   - The Refiner writes only `SPEC.md`. Builders write their owned paths and their record. Checkers write evidence only.
+   - Only the orchestrator edits this file, `HUMAN_CHECKS.md`, `LOG.md`, `PHASE.md` and `veil/docs/acceptance/`.
+   - Nobody edits `PLAN.md`.
+4. **Windows specifics.**
+   - The project path has a space, so always quote `"D:\iqoo finale"`.
+   - Python runs only through the project's `uv` environment in `veil/`, never the system Python (3.14 and 3.10 are installed; the plan wants 3.11, which `uv` provides).
+   - Android builds use Android Studio's own JDK (`JAVA_HOME` pointing at Android Studio's `jbr`). The system JDK 11 is too old for current Android builds.
+5. **Secrets.** Never write tokens or passwords into files, logs or replies. Use the tools' own login stores (`qai-hub configure`, `hf auth login`).
+6. **Privacy.**
+   - Screenshots, recordings and labels live in `veil/data/`, which git ignores, and are never uploaded anywhere.
+   - The only exception is Qualcomm AI Hub jobs that a spec lists explicitly (`PLAN.md` 3.2 sends test crops).
+   - No personal accounts or personal content: test accounts only.
+7. **No explicit content, ever.**
+   - Agents never download, generate, search for or open explicit material.
+   - Layer 1 tests use harmless stand-ins until you supply the controlled evaluation set by hand, through a human check.
+8. **Phone safety.**
+   - Install and uninstall only Veil's own packages and the Test Feed app.
+   - Never factory-reset, clear other apps' data, change accounts, or change system settings except those the spec lists (for example stay-awake, or enabling Veil's accessibility service through `adb` on a debug build).
+   - Only one agent drives the phone at a time.
+9. **Frozen things stay frozen.** Contracts v1.0, frozen test sets and their checksums, golden tapes, and `PLAN.md` thresholds change only through a waiver you approve.
+10. **Installs.**
+    - Inside the project, install freely (`uv`/pip, Gradle, Flutter pub).
+    - System-wide installs or PATH changes are never done by an agent. Report NEEDS_HUMAN with the exact command.
+11. **Long runs** (soak tests, battery runs, big exports) run in the background, writing a log. Report the log path; don't sit watching.
+12. **Short replies.** Details go into files.
+
+---
+
+## 13. Budget and context
+
+- **Opus** is only for the Refiner: one per phase, plus at most one repair. **Sonnet** does all building and clean-room checking.
+- The orchestrator reads only the active phase's lines of `PLAN.md`, never the whole file.
+- It reads only the ends of long logs (`tail`, `grep`), never whole files.
+- Agents reply in 20 lines or fewer; everything else lives in files.
+- Your weekly usage resets **Tuesday morning (2026-10-06)**.
+  - If a session is cut off before then, nothing is lost: paste the start prompt again after the reset.
+  - The state in section 1 says exactly where to resume.
+- Keep the laptop plugged in and set not to sleep while a session runs. Running agents stop when the laptop sleeps, and the next session resumes them (Step 1).
+
+---
+
+## 14. Mapping the plan's four-person team to agents
+
+`PLAN.md` was written for four people (owners A, B, C, D, each verifying someone else's work). Here is who does what now:
+
+| PLAN.md says | Here it means |
+| --- | --- |
+| Owner A, B, C or D builds it | A Sonnet Builder per sub-phase |
+| The verifier re-runs the checks | The orchestrator, never the Builder |
+| "A teammate who did not write it" follows the README | A clean-room Checker on a fresh clone; the record notes it ran on the same laptop |
+| Blind re-labelling, gallery review, "watch it like a user", "from a user's point of view" | You or a teammate (HUMAN) |
+| "All four owners approve" (contracts, waivers) | You |
+| "3 first-time users", "someone outside the team" | Real people you bring in |
+| A waiver | Only you, through a human check: reason · risk · plan · approved |
+| `docs/acceptance/<phase>.md` | Written by the orchestrator in `veil/docs/acceptance/`, mirrored in `PHASE.md` |
+
+---
+
+## 15. What each phase will likely ask of you
+
+These are rough guesses so you can plan your time. The real list is in each phase's "Human sitting" once its spec exists.
+
+| Phase | What you'll likely be asked | Rough time |
+| --- | --- | --- |
+| 1.1 | Setup items HC-001 to HC-005; approve contracts v1.0 | 1-2 h, once |
+| 1.2 | Capture about 300 screenshots from test accounts (a script scrolls and captures; you steer the feeds); correct pre-drawn labels in Label Studio; a blind re-label of 20% (ideally a teammate) | 4-6 h, can be split |
+| 1.3 | Take 30 fresh screenshots; review the gallery and tally the results | 30-45 min |
+| 2.1 | Help with scripted recording sessions (logins, Reels); label recordings at keyframes | 3-5 h |
+| 2.2 | Review a timeline chart | 15 min |
+| 2.3 | Watch side-by-side videos and mark issues | 1 h |
+| 3.1, 3.2 | Nothing (uses the AI Hub token from setup) | – |
+| 3.3 | Hold the phone during the 10-minute run and say if it gets uncomfortably warm | 15 min |
+| 4.1 | Tap the screen-capture consent; check the lock/unlock and "Resume Veil" flows; Netflix blind-spot check | 30-45 min |
+| 4.2 | Enable the accessibility service once through "Allow restricted settings", with screenshots | 15 min |
+| 4.3 | Tap through covers in 5 apps; try the long-press | 20 min |
+| 5.1 | Nothing; keep the phone plugged in | – |
+| 5.2 | Supply the controlled Layer 1 evaluation images by hand; a 5-minute real Instagram session | 30 min, plus sourcing |
+| 5.3 | Battery runs: phone off the charger (wireless adb), fixed brightness, 4 × 30 min | 2-3 h, mostly waiting |
+| 6.1 | Find 3 people who have never seen Veil and watch them set it up | 1-2 h |
+| 6.2 | Run PCAPdroid during the fox test | 20 min |
+| 6.3 | Three rehearsals, a 30-minute session by an outsider, review the deck | 2-3 h |
+
+---
+
+## 16. Changing this runbook
+
+The orchestrator rewrites only the blocks between the `STATE` and `LEDGER` markers. If it finds a flaw in the process, it puts a proposal under "Problems" in the session report instead of editing the runbook. You can edit anything here at any time; the next session follows the new version.

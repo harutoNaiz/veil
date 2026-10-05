@@ -1,0 +1,18 @@
+=== 4.1.3 verify · 2026-10-05 09:50:45
+ok    (1) ktlint
+ok    (2) ruff
+ok    (3) pytest capture_logs
+    capture routine plan, 5 min (scrcpy record, meminfo/10 s, pull logs)
+      1. idle 30 s on the home screen (static): 30 s  [marker idleStart]
+      2. end idle, open Instagram and scroll: 45 s  [marker idleEnd]
+      3. open YouTube and play a video: 45 s
+      4. rotate to landscape then back: 30 s
+      5. lock and unlock (keyevents): 30 s  [marker lock]  [MANUAL: Tap 'Resume Veil' / accept consent if prompted]
+      6. tap the capture status-bar chip once: 15 s  [MANUAL: Tap the capture chip in the status bar]
+      7. force-stop com.veil.guard: 30 s  [marker kill]  [MANUAL: Tap 'Resume Veil' / accept consent when prompted]
+      8. open Netflix (expect black frames): 45 s
+      9. end: 30 s
+ok    (4) capture_routine --dry-run
+ok    (5) JVM tests backup + blind
+VERIFY 4.1.3: PASS
+exit 0

@@ -1,0 +1,9 @@
+=== 4.2.1 verify · 2026-10-05 18:33:48
+ok    (1) gradle build + 3 tests
+ok    (2) 1,000 events validate
+ok    (3) no tree walks in callbacks
+ok    (4) ktlint
+ok    (5) ruff
+ok    (6) pytest
+VERIFY 4.2.1: PASS
+exit 0
