@@ -1,0 +1,18 @@
+{
+  "recall": 0.875,
+  "cleanFalseCoverRate": 0.0,
+  "testImages": 50,
+  "testSet": "public-photos (8 spider, 42 clean)",
+  "missed": [
+    "spider/Animals-10-spider-17670.jpg"
+  ],
+  "falseCovers": [],
+  "textRecall": 0.9091,
+  "textFalseRate": 0.0,
+  "textLines": [
+    22,
+    46
+  ],
+  "status": "PASS",
+  "line": "image recall 0.88, clean false-cover 0.00 on public-photos (8 spider, 42 clean); text recall 0.91, text false 0.00."
+}

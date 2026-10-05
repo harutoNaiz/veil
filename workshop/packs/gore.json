@@ -1,0 +1,55 @@
+{
+  "contractVersion": "1.0",
+  "packId": "gore",
+  "name": "Graphic injury",
+  "version": "1.0.0",
+  "description": "Text-only rules for posts describing graphic injury or gore. Result (PENDING-HUMAN): image rows PENDING-HUMAN (text-only pack, no images); text recall 1.00, text false 0.00 on 21+51 hand-written lines.",
+  "sensitive": true,
+  "concepts": [
+    {
+      "contractVersion": "1.0",
+      "layer": 2,
+      "enabled": true,
+      "coverStyle": "solid",
+      "showLabel": false,
+      "sensitive": true,
+      "conceptId": "gore",
+      "displayName": "Graphic injury",
+      "scope": "wholeElement",
+      "looksLike": [
+        "a graphic scene of a bloody injury",
+        "a gory horror movie scene",
+        "a person with a severe wound",
+        "a pool of blood on the ground",
+        "a gruesome accident scene"
+      ],
+      "butNot": [
+        "tomato sauce on a plate",
+        "red paint on a canvas",
+        "ketchup on fries",
+        "a red rose",
+        "strawberry jam"
+      ],
+      "keywords": [
+        "gore",
+        "gory",
+        "gruesome",
+        "bloodbath",
+        "mutilated",
+        "mutilation",
+        "dismembered",
+        "graphic injury",
+        "severed",
+        "bloody wound",
+        "entrails"
+      ]
+    }
+  ],
+  "licence": "CC0-1.0",
+  "accuracy": {
+    "recall": 1.0,
+    "cleanFalseCoverRate": 0.0,
+    "testImages": 72,
+    "testSet": "hand-written text lines (image set PENDING-HUMAN)"
+  }
+}

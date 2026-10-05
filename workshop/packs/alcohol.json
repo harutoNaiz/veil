@@ -1,0 +1,57 @@
+{
+  "contractVersion": "1.0",
+  "packId": "alcohol",
+  "name": "Alcohol",
+  "version": "1.0.0",
+  "description": "Hides drinks and posts about alcohol. Result (PENDING-HUMAN): image rows PENDING-HUMAN (no licensed photo set); text recall 1.00, text false 0.00 on 22+52 hand-written lines.",
+  "sensitive": true,
+  "concepts": [
+    {
+      "contractVersion": "1.0",
+      "layer": 2,
+      "enabled": true,
+      "coverStyle": "solid",
+      "showLabel": false,
+      "sensitive": true,
+      "conceptId": "alcohol",
+      "displayName": "Alcohol",
+      "scope": "wholeElement",
+      "looksLike": [
+        "a bottle of beer",
+        "a glass of wine",
+        "a cocktail in a glass",
+        "a shot of whisky",
+        "bottles of liquor on a shelf",
+        "people drinking beer at a bar"
+      ],
+      "butNot": [
+        "a glass of orange juice",
+        "a can of soda",
+        "a cup of tea",
+        "a glass of water",
+        "a cup of coffee"
+      ],
+      "keywords": [
+        "beer",
+        "wine",
+        "vodka",
+        "whisky",
+        "whiskey",
+        "cocktail",
+        "tequila",
+        "booze",
+        "drunk",
+        "hangover",
+        "happy hour",
+        "shots"
+      ]
+    }
+  ],
+  "licence": "CC0-1.0",
+  "accuracy": {
+    "recall": 1.0,
+    "cleanFalseCoverRate": 0.0,
+    "testImages": 74,
+    "testSet": "hand-written text lines (image set PENDING-HUMAN)"
+  }
+}

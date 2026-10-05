@@ -1,0 +1,59 @@
+{
+  "contractVersion": "1.0",
+  "packId": "spiders",
+  "name": "Spiders",
+  "version": "1.0.0",
+  "description": "Hides spiders and spider webs, including cartoons. Result (PASS): image recall 0.88, clean false-cover 0.00 on public-photos (8 spider, 42 clean); text recall 0.91, text false 0.00.",
+  "sensitive": false,
+  "concepts": [
+    {
+      "contractVersion": "1.0",
+      "layer": 2,
+      "enabled": true,
+      "coverStyle": "solid",
+      "showLabel": false,
+      "sensitive": false,
+      "conceptId": "spiders",
+      "displayName": "Spiders",
+      "scope": "object",
+      "looksLike": [
+        "a photo of a spider",
+        "a close-up of a tarantula",
+        "a spider on its web",
+        "a cartoon spider",
+        "a drawing of a spider",
+        "a spider emoji",
+        "a large hairy spider",
+        "a spider crawling on a wall"
+      ],
+      "butNot": [
+        "a crab",
+        "an ant",
+        "a toy for cats",
+        "a beetle",
+        "a dog",
+        "a cat"
+      ],
+      "keywords": [
+        "spider",
+        "spiders",
+        "tarantula",
+        "arachnid",
+        "arachnophobia",
+        "cobweb",
+        "spiderweb",
+        "huntsman",
+        "daddy longlegs",
+        "wolf spider",
+        "jumping spider"
+      ]
+    }
+  ],
+  "licence": "CC0-1.0",
+  "accuracy": {
+    "recall": 0.875,
+    "cleanFalseCoverRate": 0.0,
+    "testImages": 50,
+    "testSet": "public-photos (8 spider, 42 clean)"
+  }
+}

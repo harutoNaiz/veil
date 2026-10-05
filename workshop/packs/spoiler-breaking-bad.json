@@ -1,0 +1,54 @@
+{
+  "contractVersion": "1.0",
+  "packId": "spoiler-breaking-bad",
+  "name": "Spoilers: Breaking Bad",
+  "version": "1.0.0",
+  "description": "Covers posts that give away how Breaking Bad plays out. Names and keywords only. Result (PENDING-HUMAN): image rows PENDING-HUMAN (text-only pack, no images); text recall 1.00, text false 0.00 on 20+53 hand-written lines.",
+  "sensitive": false,
+  "concepts": [
+    {
+      "contractVersion": "1.0",
+      "layer": 2,
+      "enabled": true,
+      "coverStyle": "solid",
+      "showLabel": false,
+      "sensitive": false,
+      "conceptId": "spoiler-breaking-bad",
+      "displayName": "Breaking Bad spoilers",
+      "scope": "wholeElement",
+      "looksLike": [
+        "a post that reveals the ending of a tv series",
+        "a spoiler about who dies in breaking bad",
+        "a text post about the breaking bad finale",
+        "a meme spoiling the end of breaking bad"
+      ],
+      "butNot": [
+        "a poster for a tv show",
+        "a cooking show",
+        "a chemistry classroom",
+        "a movie trailer without plot details"
+      ],
+      "keywords": [
+        "walter dies",
+        "walt dies",
+        "walter white dies",
+        "hank dies",
+        "gus dies",
+        "jesse escapes",
+        "the finale reveals",
+        "ending of breaking bad",
+        "breaking bad spoiler",
+        "breaking bad ending",
+        "who dies in breaking bad",
+        "felina"
+      ]
+    }
+  ],
+  "licence": "CC0-1.0",
+  "accuracy": {
+    "recall": 1.0,
+    "cleanFalseCoverRate": 0.0,
+    "testImages": 73,
+    "testSet": "hand-written text lines (image set PENDING-HUMAN)"
+  }
+}

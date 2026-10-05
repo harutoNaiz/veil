@@ -1,0 +1,14 @@
+{
+  "recall": 1.0,
+  "cleanFalseCoverRate": 0.04,
+  "testImages": 71,
+  "testSet": "hand-written text lines (image set PENDING-HUMAN)",
+  "textRecall": 1.0,
+  "textFalseRate": 0.04,
+  "textLines": [
+    21,
+    50
+  ],
+  "status": "PENDING-HUMAN",
+  "line": "image rows PENDING-HUMAN (text-only pack, no images); text recall 1.00, text false 0.04 on 21+50 hand-written lines."
+}

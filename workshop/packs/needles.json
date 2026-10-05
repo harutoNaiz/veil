@@ -1,0 +1,56 @@
+{
+  "contractVersion": "1.0",
+  "packId": "needles",
+  "name": "Needles and injections",
+  "version": "1.0.0",
+  "description": "Text-only rules for posts about needles and injections. Result (PENDING-HUMAN): image rows PENDING-HUMAN (text-only pack, no images); text recall 1.00, text false 0.04 on 21+50 hand-written lines.",
+  "sensitive": true,
+  "concepts": [
+    {
+      "contractVersion": "1.0",
+      "layer": 2,
+      "enabled": true,
+      "coverStyle": "solid",
+      "showLabel": false,
+      "sensitive": true,
+      "conceptId": "needles",
+      "displayName": "Needles and injections",
+      "scope": "wholeElement",
+      "looksLike": [
+        "a syringe with a needle",
+        "a person receiving an injection",
+        "a needle going into an arm",
+        "a nurse holding a syringe",
+        "a blood draw with a needle",
+        "a vaccine shot being given"
+      ],
+      "butNot": [
+        "a ballpoint pen",
+        "knitting needles and yarn",
+        "a thermometer",
+        "a sewing needle and thread",
+        "a pine tree branch"
+      ],
+      "keywords": [
+        "needle",
+        "needles",
+        "syringe",
+        "injection",
+        "injections",
+        "blood draw",
+        "vaccine shot",
+        "jab",
+        "iv drip",
+        "intravenous",
+        "needle phobia"
+      ]
+    }
+  ],
+  "licence": "CC0-1.0",
+  "accuracy": {
+    "recall": 1.0,
+    "cleanFalseCoverRate": 0.04,
+    "testImages": 71,
+    "testSet": "hand-written text lines (image set PENDING-HUMAN)"
+  }
+}
