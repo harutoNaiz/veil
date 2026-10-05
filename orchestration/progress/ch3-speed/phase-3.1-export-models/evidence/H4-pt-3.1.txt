@@ -3,3 +3,7 @@
 Loading weights:   0%|          | 0/408 [00:00<?, ?it/s]Loading weights:   6%|▌         | 25/408 [00:00<00:01, 239.15it/s]Loading weights:  14%|█▍        | 58/408 [00:00<00:01, 276.63it/s]Loading weights:  23%|██▎       | 92/408 [00:00<00:01, 286.23it/s]Loading weights:  30%|██▉       | 121/408 [00:00<00:01, 264.06it/s]Loading weights:  37%|███▋      | 150/408 [00:00<00:01, 232.17it/s]Loading weights:  43%|████▎     | 174/408 [00:00<00:00, 234.26it/s]Loading weights:  49%|████▊     | 198/408 [00:00<00:01, 195.38it/s]Loading weights:  54%|█████▎    | 219/408 [00:01<00:01, 179.66it/s]Loading weights:  58%|█████▊    | 238/408 [00:01<00:01, 164.94it/s]Loading weights: 100%|██████████| 408/408 [00:01<00:00, 348.87it/s]
 D:\iqoo finale\veil\.venv\Lib\site-packages\torch\jit\_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.
   warnings.warn(
+gallery data\forge\pt-3.1\torch\gallery\index.html
+ok    1 engine torch
+[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.

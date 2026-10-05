@@ -1,0 +1,10 @@
+=== D-small-1 verify · 2026-10-05 23:16:11
+ok    parse pt-4.2.ps1
+ok    pt-4.2 -DryRun exits 0
+ok    pt-4.2 no device exits 2
+ok    tune --check
+ok    pytest perf
+ok    ruff check
+ok    ruff format
+VERIFY D-small-1: PASS
+exit 0

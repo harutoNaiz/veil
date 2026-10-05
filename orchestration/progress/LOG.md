@@ -241,3 +241,6 @@ Events:
 - 2026-10-05 23:05 3.3 committed (fda43f1, 524b12a, 45eff08) + pushed; 3.3 closed WAITING_HUMAN (HC-027); manifest fix round sent to 3.3.3. ALL 18 phases now built except 3.1's H4 proof run.
 2026-10-05 23:12 | 3.3.3 | VERIFY PASS + COMMIT ae75468 | [3.3.3] Fix round 1: model manifests for the phone install
 - 2026-10-05 23:15 session 6 boot: 3.3.3 fix round verified+pushed (ae75468); 3.3 closed (HC-027); H4 pt-3.1 started alone; D-small-1 Builder (pt-4.2.ps1 + tune sync) spawned
+- 2026-10-05 23:12 checkpoint (session 6 boot): main 716878e pushed; WIP files: 1
+2026-10-05 23:16 | D-small-1 | VERIFY PASS + COMMIT 7266ef6 | [D-small-1] Deferred: pt-4.2 driver + tune sync for app params asset
+- 2026-10-05 23:25 D-small-1 committed 7266ef6 (pt-4.2.ps1, tune sync); 7.0 Refiner (veil-planner-high) spawned
