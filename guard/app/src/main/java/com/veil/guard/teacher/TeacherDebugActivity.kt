@@ -48,6 +48,12 @@ class TeacherDebugActivity : Activity() {
                     }
                 val ms = (System.nanoTime() - t0) / NS_PER_MS
                 File(filesDir, "card-${card["conceptId"]}.json").writeText(Teacher.conceptSha256(card) + "\n" + card)
+                runCatching {
+                    val dir = File(externalMediaDirs.first(), "concepts").also { it.mkdirs() }
+                    val tmp = File(dir, "${card["conceptId"]}.json.tmp")
+                    tmp.writeText(card.toString())
+                    tmp.renameTo(File(dir, "${card["conceptId"]}.json"))
+                }
                 runOnUiThread { out.text = "$note, ms=$ms\n$card" }
             }
         }
