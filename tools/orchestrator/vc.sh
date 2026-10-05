@@ -20,6 +20,8 @@ if [ $CODE -ne 0 ] || ! grep -q "VERIFY $ID: PASS" "$EV"; then echo "RESULT: VER
 source tools/env.sh >/dev/null 2>&1
 printf '[%s] %s\n\nVerified by orchestrator (tools/verify/%s.ps1 PASS): progress/%s/%s\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n' "$ID" "$NAME" "$ID" "$PDIR" "$REC" > "$(cygpath -u "$SP")/msg-$ID.txt"
 PATHS=(); for p in "$@"; do case "$p" in data/*) ;; *) [ -e "$p" ] && PATHS+=("$p");; esac; done
+LOCK=.git/veil-commit.lock; for i in $(seq 1 60); do mkdir "$LOCK" 2>/dev/null && break; sleep 2; done
+trap 'rmdir "$LOCK" 2>/dev/null' EXIT
 BEFORE=$(git rev-parse HEAD)
 for attempt in 1 2; do
   git add -- "${PATHS[@]}" "tools/verify/$ID.ps1" 2>&1 | grep -v "LF will be replaced"
@@ -32,3 +34,5 @@ H=$(git log --format=%h -1)
 echo "RESULT: PASS · COMMIT $H"
 printf '\n## Independent verification (orchestrator)\n- %s: `tools/verify/%s.ps1` re-run → VERIFY %s: PASS (evidence/%s-verify.txt). Commit %s.\n' "$(date '+%H:%M')" "$ID" "$ID" "$ID" "$H" >> "$ROOT/progress/$PDIR/$REC"
 echo "$(date '+%Y-%m-%d %H:%M') | $ID | VERIFY PASS + COMMIT $H | [$ID] $NAME" >> "$ROOT/progress/LOG.md"
+rmdir "$LOCK" 2>/dev/null
+git -c credential.helper= -c "credential.helper=!gh auth git-credential" push -q origin main && echo "pushed main $H"
