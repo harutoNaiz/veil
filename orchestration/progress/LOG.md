@@ -253,3 +253,4 @@ Events:
 - 2026-10-05 23:59 checkpoint (weekly limit near: save everything): main 5f08e2b pushed; WIP files: 27
 - 2026-10-06 00:05 H4 pt-3.1 PASS (agreement 0.9917, lists OK, shapes OK); 3.1 closed
 - 2026-10-06 00:05 checkpoint (3.1 proof PASS): main 4242296 pushed; WIP files: 27
+- 2026-10-06 00:08 checkpoint (STATE refresh): main ae2d9f6 pushed; WIP files: 27
