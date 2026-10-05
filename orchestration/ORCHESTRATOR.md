@@ -50,16 +50,16 @@ Added 2026-10-02 after Phase 1.1 took about 4 hours. **Hard rule from the user: 
 | Field | Value |
 | --- | --- |
 | STANDING ORDER (user) | Keep working every session until the WEEKLY usage limit (it resets Tuesday 2026-10-06 morning). When close to it: commit everything (per sub-phase), update this block, then shut down the laptop (`shutdown /s /t 60`) |
-| Active phases | ALL 18 phases built except 3.1 (H4 proof running) · 7.0 "Deferred laptop work" REFINING (progress/ch7-deferred/phase-7.0-deferred-laptop-work/SPEC.md) · D-4.2-pt and D-5.2W-tune DONE (7266ef6) |
-| Running agents | H4 pt-3.1 (bash bg; evidence progress/ch3-speed/phase-3.1-export-models/evidence/H4-pt-3.1.txt) · R-7.0 a84ed5a31c9664713 · checkpoint loop (bash bg, every 12 min) |
+| Active phases | ALL 18 phases built except 3.1 (H4 proof running) · 7.0 "Deferred laptop work" BUILDING (SPEC 84 lines: 7.0.1 toxicity tokenizer, 7.0.2 Guard crash recovery + Resume Veil, 7.0.3 concept hot-swap) |
+| Running agents | H4 pt-3.1 (bash bg) · Gradle-mutex holder until pt-3.1 ends (bash bg) · 7.0.1 ac082186a2c320098 · 7.0.2 afb6f3910c0635b80 · 7.0.3 a76f3ad24f6fc67d0 · checkpoint loop (12 min) |
 | Waiting on you | progress/HUMAN_CHECKS.md: Sitting 1 (Phase 1.1) and HC-002 to HC-026 (HC-016 = Chapter 2 gate decision). HC-002 (phone) and HC-003 (AI Hub token) unblock the most; HC-026 (live Guard) unblocks HC-020/021/024/025 |
 | Deferred heavy checks | `progress/DEFERRED.md`: D-1.1-01, D-1.3-07, D-6.1-apk, D-4.2-pt, D-5.3-perfetto, D-6.3-*, D-5.2W-* |
 | Phone at last boot | NOT connected |
 | Phases accepted | 0 of 18 · built (WAITING_HUMAN): 1.1-1.3, 2.1-2.3, 3.2, 3.3, 4.1-4.3, 5.1, 5.2 (+5.2-W), 5.3, 6.1-6.3 · 3.1: exports committed, H4 proof running |
-| Next action | When H4 finishes: read the evidence and close 3.1. When the 7.0 spec lands: approve it and spawn 3 veil-builders (Gradle via gradle-locked.ps1; start Gradle work only after H4 ends). Verify, commit and push each with vc.sh |
+| Next action | When H4 ends: read progress/ch3-speed/phase-3.1-export-models/evidence/H4-pt-3.1.txt, write 3.1 PHASE.md. Verify and commit 7.0.1, 7.0.2, then 7.0.3 (last; needs 7.0.1) with vc.sh; close 7.0 (PHASE.md + HC). Then D-6.1-apk (one Gradle command alone) |
 | Session notes | Agent types: veil-planner-medium/high (Opus), veil-builder (Sonnet, medium); definitions in .claude/agents (mirrored at veil/orchestration/claude-agents). Remote: private GitHub harutoNaiz/veil. User 2026-10-05 22:30: commit AND push everything so another agent can resume from a fresh clone; mirror via `veil/tools/orchestrator/sync.sh`. Commit per sub-phase via `bash veil/tools/orchestrator/vc.sh`. ALL Gradle via `tools\gradle-locked.ps1` (mutex Global\veil-gradle); never wait on java.exe (VS Code Java server + its Gradle daemon never exit); close VS Code Java import during builds. PUSH with `git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin main` (gh token has the workflow scope; the Windows credential manager token does not). Last push 375f7e8 (2026-10-05 22:50). USER RULE (2026-10-05 22:50): commit + push every 10-15 min and keep STATE current. A background loop runs `bash veil/tools/orchestrator/checkpoint.sh` every 12 min (mirror to main + WIP snapshot to origin/checkpoint); restart the loop when it ends (2 h); vc.sh pushes after each verified commit |
 | Sessions run | 6 |
-| Last updated | 2026-10-05 23:25 |
+| Last updated | 2026-10-05 23:40 |
 <!-- STATE:END -->
 
 ## 2. Ledger

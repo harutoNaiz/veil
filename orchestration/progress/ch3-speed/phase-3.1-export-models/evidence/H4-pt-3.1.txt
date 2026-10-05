@@ -7,3 +7,9 @@ gallery data\forge\pt-3.1\torch\gallery\index.html
 ok    1 engine torch
 [transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
 [transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.
+gallery data\forge\pt-3.1\onnx\gallery\index.html
+ok    2 engine onnx
+agreement 0.9917 PASS
+ok    3 compare (>= 98% same decisions)
+[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.

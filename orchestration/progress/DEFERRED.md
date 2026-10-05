@@ -18,3 +18,4 @@ Checks that take more than 5 minutes or are heavy never run inside a phase (FAST
 | D-5.2W-accel | 5.2-W | GPU crop and faster ONNX backends (QNN/NNAPI) | After 3.3 runtime choice | 45 min | TODO |
 | D-5.2W-console | 5.2-W · 6.1 | Real console GuardBackend (separate APK; Guard receivers are DUMP-protected) | Bound service or signature permission | 45 min | TODO |
 | D-5.2W-tune | 5.2-W · 5.3 | `tune.py --check` must also cover the new app/src/main/assets/params.json | One-line extension | 5 min | DONE (D-small-1) |
+| D-7.0-auc | 7.0.1 · 3.1 | Re-run the toxicity AUC with sigmoid(logits[0]) scoring (3.1 measured with softmax) | Heavy: loads the toxicity model; run alone | 20 min | TODO |
