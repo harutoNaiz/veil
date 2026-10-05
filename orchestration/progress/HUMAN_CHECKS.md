@@ -1,3 +1,5 @@
+> Recommended order for all phone and human checks: see `veil/docs/PHONE_DAY.md`.
+
 # Waiting on you
 
 The orchestrator adds an item here whenever something needs human hands, eyes, accounts or judgement. For each item:
