@@ -1,0 +1,4 @@
+Estimated power use (mAh):
+  Capacity: 5000, Computed drain: 330
+  Uid u0a45: 41.2 ( cpu=30 screen=11 )
+  Uid u0a123: 18.75 ( cpu=18 ) com.veil.guard

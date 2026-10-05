@@ -1,0 +1,3 @@
+Estimated power use (mAh):
+  Capacity: 5000, Computed drain: 300
+  Uid u0a45: 41.2 ( cpu=30 screen=11 )

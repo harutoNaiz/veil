@@ -1,0 +1,5 @@
+Current Battery Service state:
+  AC powered: false
+  status: 3
+  level: 94
+  scale: 100

@@ -1,0 +1,72 @@
+[
+ {
+  "label": "A-off",
+  "mode": "off",
+  "minutes": 30,
+  "brightness": 128,
+  "startLevel": 100,
+  "endLevel": 94,
+  "network": "wifi",
+  "guardMah": null
+ },
+ {
+  "label": "A-on",
+  "mode": "balanced",
+  "minutes": 30,
+  "brightness": 128,
+  "startLevel": 100,
+  "endLevel": 93.4,
+  "network": "wifi",
+  "guardMah": 12.0
+ },
+ {
+  "label": "B-off",
+  "mode": "off",
+  "minutes": 30,
+  "brightness": 128,
+  "startLevel": 100,
+  "endLevel": 94,
+  "network": "wifi",
+  "guardMah": null
+ },
+ {
+  "label": "B-on",
+  "mode": "balanced",
+  "minutes": 30,
+  "brightness": 128,
+  "startLevel": 100,
+  "endLevel": 93.4,
+  "network": "wifi",
+  "guardMah": 12.5
+ },
+ {
+  "label": "light",
+  "mode": "light",
+  "minutes": 30,
+  "brightness": 128,
+  "startLevel": 100,
+  "endLevel": 95,
+  "network": "wifi",
+  "guardMah": 6.0
+ },
+ {
+  "label": "strict",
+  "mode": "strict",
+  "minutes": 30,
+  "brightness": 128,
+  "startLevel": 100,
+  "endLevel": 91,
+  "network": "wifi",
+  "guardMah": 20.0
+ },
+ {
+  "label": "video15",
+  "mode": "balanced",
+  "minutes": 15,
+  "brightness": 128,
+  "startLevel": 100,
+  "endLevel": 96,
+  "network": "wifi",
+  "guardMah": 9.0
+ }
+]
