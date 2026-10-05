@@ -11,6 +11,8 @@ try {
   try { $held = $mutex.WaitOne([TimeSpan]::FromMinutes(45)) }
   catch [System.Threading.AbandonedMutexException] { $held = $true }
   if (-not $held) { Write-Host 'gradle-locked: timed out after 45 min waiting for Global\veil-gradle'; exit 75 }
+  # Gradle writes warnings to stderr; with 'Stop' a caller's 2>&1 would turn them into errors.
+  $ErrorActionPreference = 'Continue'
   Push-Location (Join-Path $repo 'guard')
   try { & .\gradlew.bat --no-daemon @GradleArgs; $code = $LASTEXITCODE } finally { Pop-Location }
   exit $code
