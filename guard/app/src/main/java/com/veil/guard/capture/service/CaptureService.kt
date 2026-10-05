@@ -17,8 +17,12 @@ import com.veil.guard.capture.CaptureLog
 import com.veil.guard.capture.CaptureState
 import com.veil.guard.capture.FrameSize
 import com.veil.guard.capture.FrameSource
+import com.veil.guard.capture.backup.AccessibilityScreenSource
+import com.veil.guard.capture.source.MediaProjectionScreenSource
 import com.veil.guard.capture.state.CaptureEvent
 import com.veil.guard.capture.state.CaptureStateMachine
+import com.veil.guard.wire.FrameAdapter
+import com.veil.guard.wire.GuardRuntime
 
 /**
  * FGS (foregroundServiceType="mediaProjection") holding the MediaProjection token and driving
@@ -70,6 +74,7 @@ class CaptureService : Service() {
         projection?.unregisterCallback(projectionCallback)
         projection?.stop()
         source?.stop()
+        GuardRuntime.stop()
         super.onDestroy()
     }
 
@@ -91,6 +96,8 @@ class CaptureService : Service() {
                 proj.registerCallback(projectionCallback, null)
                 projection = proj
                 handleEvent(CaptureEvent.ConsentGranted(entireScreen = true))
+                GuardRuntime.start(applicationContext)
+                useSource("mp")
             } else {
                 handleEvent(CaptureEvent.ConsentDenied)
             }
@@ -104,16 +111,19 @@ class CaptureService : Service() {
             "pause" -> {
                 handleEvent(CaptureEvent.Pause)
                 source?.pause()
+                GuardRuntime.pause()
             }
 
             "resume" -> {
                 handleEvent(CaptureEvent.Resume)
                 source?.resume()
+                GuardRuntime.resume()
             }
 
             "stop" -> {
                 handleEvent(CaptureEvent.UserStop)
                 source?.stop()
+                GuardRuntime.stop()
                 stopSelf()
             }
 
@@ -124,7 +134,42 @@ class CaptureService : Service() {
                     }
                 startActivity(activityIntent)
             }
-            // "source" / "saveFrames": wired by 4.1.2/4.1.3 (FrameSource implementations) and 4.2.
+
+            "source" -> useSource(intent.getStringExtra(CaptureCommandReceiver.EXTRA_VALUE) ?: "mp")
+
+            "mode" -> {
+                val m = intent.getStringExtra(CaptureCommandReceiver.EXTRA_VALUE)
+                if (m in setOf("light", "balanced", "strict", "off")) {
+                    GuardRuntime.setMode(m!!)
+                    GuardRuntime.writeStatus(applicationContext)
+                }
+            }
+
+            "skip" -> {
+                val v = intent.getStringExtra(CaptureCommandReceiver.EXTRA_VALUE).orEmpty()
+                GuardRuntime.setSkipApps(v.split(',').map { it.trim() }.filter { it.isNotEmpty() }.toSet())
+            }
+
+            "concepts" -> GuardRuntime.reloadLanes()
+
+            "status" -> GuardRuntime.writeStatus(applicationContext)
+        }
+    }
+
+    private fun useSource(kind: String) {
+        source?.stop()
+        source = null
+        val wm = getSystemService(WindowManager::class.java)
+        val rotation = wm.defaultDisplay.rotation
+        val size = displaySize()
+        if (kind == "a11y") {
+            GuardRuntime.start(applicationContext)
+            source = AccessibilityScreenSource(screen = size, rotation = rotation).also { it.start(FrameAdapter.sink) }
+        } else {
+            val proj = projection ?: return
+            source =
+                MediaProjectionScreenSource(proj, size, resources.displayMetrics.densityDpi, rotation)
+                    .also { it.start(FrameAdapter.sink) }
         }
     }
 
