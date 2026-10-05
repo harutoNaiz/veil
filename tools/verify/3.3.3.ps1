@@ -23,6 +23,13 @@ Step '5 laptop_ref --limit 2' {
   $ok = ($rows.Count -eq 2) -and (($rows | ForEach-Object { ($_ -split ',').Count - 1 }) -notcontains 0) -and ((($rows[0] -split ',').Count - 1) -eq 768)
   if (-not $ok) { Write-Host 'laptop-fp.csv wrong shape'; $global:LASTEXITCODE = 1 }
 }
+Step '5b manifests' {
+  uv run --locked pytest workshop/forge/phone/test_manifests.py -q
+  if ($LASTEXITCODE -ne 0) { return }
+  uv run --locked python -m workshop.forge.phone.manifests
+  if ($LASTEXITCODE -ne 0) { return }
+  if (-not (Get-ChildItem dataorge -Recurse -Filter *.manifest.json)) { $global:LASTEXITCODE = 1 }
+}
 Step '6 phone scripts parse' {
   $bad = 0
   Get-ChildItem tools\phone\3.3\*.ps1 | ForEach-Object {
