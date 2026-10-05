@@ -1,0 +1,9 @@
+=== 7.0.3 verify · 2026-10-06 00:30:45
+ok    (1) ktlint
+ok    (2) unit tests
+ok    (3) LiveLanes OrtToxicity.open
+ok    (4) GuardRuntime ConceptWatcher
+ok    (5) GuardRuntime swapLanes
+ok    (6) assembleDebug
+VERIFY 7.0.3: PASS
+exit 0

@@ -50,16 +50,16 @@ Added 2026-10-02 after Phase 1.1 took about 4 hours. **Hard rule from the user: 
 | Field | Value |
 | --- | --- |
 | STANDING ORDER (user) | Keep working every session until the WEEKLY usage limit (it resets Tuesday 2026-10-06 morning). When close to it: commit everything (per sub-phase), update this block, then shut down the laptop (`shutdown /s /t 60`) |
-| Active phases | ALL 18 phases built; 3.1 proof test PASS (agreement 0.9917) · 7.0 "Deferred laptop work" IN PROGRESS: 7.0.1-3 code on disk (snapshot on origin/checkpoint), NOT yet verified (Gradle was waiting on the H4 mutex, now released) |
-| Running agents | none survive a restart. At the weekly-limit stop (2026-10-05 ~23:55) these were in flight: H4 pt-3.1 (bash bg), the Gradle-mutex holder, the 7.0.1-3 Builders (their verify runs were queued) |
+| Active phases | ALL 18 PLAN phases built (3.1 PT PASS) + extra 7.0 built (45ccc2d, d9d5bd9, dae06c1). Remaining laptop work: "phone-day kit" (build all APKs + one ordered run-sheet of HC items + model bundle), D-6.1-apk, D-7.0-auc; optional D-1.1-01/D-1.3-07 clean-room |
+| Running agents | checkpoint loop (bash bg, every 12 min) |
 | Waiting on you | progress/HUMAN_CHECKS.md: Sitting 1 (Phase 1.1) and HC-002 to HC-027 (HC-016 = Chapter 2 gate decision). HC-002 (phone) and HC-003 (AI Hub token) unblock the most; HC-026 (live Guard) unblocks HC-020/021/024/025 |
 | Deferred heavy checks | `progress/DEFERRED.md`: D-1.1-01, D-1.3-07, D-6.1-apk, D-4.2-pt, D-5.3-perfetto, D-6.3-*, D-5.2W-* |
 | Phone at last boot | NOT connected |
-| Phases accepted | 0 of 18 accepted (acceptance needs the human checks) · ALL 18 built: 1.1-1.3, 2.1-2.3, 3.1 (PT-3.1 PASS), 3.2, 3.3, 4.1-4.3, 5.1, 5.2 (+5.2-W), 5.3, 6.1-6.3 · extra phase 7.0 in progress |
-| Next action | RESUME: (1) `git fetch origin checkpoint` and check out the WIP files for 7.0 if the laptop lost them (`git checkout origin/checkpoint -- <paths>`; owned paths in progress/ch7-deferred/phase-7.0-deferred-laptop-work/SPEC.md §3). (2) H4 DONE: PASS, 3.1 closed. (3) Run tools\verify\7.0.1.ps1, 7.0.2, then 7.0.3 via vc.sh; on failure, spawn a veil-builder fix round (7.0.1 risk: GemmaBpe.encodeSegment edge cases). Close 7.0. (4) D-6.1-apk, D-7.0-auc. Then only phone/human items remain (HUMAN_CHECKS.md) |
+| Phases accepted | 0 of 18 accepted (needs the human checks) · ALL built: 1.1-1.3, 2.1-2.3, 3.1, 3.2, 3.3, 4.1-4.3, 5.1, 5.2 (+5.2-W), 5.3, 6.1-6.3, + 7.0 |
+| Next action | Build the phone-day kit: (a) D-6.1-apk + Guard debug APK + smoketest APKs via gradle-locked.ps1 into data/phone-kit/ (git-ignored) with a script tools/phone/kit.ps1 that rebuilds them; (b) docs/PHONE_DAY.md = one ordered run-sheet merging HC-002..HC-027 (dependency order, time per step, exact commands); (c) a model push script. Then D-7.0-auc (alone, heavy). Expect fix rounds after the first phone sitting |
 | Session notes | Agent types: veil-planner-medium/high (Opus), veil-builder (Sonnet, medium); definitions in .claude/agents (mirrored at veil/orchestration/claude-agents). Remote: private GitHub harutoNaiz/veil. User 2026-10-05 22:30: commit AND push everything so another agent can resume from a fresh clone; mirror via `veil/tools/orchestrator/sync.sh`. Commit per sub-phase via `bash veil/tools/orchestrator/vc.sh`. ALL Gradle via `tools\gradle-locked.ps1` (mutex Global\veil-gradle); never wait on java.exe (VS Code Java server + its Gradle daemon never exit); close VS Code Java import during builds. PUSH with `git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin main` (gh token has the workflow scope; the Windows credential manager token does not). Last push 375f7e8 (2026-10-05 22:50). USER RULE (2026-10-05 22:50): commit + push every 10-15 min and keep STATE current. A background loop runs `bash veil/tools/orchestrator/checkpoint.sh` every 12 min (mirror to main + WIP snapshot to origin/checkpoint); restart the loop when it ends (2 h); vc.sh pushes after each verified commit |
-| Sessions run | 6 |
-| Last updated | 2026-10-06 00:10 |
+| Sessions run | 7 |
+| Last updated | 2026-10-06 00:45 |
 <!-- STATE:END -->
 
 ## 2. Ledger

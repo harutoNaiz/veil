@@ -1,0 +1,8 @@
+=== 7.0.2 verify · 2026-10-06 00:12:46
+ok    (1) ktlint owned Kotlin
+ok    (2) unit tests
+ok    (3) RECOVERY-GUARD line
+ok    (4) service source markers
+ok    (5) processDebugMainManifest
+VERIFY 7.0.2: PASS
+exit 0

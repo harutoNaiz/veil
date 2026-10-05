@@ -254,3 +254,8 @@ Events:
 - 2026-10-06 00:05 H4 pt-3.1 PASS (agreement 0.9917, lists OK, shapes OK); 3.1 closed
 - 2026-10-06 00:05 checkpoint (3.1 proof PASS): main 4242296 pushed; WIP files: 27
 - 2026-10-06 00:08 checkpoint (STATE refresh): main ae2d9f6 pushed; WIP files: 27
+- 2026-10-06 00:10 checkpoint (periodic): main 984a530 pushed; WIP files: 27
+2026-10-06 00:12 | 7.0.1 | VERIFY PASS + COMMIT 45ccc2d | [7.0.1] Toxicity on the phone (Gemma BPE tokenizer + ORT classifier)
+2026-10-06 00:13 | 7.0.2 | VERIFY PASS + COMMIT d9d5bd9 | [7.0.2] Guard crash recovery and Resume Veil
+2026-10-06 00:31 | 7.0.3 | VERIFY PASS + COMMIT dae06c1 | [7.0.3] Concept hot-swap without a restart
+- 2026-10-06 00:45 session 7: 7.0.2 d9d5bd9 and 7.0.3 dae06c1 committed+pushed (retries after TEMP log-file locks); 7.0 closed. User asked ETA: ~1-1.5 h laptop work left + phone sittings
