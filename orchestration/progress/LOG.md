@@ -250,3 +250,5 @@ Events:
 - 2026-10-05 23:46 checkpoint (periodic): main bd34ffc pushed; WIP files: 27
 - 2026-10-05 23:58 checkpoint (periodic): main e9e6e6e pushed; WIP files: 27
 - 2026-10-05 23:59 user: weekly limit near; commit+push everything. STATE rewritten with resume steps; checkpoint pushed (WIP 7.0 code on origin/checkpoint)
+- 2026-10-05 23:59 checkpoint (weekly limit near: save everything): main 5f08e2b pushed; WIP files: 27
+- 2026-10-06 00:05 H4 pt-3.1 PASS (agreement 0.9917, lists OK, shapes OK); 3.1 closed

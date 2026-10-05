@@ -19,3 +19,18 @@ ok    4 onnx list bicycles
 ok    4 onnx list dogs,flowers
 [transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
 [transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.
+ok    4 onnx list cats,spiders
+ok    4b onnx files unchanged
+ok data/forge/nudenet/nudenet-320n.onnx opset=17 in=[('images', [1, 3, 320, 320])] out=[('output0', [1, 22, 2100])]
+ok data/forge/nudenet/nudenet-640m.onnx opset=17 in=[('images', [1, 3, 640, 640])] out=[('output0', [1, 22, 8400])]
+ok data/forge/siglip2/siglip2-image-b1.onnx opset=17 in=[('pixel_values', [1, 3, 224, 224])] out=[('fingerprint', [1, 768])]
+ok data/forge/siglip2/siglip2-image-b16.onnx opset=17 in=[('pixel_values', [16, 3, 224, 224])] out=[('fingerprint', [16, 768])]
+ok data/forge/siglip2/siglip2-image-b4.onnx opset=17 in=[('pixel_values', [4, 3, 224, 224])] out=[('fingerprint', [4, 768])]
+ok data/forge/siglip2/siglip2-text.onnx opset=17 in=[('input_ids', [1, 64])] out=[('fingerprint', [1, 768])]
+ok data/forge/toxicity/toxicity-seq128.onnx opset=17 in=[('input_ids', [1, 128]), ('attention_mask', [1, 128])] out=[('logits', [1, 7])]
+ok data/forge/toxicity/toxicity-seq256.onnx opset=17 in=[('input_ids', [1, 256]), ('attention_mask', [1, 256])] out=[('logits', [1, 7])]
+ok data/forge/yoloe/yoloe-26s-embed-top100.onnx opset=17 in=[('images', [1, 3, 640, 640]), ('proposal_pe', [1, 8, 512])] out=[('boxes', [1, 100, 4]), ('objectness', [1, 100]), ('fingerprint', [1, 100, 512]), ('fp_scale', [1, 100]), ('fp_bias', [1, 100])]
+ok    5 shapes over data/forge
+PT-3.1: PASS
+galleries: data/forge/pt-3.1/torch/gallery/index.html  data/forge/pt-3.1/onnx/gallery/index.html
+diff: data/forge/pt-3.1/diff.md
