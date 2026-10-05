@@ -1,0 +1,46 @@
+=== 3.3.3 verify · 2026-10-05 23:09:56
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.3.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :soak:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :soak:compileKotlin UP-TO-DATE
+> Task :soak:compileJava NO-SOURCE
+> Task :soak:processResources NO-SOURCE
+> Task :soak:classes UP-TO-DATE
+> Task :soak:jar UP-TO-DATE
+> Task :soak:compileTestKotlin UP-TO-DATE
+> Task :soak:compileTestJava NO-SOURCE
+> Task :soak:processTestResources NO-SOURCE
+> Task :soak:testClasses UP-TO-DATE
+> Task :soak:test UP-TO-DATE
+
+BUILD SUCCESSFUL in 1m
+4 actionable tasks: 4 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html
+ok    1 gradle :soak:test
+ok    2 ktlint
+All checks passed!
+ok    3 ruff check
+4 files already formatted
+ok    4 ruff format
+[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.
+wrote 2 rows of 768 to D:\iqoo finale\veil\data\ch3\phone\laptop-fp.csv
+ok    5 laptop_ref --limit 2
+.                                                                        [100%]
+1 passed in 0.50s
+wrote 9 manifests under D:\iqoo finale\veil\data\forge
+Get-ChildItem : A positional parameter cannot be found that accepts argument 'orge'.
+At D:\iqoo finale\veil\tools\verify\3.3.3.ps1:31 char:13
++   if (-not (Get-ChildItem dataorge -Recurse -Filter *.manifest.json) ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Get-ChildItem], ParameterBindingException
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.GetChildItemCommand
+ 
+ok    5b manifests
+ok    6 phone scripts parse
+adb shell am instrument -w -e class com.veil.smoketest.BenchTest -e runtime ort-qnn -e model siglip2-image-b1 -e n 100 com.veil.smoketest.test/androidx.test.runner.AndroidJUnitRunner
+adb pull /sdcard/Android/media/com.veil.smoketest/out/timing.csv D:\iqoo finale\veil\data\ch3\phone\20261005-231204
+
+ok    7 bench -DryRun
+VERIFY 3.3.3: PASS
+exit 0

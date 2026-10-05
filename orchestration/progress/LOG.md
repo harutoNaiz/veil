@@ -235,3 +235,9 @@ Events:
 - 2026-10-05 22:56 5.2-W committed+pushed (bd16085, aec978e, 2ab2d60); 5.2 closed WAITING_HUMAN; 3.3 Builders spawned
 - 2026-10-05 22:56 checkpoint (5.2 closed, 3.3 started): main 1a4eb88 pushed; WIP files: 0
 2026-10-05 23:01 | 3.3.2 | VERIFY PASS + COMMIT 524b12a | [3.3.2] Runtime wrapper (JVM) for residency and timing
+- 2026-10-05 23:01 checkpoint (periodic): main f06bcde pushed; WIP files: 29
+2026-10-05 23:03 | 3.3.3 | VERIFY PASS + COMMIT 45eff08 | [3.3.3] Soak analysis, phone scripts and decision draft
+2026-10-05 23:04 | 3.3.1 | VERIFY PASS + COMMIT fda43f1 | [3.3.1] Runtime smoke test (Android app + wrappers)
+- 2026-10-05 23:05 3.3 committed (fda43f1, 524b12a, 45eff08) + pushed; 3.3 closed WAITING_HUMAN (HC-027); manifest fix round sent to 3.3.3. ALL 18 phases now built except 3.1's H4 proof run.
+2026-10-05 23:12 | 3.3.3 | VERIFY PASS + COMMIT ae75468 | [3.3.3] Fix round 1: model manifests for the phone install
+- 2026-10-05 23:15 session 6 boot: 3.3.3 fix round verified+pushed (ae75468); 3.3 closed (HC-027); H4 pt-3.1 started alone; D-small-1 Builder (pt-4.2.ps1 + tune sync) spawned

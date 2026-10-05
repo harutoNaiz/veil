@@ -1,0 +1,17 @@
+=== 3.3.1 verify · 2026-10-05 23:04:22
+ok    (1) gradle assembleDebug + assembleDebugAndroidTest
+ok    (2) both APKs exist
+    lib/arm64-v8a/libQnnHtp.so
+    lib/arm64-v8a/libQnnHtpV68Skel.so
+    lib/arm64-v8a/libQnnHtpV69Skel.so
+    lib/arm64-v8a/libQnnHtpV73Skel.so
+    lib/arm64-v8a/libQnnHtpV75Skel.so
+    lib/arm64-v8a/libQnnHtpV79Skel.so
+    lib/arm64-v8a/libQnnHtpV81Skel.so
+    lib/arm64-v8a/libonnxruntime.so
+ok    (3) apk has libonnxruntime.so, libQnnHtp.so, >=1 Skel
+ok    (4) manifest has libcdsprpc.so
+ok    (5) disable_cpu_ep_fallback never set to 0 in src
+ok    (6) ktlint
+VERIFY 3.3.1: PASS
+exit 0

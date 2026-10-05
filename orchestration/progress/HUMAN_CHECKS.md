@@ -410,6 +410,22 @@ HC-2.2 Gatekeeper (laptop now ~5 min; phone later ~45 min)
 - **How to answer:** [PASS] or [FAIL] per step.
 - **Your answer:**
 
+### HC-027 · Phase 3.3 · "AI in your hand" and the Chapter 3 gate  [OPEN]
+- **Why a human:** the phone, a 10-minute hand-held soak, comfort, and the runtime decision.
+- **Blocks:** acceptance of 3.3 and the Chapter 3 gate.
+- **Time:** about 40 min. Needs HC-002. HC-003 (AI Hub) helps if QNN load fails.
+- **Do:** (env-loaded PowerShell in `D:\iqoo finale\veil`)
+  1. On the laptop, run `uv run python -m workshop.forge.phone.laptop_ref` (full 50 images) once.
+  2. Connect the iQOO with USB debugging and "stay awake" on. Run `tools\phone\3.3\pt.ps1`.
+     - It covers: 50 on-phone screenshots, cosine ≥ 0.98 against the laptop, a 10-min soak at 3 looks/s, and a reopen with VEIL_READY ≤ 5000 ms.
+     - Evidence goes to `data/ch3/phone/<stamp>/`.
+  3. If QNN load fails, approve the AI Hub context-binary downloads.
+  4. Supply the LiteRT .tflite and the NPU dispatch lib, then run `tools\phone\3.3\bench.ps1 -Runtime litert-npu`.
+  5. Hold the phone for the 10 min and report how comfortable it was (heat).
+  6. Approve or change the D-3.3 runtime decision in `docs/decisions.md`. Then sign the Chapter 3 gate in `docs/reports/ch3-speed.md`.
+- **How to answer:** [PASS] or [FAIL] per step.
+- **Your answer:**
+
 ---
 
 ## Later (not needed for Phase 1.1)

@@ -50,16 +50,16 @@ Added 2026-10-02 after Phase 1.1 took about 4 hours. **Hard rule from the user: 
 | Field | Value |
 | --- | --- |
 | STANDING ORDER (user) | Keep working every session until the WEEKLY usage limit (it resets Tuesday 2026-10-06 morning). When close to it: commit everything (per sub-phase), update this block, then shut down the laptop (`shutdown /s /t 60`) |
-| Active phases | 3.3 BUILDING (last unbuilt phase) · 3.1 needs H4 (pt-3.1) · D-4.2-pt small job |
-| Running agents | 3.3.1 a237df703f90ac672 · 3.3.2 af522a3115a3fb610 · 3.3.3 abd652f263e9de8ea · checkpoint loop (bash bg, every 12 min) |
+| Active phases | ALL 18 phases built (WAITING_HUMAN) except 3.1 (H4 proof running now) · deferred items in progress: D-4.2-pt + D-5.2W-tune (one Builder, record progress/deferred-small-1.md) |
+| Running agents | H4 pt-3.1 (bash bg; evidence progress/ch3-speed/phase-3.1-export-models/evidence/H4-pt-3.1.txt) · D-small-1 Builder af0a0843c95e6b08c · checkpoint loop (bash bg, every 12 min) |
 | Waiting on you | progress/HUMAN_CHECKS.md: Sitting 1 (Phase 1.1) and HC-002 to HC-026 (HC-016 = Chapter 2 gate decision). HC-002 (phone) and HC-003 (AI Hub token) unblock the most; HC-026 (live Guard) unblocks HC-020/021/024/025 |
 | Deferred heavy checks | `progress/DEFERRED.md`: D-1.1-01, D-1.3-07, D-6.1-apk, D-4.2-pt, D-5.3-perfetto, D-6.3-*, D-5.2W-* |
 | Phone at last boot | NOT connected |
-| Phases accepted | 0 of 18 · built (WAITING_HUMAN): 1.1-1.3, 2.1-2.3, 3.2, 4.1-4.3, 5.1, 5.2 (+5.2-W), 5.3, 6.1-6.3 · building: 3.3 · 3.1 needs H4 |
-| Next action | Verify and commit 3.3.2, then 3.3.1 and 3.3.3 (bash veil/tools/orchestrator/vc.sh; it pushes). Close 3.3 + the Chapter 3 gate HC. Then H4 = tools\verify\pt-3.1.ps1 alone → close 3.1. Then D-4.2-pt and the DEFERRED items (D-5.2W-* first) |
+| Phases accepted | 0 of 18 · built (WAITING_HUMAN): 1.1-1.3, 2.1-2.3, 3.2, 3.3, 4.1-4.3, 5.1, 5.2 (+5.2-W), 5.3, 6.1-6.3 · 3.1: exports committed, H4 proof running |
+| Next action | When H4 finishes: read the evidence; if PASS write 3.1 PHASE.md (WAITING_HUMAN or ACCEPTED-pending-human) and commit the evidence via checkpoint. Verify and commit D-small-1 (vc.sh-style, paths: tools/verify/pt-4.2.ps1, workshop/perf/tune.py, workshop/perf/tests). Then the remaining DEFERRED items that need no phone: D-5.2W-finder, D-5.2W-tox, D-5.2W-teacher, D-6.3-guard, D-6.3-blind, D-6.1-apk (refine as one small phase "7.0 Deferred laptop work" with veil-planner-medium) |
 | Session notes | Agent types: veil-planner-medium/high (Opus), veil-builder (Sonnet, medium); definitions in .claude/agents (mirrored at veil/orchestration/claude-agents). Remote: private GitHub harutoNaiz/veil. User 2026-10-05 22:30: commit AND push everything so another agent can resume from a fresh clone; mirror via `veil/tools/orchestrator/sync.sh`. Commit per sub-phase via `bash veil/tools/orchestrator/vc.sh`. ALL Gradle via `tools\gradle-locked.ps1` (mutex Global\veil-gradle); never wait on java.exe (VS Code Java server + its Gradle daemon never exit); close VS Code Java import during builds. PUSH with `git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin main` (gh token has the workflow scope; the Windows credential manager token does not). Last push 375f7e8 (2026-10-05 22:50). USER RULE (2026-10-05 22:50): commit + push every 10-15 min and keep STATE current. A background loop runs `bash veil/tools/orchestrator/checkpoint.sh` every 12 min (mirror to main + WIP snapshot to origin/checkpoint); restart the loop when it ends (2 h); vc.sh pushes after each verified commit |
-| Sessions run | 5 |
-| Last updated | 2026-10-05 22:56 |
+| Sessions run | 6 |
+| Last updated | 2026-10-05 23:15 |
 <!-- STATE:END -->
 
 ## 2. Ledger
