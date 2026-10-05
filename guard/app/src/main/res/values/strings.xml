@@ -2,4 +2,6 @@
 <resources>
     <string name="probe_label">Veil probe (does nothing)</string>
     <string name="probe_description">Test-only service used in Phase 1.1 to check that this phone lets a sideloaded app enable an accessibility service. It reads nothing.</string>
+    <string name="guard_a11y_label">Veil Guard signals</string>
+    <string name="guard_a11y_description">Lets Veil Guard see scrolling, which app is open and the on-screen layout, so it can protect you. Nothing leaves the phone.</string>
 </resources>
