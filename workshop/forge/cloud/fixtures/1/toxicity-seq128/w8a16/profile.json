@@ -1,0 +1,71 @@
+{
+ "jobId": "p-toxicity-seq128-w8a16",
+ "url": "fixture://p-toxicity-seq128-w8a16",
+ "status": "SUCCESS",
+ "execution_summary": {
+  "estimated_inference_time": 840,
+  "estimated_inference_peak_memory": 45000000
+ },
+ "execution_detail": [
+  {
+   "name": "layer0",
+   "type": "Relu",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer1",
+   "type": "Conv",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer2",
+   "type": "Relu",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer3",
+   "type": "Conv",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer4",
+   "type": "Relu",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer5",
+   "type": "Conv",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer6",
+   "type": "Relu",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer7",
+   "type": "Conv",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer8",
+   "type": "Relu",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer9",
+   "type": "Conv",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer10",
+   "type": "Relu",
+   "compute_unit": "NPU"
+  },
+  {
+   "name": "layer11",
+   "type": "Conv",
+   "compute_unit": "NPU"
+  }
+ ]
+}

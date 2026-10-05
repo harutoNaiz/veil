@@ -1,0 +1,376 @@
+{
+  "source": "fixture",
+  "device": "Samsung Galaxy S26 (Family)",
+  "models": [
+    {
+      "modelId": "nudenet-320n",
+      "precision": "float16",
+      "batch": 1,
+      "compileJob": "fixture://c-nudenet-320n-float16",
+      "profileJob": "fixture://p-nudenet-320n-float16",
+      "quantizeJob": null,
+      "latencyMs": 1.8,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "nudenet-320n",
+      "precision": "w8a16",
+      "batch": 1,
+      "compileJob": "fixture://c-nudenet-320n-w8a16",
+      "profileJob": "fixture://p-nudenet-320n-w8a16",
+      "quantizeJob": "fixture://q-nudenet-320n-w8a16",
+      "latencyMs": 1.26,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "nudenet-320n",
+      "precision": "w8a8",
+      "batch": 1,
+      "compileJob": "fixture://c-nudenet-320n-w8a8",
+      "profileJob": "fixture://p-nudenet-320n-w8a8",
+      "quantizeJob": "fixture://q-nudenet-320n-w8a8",
+      "latencyMs": 0.9,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "nudenet-640m",
+      "precision": "float16",
+      "batch": 1,
+      "compileJob": "fixture://c-nudenet-640m-float16",
+      "profileJob": "fixture://p-nudenet-640m-float16",
+      "quantizeJob": null,
+      "latencyMs": 6.5,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "nudenet-640m",
+      "precision": "w8a16",
+      "batch": 1,
+      "compileJob": "fixture://c-nudenet-640m-w8a16",
+      "profileJob": "fixture://p-nudenet-640m-w8a16",
+      "quantizeJob": "fixture://q-nudenet-640m-w8a16",
+      "latencyMs": 4.55,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "nudenet-640m",
+      "precision": "w8a8",
+      "batch": 1,
+      "compileJob": "fixture://c-nudenet-640m-w8a8",
+      "profileJob": "fixture://p-nudenet-640m-w8a8",
+      "quantizeJob": "fixture://q-nudenet-640m-w8a8",
+      "latencyMs": 3.25,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "yoloe-26s-embed-top100",
+      "precision": "float16",
+      "batch": 1,
+      "compileJob": "fixture://c-yoloe-26s-embed-top100-float16",
+      "profileJob": "fixture://p-yoloe-26s-embed-top100-float16",
+      "quantizeJob": null,
+      "latencyMs": 5.2,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 2
+      },
+      "npuShare": 0.8571428571428571,
+      "offChip": [
+        {
+          "layer": "post/NonZero_1",
+          "op": "NonZero",
+          "unit": "CPU",
+          "cause": "dynamic shape"
+        },
+        {
+          "layer": "post/NonZero_2",
+          "op": "NonZero",
+          "unit": "CPU",
+          "cause": "dynamic shape"
+        }
+      ]
+    },
+    {
+      "modelId": "yoloe-26s-embed-top100",
+      "precision": "w8a16",
+      "batch": 1,
+      "compileJob": "fixture://c-yoloe-26s-embed-top100-w8a16",
+      "profileJob": "fixture://p-yoloe-26s-embed-top100-w8a16",
+      "quantizeJob": "fixture://q-yoloe-26s-embed-top100-w8a16",
+      "latencyMs": 3.639,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "yoloe-26s-embed-top100",
+      "precision": "w8a8",
+      "batch": 1,
+      "compileJob": "fixture://c-yoloe-26s-embed-top100-w8a8",
+      "profileJob": "fixture://p-yoloe-26s-embed-top100-w8a8",
+      "quantizeJob": "fixture://q-yoloe-26s-embed-top100-w8a8",
+      "latencyMs": 2.6,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "siglip2-base-image-b1",
+      "precision": "float16",
+      "batch": 1,
+      "compileJob": "fixture://c-siglip2-base-image-b1-float16",
+      "profileJob": "fixture://p-siglip2-base-image-b1-float16",
+      "quantizeJob": null,
+      "latencyMs": 5.6,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "siglip2-base-image-b1",
+      "precision": "w8a16",
+      "batch": 1,
+      "compileJob": "fixture://c-siglip2-base-image-b1-w8a16",
+      "profileJob": "fixture://p-siglip2-base-image-b1-w8a16",
+      "quantizeJob": "fixture://q-siglip2-base-image-b1-w8a16",
+      "latencyMs": 3.92,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "siglip2-base-image-b16",
+      "precision": "float16",
+      "batch": 16,
+      "compileJob": "fixture://c-siglip2-base-image-b16-float16",
+      "profileJob": "fixture://p-siglip2-base-image-b16-float16",
+      "quantizeJob": null,
+      "latencyMs": 89.6,
+      "peakMemMb": 120.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "siglip2-base-image-b16",
+      "precision": "w8a16",
+      "batch": 16,
+      "compileJob": "fixture://c-siglip2-base-image-b16-w8a16",
+      "profileJob": "fixture://p-siglip2-base-image-b16-w8a16",
+      "quantizeJob": "fixture://q-siglip2-base-image-b16-w8a16",
+      "latencyMs": 62.72,
+      "peakMemMb": 120.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "siglip2-base-image-b4",
+      "precision": "float16",
+      "batch": 4,
+      "compileJob": "fixture://c-siglip2-base-image-b4-float16",
+      "profileJob": "fixture://p-siglip2-base-image-b4-float16",
+      "quantizeJob": null,
+      "latencyMs": 22.4,
+      "peakMemMb": 60.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "siglip2-base-image-b4",
+      "precision": "w8a16",
+      "batch": 4,
+      "compileJob": "fixture://c-siglip2-base-image-b4-w8a16",
+      "profileJob": "fixture://p-siglip2-base-image-b4-w8a16",
+      "quantizeJob": "fixture://q-siglip2-base-image-b4-w8a16",
+      "latencyMs": 15.68,
+      "peakMemMb": 60.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "siglip2-base-text",
+      "precision": "float16",
+      "batch": 1,
+      "compileJob": "fixture://c-siglip2-base-text-float16",
+      "profileJob": "fixture://p-siglip2-base-text-float16",
+      "quantizeJob": null,
+      "latencyMs": 3.0,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "siglip2-base-text",
+      "precision": "w8a16",
+      "batch": 1,
+      "compileJob": "fixture://c-siglip2-base-text-w8a16",
+      "profileJob": "fixture://p-siglip2-base-text-w8a16",
+      "quantizeJob": "fixture://q-siglip2-base-text-w8a16",
+      "latencyMs": 2.099,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "toxicity-seq128",
+      "precision": "float16",
+      "batch": 1,
+      "compileJob": "fixture://c-toxicity-seq128-float16",
+      "profileJob": "fixture://p-toxicity-seq128-float16",
+      "quantizeJob": null,
+      "latencyMs": 1.2,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "toxicity-seq128",
+      "precision": "w8a16",
+      "batch": 1,
+      "compileJob": "fixture://c-toxicity-seq128-w8a16",
+      "profileJob": "fixture://p-toxicity-seq128-w8a16",
+      "quantizeJob": "fixture://q-toxicity-seq128-w8a16",
+      "latencyMs": 0.84,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "toxicity-seq256",
+      "precision": "float16",
+      "batch": 1,
+      "compileJob": "fixture://c-toxicity-seq256-float16",
+      "profileJob": "fixture://p-toxicity-seq256-float16",
+      "quantizeJob": null,
+      "latencyMs": 2.3,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    },
+    {
+      "modelId": "toxicity-seq256",
+      "precision": "w8a16",
+      "batch": 1,
+      "compileJob": "fixture://c-toxicity-seq256-w8a16",
+      "profileJob": "fixture://p-toxicity-seq256-w8a16",
+      "quantizeJob": "fixture://q-toxicity-seq256-w8a16",
+      "latencyMs": 1.609,
+      "peakMemMb": 45.0,
+      "layers": {
+        "npu": 12,
+        "gpu": 0,
+        "cpu": 0
+      },
+      "npuShare": 1.0,
+      "offChip": []
+    }
+  ]
+}
