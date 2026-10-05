@@ -95,4 +95,13 @@ class CaptureStateMachineTest {
         assertNull(t)
         assertEquals(CaptureState.RUNNING, m.state)
     }
+
+    @Test
+    fun restartedFromStoppedAwaitsPermission() {
+        val m = CaptureStateMachine()
+        val t = m.on(CaptureEvent.Restarted, 1)
+        assertEquals(CaptureState.AWAITING_PERMISSION, t?.state)
+        assertEquals("restarted", t?.reason)
+        assertNull(m.on(CaptureEvent.Restarted, 2))
+    }
 }

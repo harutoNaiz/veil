@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import android.os.Trace
+import com.veil.guard.wire.ml.ConceptWatcher
 import com.veil.guard.wire.ml.LiveLanes
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
@@ -17,9 +18,11 @@ object GuardRuntime {
     private var worker: ThreadWorker? = null
 
     @Volatile private var core: GuardCore? = null
+    private const val DEBOUNCE_MS = 150L
     private val pumpQueued = AtomicBoolean(false)
     private var appCtx: Context? = null
     private var skip: Set<String> = DEFAULT_SKIP
+    private var watcher: ConceptWatcher? = null
 
     @Synchronized
     fun start(ctx: Context) {
@@ -64,6 +67,12 @@ object GuardRuntime {
         }
         WireHub.events = { e -> h.post { c.onEvent(e) } }
         WireHub.drawn = { t0 -> h.post { c.onDrawn(t0) } }
+        val dir = File(app.externalMediaDirs.first(), "concepts").also { it.mkdirs() }
+        val r = Runnable { reloadLanes() }
+        watcher = ConceptWatcher(dir) {
+            h.removeCallbacks(r)
+            h.postDelayed(r, DEBOUNCE_MS)
+        }.also { it.start() }
     }
 
     private fun schedulePump() {
@@ -95,7 +104,12 @@ object GuardRuntime {
         run { it.setSkipApps(pkgs) }
     }
 
-    fun reloadLanes() = run { it.rebuild() }
+    fun reloadLanes() = run {
+        it.swapLanes()
+        WireHub.log?.write(
+            mapOf("kind" to "concepts", "tMs" to SystemClock.uptimeMillis(), "lanes" to it.buildCount)
+        )
+    }
 
     fun writeStatus(ctx: Context) {
         run { c ->
@@ -108,6 +122,8 @@ object GuardRuntime {
 
     @Synchronized
     fun stop() {
+        watcher?.stop()
+        watcher = null
         WireHub.frames = null
         WireHub.events = null
         WireHub.drawn = null

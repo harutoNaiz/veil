@@ -25,12 +25,18 @@ object CaptureNotifications {
         mgr.createNotificationChannel(channel)
     }
 
-    fun build(context: Context, text: String, awaitingPermission: Boolean): Notification {
+    fun build(context: Context, text: String, awaitingPermission: Boolean, reason: String? = null): Notification {
         ensureChannel(context)
         val builder =
             Notification.Builder(context, CHANNEL_ID)
                 .setContentTitle(context.getString(R.string.capture_notification_title))
-                .setContentText(text)
+                .setContentText(
+                    when (reason) {
+                        "restarted" -> context.getString(R.string.capture_text_restarted)
+                        "keyguard" -> context.getString(R.string.capture_text_keyguard)
+                        else -> text
+                    }
+                )
                 .setOngoing(true)
                 .setSmallIcon(android.R.drawable.ic_menu_view)
         if (awaitingPermission) {
@@ -45,6 +51,7 @@ object CaptureNotifications {
                     intent,
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
+            builder.setContentIntent(pending)
             builder.addAction(
                 Notification.Action
                     .Builder(
