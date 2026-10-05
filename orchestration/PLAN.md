@@ -2143,6 +2143,121 @@ These are small tools, not product features, but almost every on-device proof te
 
 ---
 
+# Chapter 7: NAME ANYTHING
+
+**Why this chapter:** the product promise is "type what you don't want to see, and it disappears". Chapters 1-6 tuned thresholds by hand for a few concepts (cats, spiders). An untuned word ("snakes") worked end to end but wrongly covered 53% of clean screens, because SigLIP2 scores sit at different levels for different words. This chapter replaces per-word tuning with automatic, label-free calibration, so that any concrete word works out of the box.
+
+**Scope (user decision, 2026-10-06):**
+- **In scope:** concrete visual nouns, named at the level a person would name them: one animal, object, food or vehicle ("buffalo", "umbrella", "pizza", "motorbike"). Finer subclasses inside a name (water buffalo vs cape buffalo) are not required.
+- **Out of scope here:** abstract topics such as politics, violence or a specific person. These go through the text lane and topic packs.
+
+**Chapter gate:** on a benchmark of never-tuned concrete words, at least 90% of the words reach recall ≥ 90% at a clean false-cover ≤ 5% (Balanced mode). Every number comes from public, human-labelled data; no word is hand-tuned.
+
+## Phase 7.1: Self-calibrating concepts
+
+### 7.1.1 Reference bank
+
+**Goal:** a compact, safe, diverse picture of "everything else" that ships with the app.
+
+**Do:**
+1. Pick about 30,000 diverse, safe, permissively licensed public images (Open Images or COCO style), covering scenes, people, objects, screenshots, memes and text-heavy images. Exclude explicit material.
+2. Compute their SigLIP2 image fingerprints on the laptop with the same exported model the phone uses. Store them as a compact asset (fp16 or int8; target ≤ 40 MB), with the source and licence for each image.
+3. Write a builder script that recreates the asset from scratch.
+
+**Produces:** the reference-bank asset, plus its builder and licence list.
+
+**Done when:** the asset loads on the laptop twin and in Kotlin, and its fingerprints match a fresh recomputation (cosine ≥ 0.999).
+
+### 7.1.2 Automatic threshold, competitors and prompt ensembles
+
+**Goal:** a new word gets a correct threshold in under a second on the phone, with no labels.
+
+**Do:**
+1. **Prompt ensemble:** encode each word with several templates ("a photo of a {w}", "a {w}", "a close-up of a {w}", "a {w} in a meme", "a drawing of a {w}") and average them.
+2. **Null calibration:** score the word against the whole bank. Almost every bank image is negative for any one word, so set the Balanced threshold at the bank quantile that gives the target clean false-cover; Light and Strict sit at fixed offsets. Exclude bank items whose labels include the word or one of its synonyms.
+3. **Competitors:** find the nearest lookalike words automatically (text-embedding neighbours from a built-in vocabulary of about 5,000 concrete nouns). A cover fires only if the word beats its best competitor by a margin.
+4. Implement it in the twin (Python) and in Kotlin. The golden-tape parity tests must keep passing.
+
+**Produces:** auto-calibrated concept cards, in the twin and on the phone.
+
+**Done when:** "snakes", which was never tuned, drops from 53% clean false-cover to ≤ 5% on the dev set, with recall reported.
+
+### 7.1.3 "Also hide?" in the app
+
+**Goal:** the user decides the edges of a word, not the model.
+
+**Do:**
+1. When a word is added, show the closest lookalike words as chips ("Also hide: bison? yak?"). Selected chips join the concept; unselected ones become competitors.
+2. Show a small preview of what will be hidden: the top matches from the safe reference bank.
+3. Adding a word must take under 1 s from typing to active.
+
+**Produces:** the Console flow for adding any word.
+
+**Done when:** a first-time user adds "buffalo" and sees it active, with chips, in under 1 s (phone).
+
+### Proof test: Phase 7.1 · "Buffalo"
+Type "buffalo" (never tuned) on the phone. Buffalo posts in the Test Feed and the public set get covered; cow and horse posts are not covered unless their chips are selected. On the laptop, the twin reports per-word recall and clean false-cover for 10 unseen words.
+
+### Acceptance contract: Phase 7.1
+
+| ID | Criterion | Pass threshold | How verified |
+| --- | --- | --- | --- |
+| AC-7.1-01 | Bank faithful | Fingerprint cosine ≥ 0.999 against a fresh recomputation | Script |
+| AC-7.1-02 | Fast add | Word typed → concept active in ≤ 1 s on the phone | Phone timing |
+| AC-7.1-03 | Unseen word sane | "snakes" clean false-cover ≤ 5% (was 53%) | Twin eval |
+| AC-7.1-04 | Parity kept | Golden tapes still match exactly; Kotlin and twin thresholds agree to 1e-4 | Tests |
+| AC-7.1-05 | Licences | Every bank image has a recorded permissive licence | Licence list |
+
+## Phase 7.2: The "name anything" benchmark
+
+### 7.2.1 Benchmark of unseen words
+
+**Goal:** prove the 90% with data, not anecdotes.
+
+**Do:**
+1. From a public, human-labelled dataset with image-level labels (such as Open Images), pick 100 concrete words across animals, objects, foods and vehicles that were never used for tuning. Use ≥ 30 positive images per word, plus clean negatives that include lookalikes.
+2. Add screenshot-style variants: crops placed into feed-like layouts at realistic sizes, so the numbers reflect phones, not photo galleries.
+3. Freeze the set and record its hash. Words, images and labels are fixed before any method change.
+
+**Produces:** the frozen benchmark with its licences.
+
+**Done when:** the set is frozen and every label source is recorded.
+
+### 7.2.2 Evaluate and improve
+
+**Goal:** reach the gate, or learn exactly which words fail and why.
+
+**Do:**
+1. Run the twin on the benchmark: per-word recall, precision and clean false-cover in each mode, and the share of words meeting the gate.
+2. Improve only the general method: templates, bank composition, quantile, competitor margin, crop sizes. Never tune a single word. Keep a log of each attempt; at most 5 test-set runs.
+3. Port any changed parameters to Kotlin and re-run parity.
+
+**Produces:** `docs/reports/ch7-name-anything.md`, with per-word results and a failure analysis (small objects, lookalikes, drawings).
+
+**Done when:** the report shows the gate result honestly.
+
+### 7.2.3 On the phone
+
+**Goal:** the same behaviour on the phone.
+
+**Do:**
+1. Add 10 benchmark words on the phone and run the screenshot-style set through the replay harness. Results must match the twin within 2 points.
+2. Live check in Instagram, Reddit and a browser with 3 words, scrolling.
+
+**Done when:** the phone results match the twin and the live check passes.
+
+### Acceptance contract: Phase 7.2 (includes the Chapter 7 gate)
+
+| ID | Criterion | Pass threshold | How verified |
+| --- | --- | --- | --- |
+| AC-7.2-01 | Frozen benchmark | 100 unseen concrete words, ≥ 30 positives each, hash recorded before tuning | Manifest |
+| AC-7.2-02 | Chapter 7 gate | ≥ 90% of benchmark words reach recall ≥ 90% at clean false-cover ≤ 5% (Balanced) | Report |
+| AC-7.2-03 | No per-word tuning | No word-specific parameter anywhere | Code review + grep |
+| AC-7.2-04 | Phone matches twin | Replay results within 2 points of the twin for 10 words | Replay |
+| AC-7.2-05 | Live | 3 named words covered while scrolling Instagram, Reddit and a browser | Recording |
+
+**If the gate is missed:** report the share of words that pass and the failure classes, then choose between (a) enabling the YOLOE Finder as a second opinion for small objects, (b) a larger image model on the phone, or (c) narrowing the promise to the word classes that pass.
+
 # Appendices
 
 ## A. Gates and fallbacks at a glance

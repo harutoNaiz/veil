@@ -262,3 +262,6 @@ Events:
 - 2026-10-06 00:32 checkpoint (7.0 closed): main 825335e pushed; WIP files: 0
 - 2026-10-06 00:35 phone-day kit: 2 Builders spawned (kit.ps1 + D-6.1-apk; PHONE_DAY.md run-sheet)
 2026-10-06 00:35 | phone-day-sheet | VERIFY PASS + COMMIT 4ebb1ac | [phone-day-sheet] Phone-day run-sheet (docs/PHONE_DAY.md)
+- 2026-10-06 00:44 checkpoint (periodic): main c2f0aaa pushed; WIP files: 2
+2026-10-06 00:53 | phone-kit-1 | VERIFY PASS + COMMIT 04351c2 | [phone-kit-1] Phone-day kit: build all APKs, manifest, -Push installer
+- 2026-10-06 00:53 phone kit committed 04351c2 (6 APKs; console APK build FAILED: Pigeon file, D-6.1-apk); PLAN.md Chapter 7 NAME ANYTHING added (7.1 self-calibration, 7.2 benchmark; gate >=90% of words at recall>=90%/false-cover<=5%)
