@@ -12,6 +12,8 @@ import com.veil.guard.wire.WireHub
 import java.io.File
 
 object LiveLanes {
+    private val fingerprints = FingerprintCache()
+
     private fun off(lane: String, why: String) {
         WireHub.log?.write(mapOf("kind" to "warn", "what" to "lane-off", "lane" to lane, "why" to why))
     }
@@ -34,11 +36,13 @@ object LiveLanes {
             if (store.has(n)) store.session(n)?.let { b to it } else null
         }.toMap()
         if (img.isNotEmpty() && concepts.describer.isNotEmpty()) {
-            lanes += RegionLane(concepts, OrtDescriber(store.env, img), null, FingerprintCache(), counters)
+            lanes += RegionLane(concepts, OrtDescriber(store.env, img), null, fingerprints, counters)
         } else {
             off("region", if (img.isEmpty()) "siglip2 image models missing" else "no concepts")
         }
-        lanes += TextLane(concepts, null, MlKitOcr(), counters)
+        val tox = OrtToxicity.open(store)
+        if (tox == null) off("toxicity", "toxicity-seq128.onnx or toxicity-tok.bin missing")
+        lanes += TextLane(concepts, tox, MlKitOcr(), counters)
         return lanes
     }
 }
