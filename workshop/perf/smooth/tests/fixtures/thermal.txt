@@ -1,0 +1,3 @@
+IsStatusOverride: false
+Thermal Status: 2
+Cached temperatures:

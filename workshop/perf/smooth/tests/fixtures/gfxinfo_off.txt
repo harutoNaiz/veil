@@ -1,0 +1,10 @@
+Applications Graphics Acceleration Info:
+Uptime: 123456 Realtime: 123456
+
+** Graphics info for pid 4242 [com.instagram.android] **
+
+Stats since: 100000000000ns
+Total frames rendered: 1800
+Janky frames: 81 (4.50%)
+50th percentile: 7ms
+90th percentile: 11ms

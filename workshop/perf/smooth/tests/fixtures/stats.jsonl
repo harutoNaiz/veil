@@ -1,0 +1,6 @@
+{"kind": "stats", "tMs": 0, "phase": "active"}
+{"kind": "stats", "tMs": 1000, "phase": "active"}
+{"kind": "stats", "tMs": 2000, "phase": "throttled"}
+{"kind": "stats", "tMs": 3000, "phase": "throttled"}
+{"kind": "stats", "tMs": 4000, "phase": "active"}
+{"kind": "stats", "tMs": 5000, "phase": "idle"}

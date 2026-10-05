@@ -1,0 +1,8 @@
+Applications Memory Usage (in Kilobytes):
+** MEMINFO in pid 5151 [com.veil.guard] **
+                   Pss  Private  Private
+                 Total    Dirty    Clean
+  Native Heap   300000   299000      100
+        TOTAL  1500000  1200000    50000
+
+ TOTAL PSS:  1500000            TOTAL RSS:  1700000
