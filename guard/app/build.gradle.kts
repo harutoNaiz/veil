@@ -25,6 +25,8 @@ android {
 
 dependencies {
     implementation(project(":brain"))
+    implementation(project(":conductor"))
+    implementation("com.google.mlkit:text-recognition:16.0.1")
     implementation(project(":teacher"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     implementation("com.microsoft.onnxruntime:onnxruntime-android:1.22.0")
