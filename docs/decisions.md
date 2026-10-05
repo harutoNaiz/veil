@@ -61,3 +61,15 @@ Status: proposed. Run on set **synthetic** (1.2's synthetic drawn shapes: pipeli
 - Gate: PENDING-HUMAN (real frozen test set); fallback rule per PLAN 1.3 'If rejected'.
 - Full numbers: docs/reports/ch1-see.md.
 <!-- ch1-see:end -->
+
+<!-- ch3-runtime:begin -->
+## D-3.3 runtime: ORT+QNN proposed, PENDING phone comparison
+
+2026-10-05 · Phase 3.3
+
+Status: proposed. No phone was available, so no timing, memory, soak or parity numbers exist yet (`docs/reports/ch3-speed.md`, tables PENDING-PHONE).
+
+- Proposal: ONNX Runtime with the QNN HTP execution provider (fp32 ONNX run with fp16 precision, CPU fallback off). LiteRT-NPU is the alternative; it has no local .tflite models.
+- Decide at the phone sitting with `tools/phone/3.3/pt.ps1`: look p95 <= 45 ms, soak growth <= 5%, drift <= 20%, parity cosine >= 0.98.
+- Fallback if HTP rejects an op: AI Hub QNN context binaries or the quantized ONNX from the 3.2 jobs.
+<!-- ch3-runtime:end -->
