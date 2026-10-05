@@ -1,0 +1,265 @@
+{"kind": "stage", "lookId": 0, "stage": "frame", "tMs": 1000}
+{"kind": "stage", "lookId": 0, "stage": "gate", "tMs": 1010}
+{"kind": "stage", "lookId": 0, "stage": "ai", "tMs": 1020}
+{"kind": "stage", "lookId": 0, "stage": "judge", "tMs": 1030}
+{"kind": "stage", "lookId": 0, "stage": "plan", "tMs": 1040}
+{"kind": "plan", "tMs": 1190, "lookId": 0, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 0, "stage": "draw", "tMs": 1200}
+{"kind": "stage", "lookId": 1, "stage": "frame", "tMs": 2000}
+{"kind": "stage", "lookId": 1, "stage": "gate", "tMs": 2010}
+{"kind": "stage", "lookId": 1, "stage": "ai", "tMs": 2020}
+{"kind": "stage", "lookId": 1, "stage": "judge", "tMs": 2030}
+{"kind": "stage", "lookId": 1, "stage": "plan", "tMs": 2040}
+{"kind": "plan", "tMs": 2193, "lookId": 1, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 1, "stage": "draw", "tMs": 2203}
+{"kind": "stage", "lookId": 2, "stage": "frame", "tMs": 3000}
+{"kind": "stage", "lookId": 2, "stage": "gate", "tMs": 3010}
+{"kind": "stage", "lookId": 2, "stage": "ai", "tMs": 3020}
+{"kind": "stage", "lookId": 2, "stage": "judge", "tMs": 3030}
+{"kind": "stage", "lookId": 2, "stage": "plan", "tMs": 3040}
+{"kind": "plan", "tMs": 3196, "lookId": 2, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 2, "stage": "draw", "tMs": 3206}
+{"kind": "stage", "lookId": 3, "stage": "frame", "tMs": 4000}
+{"kind": "stage", "lookId": 3, "stage": "gate", "tMs": 4010}
+{"kind": "stage", "lookId": 3, "stage": "ai", "tMs": 4020}
+{"kind": "stage", "lookId": 3, "stage": "judge", "tMs": 4030}
+{"kind": "stage", "lookId": 3, "stage": "plan", "tMs": 4040}
+{"kind": "plan", "tMs": 4199, "lookId": 3, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 3, "stage": "draw", "tMs": 4209}
+{"kind": "stage", "lookId": 4, "stage": "frame", "tMs": 5000}
+{"kind": "stage", "lookId": 4, "stage": "gate", "tMs": 5010}
+{"kind": "stage", "lookId": 4, "stage": "ai", "tMs": 5020}
+{"kind": "stage", "lookId": 4, "stage": "judge", "tMs": 5030}
+{"kind": "stage", "lookId": 4, "stage": "plan", "tMs": 5040}
+{"kind": "plan", "tMs": 5202, "lookId": 4, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 4, "stage": "draw", "tMs": 5212}
+{"kind": "plan", "tMs": 6205, "lookId": 5, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 5, "stage": "draw", "tMs": 6215}
+{"kind": "plan", "tMs": 7208, "lookId": 6, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 6, "stage": "draw", "tMs": 7218}
+{"kind": "plan", "tMs": 8211, "lookId": 7, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 7, "stage": "draw", "tMs": 8221}
+{"kind": "plan", "tMs": 9214, "lookId": 8, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 8, "stage": "draw", "tMs": 9224}
+{"kind": "plan", "tMs": 10217, "lookId": 9, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 9, "stage": "draw", "tMs": 10227}
+{"kind": "plan", "tMs": 11220, "lookId": 10, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 10, "stage": "draw", "tMs": 11230}
+{"kind": "plan", "tMs": 12223, "lookId": 11, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 11, "stage": "draw", "tMs": 12233}
+{"kind": "plan", "tMs": 13226, "lookId": 12, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 12, "stage": "draw", "tMs": 13236}
+{"kind": "plan", "tMs": 14229, "lookId": 13, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 13, "stage": "draw", "tMs": 14239}
+{"kind": "plan", "tMs": 15232, "lookId": 14, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 14, "stage": "draw", "tMs": 15242}
+{"kind": "plan", "tMs": 16235, "lookId": 15, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 15, "stage": "draw", "tMs": 16245}
+{"kind": "plan", "tMs": 17238, "lookId": 16, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 16, "stage": "draw", "tMs": 17248}
+{"kind": "plan", "tMs": 18241, "lookId": 17, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 17, "stage": "draw", "tMs": 18251}
+{"kind": "plan", "tMs": 19244, "lookId": 18, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 18, "stage": "draw", "tMs": 19254}
+{"kind": "plan", "tMs": 20247, "lookId": 19, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 19, "stage": "draw", "tMs": 20257}
+{"kind": "plan", "tMs": 21250, "lookId": 20, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 20, "stage": "draw", "tMs": 21260}
+{"kind": "plan", "tMs": 22253, "lookId": 21, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 21, "stage": "draw", "tMs": 22263}
+{"kind": "plan", "tMs": 23256, "lookId": 22, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 22, "stage": "draw", "tMs": 23266}
+{"kind": "plan", "tMs": 24259, "lookId": 23, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 23, "stage": "draw", "tMs": 24269}
+{"kind": "plan", "tMs": 25262, "lookId": 24, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 24, "stage": "draw", "tMs": 25272}
+{"kind": "plan", "tMs": 26265, "lookId": 25, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 25, "stage": "draw", "tMs": 26275}
+{"kind": "plan", "tMs": 27268, "lookId": 26, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 26, "stage": "draw", "tMs": 27278}
+{"kind": "plan", "tMs": 28271, "lookId": 27, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 27, "stage": "draw", "tMs": 28281}
+{"kind": "plan", "tMs": 29274, "lookId": 28, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 28, "stage": "draw", "tMs": 29284}
+{"kind": "plan", "tMs": 30277, "lookId": 29, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 29, "stage": "draw", "tMs": 30287}
+{"kind": "plan", "tMs": 31280, "lookId": 30, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 30, "stage": "draw", "tMs": 31290}
+{"kind": "plan", "tMs": 32283, "lookId": 31, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 31, "stage": "draw", "tMs": 32293}
+{"kind": "plan", "tMs": 33286, "lookId": 32, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 32, "stage": "draw", "tMs": 33296}
+{"kind": "plan", "tMs": 34289, "lookId": 33, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 33, "stage": "draw", "tMs": 34299}
+{"kind": "plan", "tMs": 35292, "lookId": 34, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 34, "stage": "draw", "tMs": 35302}
+{"kind": "plan", "tMs": 36295, "lookId": 35, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 35, "stage": "draw", "tMs": 36305}
+{"kind": "plan", "tMs": 37298, "lookId": 36, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 36, "stage": "draw", "tMs": 37308}
+{"kind": "plan", "tMs": 38301, "lookId": 37, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 37, "stage": "draw", "tMs": 38311}
+{"kind": "plan", "tMs": 39304, "lookId": 38, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 38, "stage": "draw", "tMs": 39314}
+{"kind": "plan", "tMs": 40307, "lookId": 39, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 39, "stage": "draw", "tMs": 40317}
+{"kind": "plan", "tMs": 41310, "lookId": 40, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 40, "stage": "draw", "tMs": 41320}
+{"kind": "plan", "tMs": 42313, "lookId": 41, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 41, "stage": "draw", "tMs": 42323}
+{"kind": "plan", "tMs": 43316, "lookId": 42, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 42, "stage": "draw", "tMs": 43326}
+{"kind": "plan", "tMs": 44319, "lookId": 43, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 43, "stage": "draw", "tMs": 44329}
+{"kind": "plan", "tMs": 45322, "lookId": 44, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 44, "stage": "draw", "tMs": 45332}
+{"kind": "plan", "tMs": 46325, "lookId": 45, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 45, "stage": "draw", "tMs": 46335}
+{"kind": "plan", "tMs": 47328, "lookId": 46, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 46, "stage": "draw", "tMs": 47338}
+{"kind": "plan", "tMs": 48331, "lookId": 47, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 47, "stage": "draw", "tMs": 48341}
+{"kind": "plan", "tMs": 49334, "lookId": 48, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 48, "stage": "draw", "tMs": 49344}
+{"kind": "plan", "tMs": 50337, "lookId": 49, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 49, "stage": "draw", "tMs": 50347}
+{"kind": "plan", "tMs": 51340, "lookId": 50, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 50, "stage": "draw", "tMs": 51350}
+{"kind": "plan", "tMs": 52343, "lookId": 51, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 51, "stage": "draw", "tMs": 52353}
+{"kind": "plan", "tMs": 53346, "lookId": 52, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 52, "stage": "draw", "tMs": 53356}
+{"kind": "plan", "tMs": 54349, "lookId": 53, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 53, "stage": "draw", "tMs": 54359}
+{"kind": "plan", "tMs": 55352, "lookId": 54, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 54, "stage": "draw", "tMs": 55362}
+{"kind": "plan", "tMs": 56355, "lookId": 55, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 55, "stage": "draw", "tMs": 56365}
+{"kind": "plan", "tMs": 57358, "lookId": 56, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 56, "stage": "draw", "tMs": 57368}
+{"kind": "plan", "tMs": 58361, "lookId": 57, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 57, "stage": "draw", "tMs": 58371}
+{"kind": "plan", "tMs": 59364, "lookId": 58, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 58, "stage": "draw", "tMs": 59374}
+{"kind": "plan", "tMs": 60367, "lookId": 59, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 59, "stage": "draw", "tMs": 60377}
+{"kind": "plan", "tMs": 61370, "lookId": 60, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 60, "stage": "draw", "tMs": 61380}
+{"kind": "plan", "tMs": 62373, "lookId": 61, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 61, "stage": "draw", "tMs": 62383}
+{"kind": "plan", "tMs": 63376, "lookId": 62, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 62, "stage": "draw", "tMs": 63386}
+{"kind": "plan", "tMs": 64379, "lookId": 63, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 63, "stage": "draw", "tMs": 64389}
+{"kind": "plan", "tMs": 65382, "lookId": 64, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 64, "stage": "draw", "tMs": 65392}
+{"kind": "plan", "tMs": 66385, "lookId": 65, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 65, "stage": "draw", "tMs": 66395}
+{"kind": "plan", "tMs": 67388, "lookId": 66, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 66, "stage": "draw", "tMs": 67398}
+{"kind": "plan", "tMs": 68391, "lookId": 67, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 67, "stage": "draw", "tMs": 68401}
+{"kind": "plan", "tMs": 69394, "lookId": 68, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 68, "stage": "draw", "tMs": 69404}
+{"kind": "plan", "tMs": 70397, "lookId": 69, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 69, "stage": "draw", "tMs": 70407}
+{"kind": "plan", "tMs": 71400, "lookId": 70, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 70, "stage": "draw", "tMs": 71410}
+{"kind": "plan", "tMs": 72403, "lookId": 71, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 71, "stage": "draw", "tMs": 72413}
+{"kind": "plan", "tMs": 73406, "lookId": 72, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 72, "stage": "draw", "tMs": 73416}
+{"kind": "plan", "tMs": 74409, "lookId": 73, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 73, "stage": "draw", "tMs": 74419}
+{"kind": "plan", "tMs": 75412, "lookId": 74, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 74, "stage": "draw", "tMs": 75422}
+{"kind": "plan", "tMs": 76415, "lookId": 75, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 75, "stage": "draw", "tMs": 76425}
+{"kind": "plan", "tMs": 77418, "lookId": 76, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 76, "stage": "draw", "tMs": 77428}
+{"kind": "plan", "tMs": 78421, "lookId": 77, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 77, "stage": "draw", "tMs": 78431}
+{"kind": "plan", "tMs": 79424, "lookId": 78, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 78, "stage": "draw", "tMs": 79434}
+{"kind": "plan", "tMs": 80427, "lookId": 79, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 79, "stage": "draw", "tMs": 80437}
+{"kind": "plan", "tMs": 81430, "lookId": 80, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 80, "stage": "draw", "tMs": 81440}
+{"kind": "plan", "tMs": 82433, "lookId": 81, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 81, "stage": "draw", "tMs": 82443}
+{"kind": "plan", "tMs": 83436, "lookId": 82, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 82, "stage": "draw", "tMs": 83446}
+{"kind": "plan", "tMs": 84439, "lookId": 83, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 83, "stage": "draw", "tMs": 84449}
+{"kind": "plan", "tMs": 85442, "lookId": 84, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 84, "stage": "draw", "tMs": 85452}
+{"kind": "plan", "tMs": 86445, "lookId": 85, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 85, "stage": "draw", "tMs": 86455}
+{"kind": "plan", "tMs": 87448, "lookId": 86, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 86, "stage": "draw", "tMs": 87458}
+{"kind": "plan", "tMs": 88451, "lookId": 87, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 87, "stage": "draw", "tMs": 88461}
+{"kind": "plan", "tMs": 89454, "lookId": 88, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 88, "stage": "draw", "tMs": 89464}
+{"kind": "plan", "tMs": 90457, "lookId": 89, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 89, "stage": "draw", "tMs": 90467}
+{"kind": "plan", "tMs": 91460, "lookId": 90, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 90, "stage": "draw", "tMs": 91470}
+{"kind": "plan", "tMs": 92463, "lookId": 91, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 91, "stage": "draw", "tMs": 92473}
+{"kind": "plan", "tMs": 93466, "lookId": 92, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 92, "stage": "draw", "tMs": 93476}
+{"kind": "plan", "tMs": 94469, "lookId": 93, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 93, "stage": "draw", "tMs": 94479}
+{"kind": "plan", "tMs": 95472, "lookId": 94, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 94, "stage": "draw", "tMs": 95482}
+{"kind": "plan", "tMs": 96475, "lookId": 95, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 95, "stage": "draw", "tMs": 96485}
+{"kind": "plan", "tMs": 97478, "lookId": 96, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 96, "stage": "draw", "tMs": 97488}
+{"kind": "plan", "tMs": 98481, "lookId": 97, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 97, "stage": "draw", "tMs": 98491}
+{"kind": "plan", "tMs": 99484, "lookId": 98, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 98, "stage": "draw", "tMs": 99494}
+{"kind": "plan", "tMs": 100487, "lookId": 99, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 99, "stage": "draw", "tMs": 100497}
+{"kind": "plan", "tMs": 101490, "lookId": 100, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 100, "stage": "draw", "tMs": 101500}
+{"kind": "plan", "tMs": 102493, "lookId": 101, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 101, "stage": "draw", "tMs": 102503}
+{"kind": "plan", "tMs": 103496, "lookId": 102, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 102, "stage": "draw", "tMs": 103506}
+{"kind": "plan", "tMs": 104499, "lookId": 103, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 103, "stage": "draw", "tMs": 104509}
+{"kind": "plan", "tMs": 105502, "lookId": 104, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 104, "stage": "draw", "tMs": 105512}
+{"kind": "plan", "tMs": 106505, "lookId": 105, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 105, "stage": "draw", "tMs": 106515}
+{"kind": "plan", "tMs": 107508, "lookId": 106, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 106, "stage": "draw", "tMs": 107518}
+{"kind": "plan", "tMs": 108511, "lookId": 107, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 107, "stage": "draw", "tMs": 108521}
+{"kind": "plan", "tMs": 109514, "lookId": 108, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 108, "stage": "draw", "tMs": 109524}
+{"kind": "plan", "tMs": 110517, "lookId": 109, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 109, "stage": "draw", "tMs": 110527}
+{"kind": "plan", "tMs": 111520, "lookId": 110, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 110, "stage": "draw", "tMs": 111530}
+{"kind": "plan", "tMs": 112523, "lookId": 111, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 111, "stage": "draw", "tMs": 112533}
+{"kind": "plan", "tMs": 113526, "lookId": 112, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 112, "stage": "draw", "tMs": 113536}
+{"kind": "plan", "tMs": 114529, "lookId": 113, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 113, "stage": "draw", "tMs": 114539}
+{"kind": "plan", "tMs": 115532, "lookId": 114, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 114, "stage": "draw", "tMs": 115542}
+{"kind": "plan", "tMs": 116535, "lookId": 115, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 115, "stage": "draw", "tMs": 116545}
+{"kind": "plan", "tMs": 117538, "lookId": 116, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 116, "stage": "draw", "tMs": 117548}
+{"kind": "plan", "tMs": 118541, "lookId": 117, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 117, "stage": "draw", "tMs": 118551}
+{"kind": "plan", "tMs": 119544, "lookId": 118, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 118, "stage": "draw", "tMs": 119554}
+{"kind": "plan", "tMs": 120547, "lookId": 119, "masks": [{"rect": [100, 200, 500, 600]}]}
+{"kind": "stage", "lookId": 119, "stage": "draw", "tMs": 120557}
