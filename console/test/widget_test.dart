@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veil_console/main.dart';
+import 'package:veil_console/app.dart';
+import 'package:veil_console/guard/fake_guard.dart';
 
 void main() {
-  testWidgets('shows the Veil Console title', (WidgetTester tester) async {
-    await tester.pumpWidget(const VeilConsoleApp());
-
-    expect(find.text('Veil Console'), findsOneWidget);
-    expect(find.text('Hello from Phase 1.1'), findsOneWidget);
+  testWidgets('app boots into onboarding', (tester) async {
+    await tester.pumpWidget(
+      VeilConsoleApp(guard: FakeGuard(statsPeriod: null)),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Set up Veil'), findsOneWidget);
   });
 }
