@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "set": "synthetic",
+  "variant": "A",
+  "concepts": {
+    "cats": {
+      "calibrationOffset": -0.477835,
+      "butNotExtra": [],
+      "exampleThreshold": null
+    },
+    "spiders": {
+      "calibrationOffset": -0.285157,
+      "butNotExtra": [],
+      "exampleThreshold": null
+    }
+  }
+}

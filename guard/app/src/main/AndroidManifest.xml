@@ -14,6 +14,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".teacher.TeacherDebugActivity"
+            android:exported="true" />
+
         <!-- Phase 1.1 probe: does nothing. It only lets us check that this phone allows a sideloaded
              app to enable an accessibility service (restricted settings). -->
         <service
