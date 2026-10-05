@@ -46,6 +46,7 @@ class CaptureService : Service() {
     private val projectionCallback =
         object : MediaProjection.Callback() {
             override fun onStop() {
+                projection = null
                 handleEvent(CaptureEvent.ProjectionStopped(cause = "stopped"))
             }
 
@@ -61,10 +62,21 @@ class CaptureService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        postNotification()
-        when (intent?.action) {
-            ACTION_CONSENT_RESULT -> onConsentResult(intent)
-            CaptureCommandReceiver.ACTION_CMD -> onCommand(intent)
+        val action = intent?.action
+        val consentOk =
+            action == ACTION_CONSENT_RESULT &&
+                intent.getIntExtra(EXTRA_RESULT_CODE, Activity.RESULT_CANCELED) == Activity.RESULT_OK
+        val wasRunning = getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean(KEY_WAS_RUNNING, false)
+        val decision = RecoveryPolicy.onStart(action, consentOk, projection != null, wasRunning)
+        postNotification(decision.fgs)
+        decision.event?.let { handleEvent(it) }
+        if (decision.stopSelf) {
+            stopSelf()
+            return START_NOT_STICKY
+        }
+        when (action) {
+            ACTION_CONSENT_RESULT -> onConsentResult(intent!!)
+            CaptureCommandReceiver.ACTION_CMD -> onCommand(intent!!)
         }
         return START_STICKY
     }
@@ -179,21 +191,30 @@ class CaptureService : Service() {
             "{\"tMs\":${t.tMs},\"state\":\"${t.state.wire}\"," +
                 "\"reason\":${t.reason?.let { "\"$it\"" } ?: "null"}}"
         )
-        postNotification()
+        getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(KEY_WAS_RUNNING, RecoveryPolicy.wasRunning(t.state))
+            .apply()
+        postNotification(if (projection != null) FgsKind.PROJECTION else FgsKind.WAITING)
     }
 
-    private fun postNotification() {
+    private fun postNotification(kind: FgsKind) {
         val notification =
             CaptureNotifications.build(
                 this,
                 stateMachine.state.wire,
-                stateMachine.state == CaptureState.AWAITING_PERMISSION
+                stateMachine.state == CaptureState.AWAITING_PERMISSION,
+                stateMachine.reason
             )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             startForeground(
                 CaptureNotifications.NOTIFICATION_ID,
                 notification,
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
+                if (kind == FgsKind.PROJECTION) {
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
+                } else {
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+                }
             )
         } else {
             startForeground(CaptureNotifications.NOTIFICATION_ID, notification)
@@ -209,6 +230,8 @@ class CaptureService : Service() {
     }
 
     companion object {
+        private const val PREFS = "veil.capture"
+        private const val KEY_WAS_RUNNING = "wasRunning"
         const val ACTION_CONSENT_RESULT = "com.veil.guard.capture.CONSENT_RESULT"
         const val EXTRA_RESULT_CODE = "resultCode"
         const val EXTRA_RESULT_DATA = "resultData"
