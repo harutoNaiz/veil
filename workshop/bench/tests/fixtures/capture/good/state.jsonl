@@ -1,0 +1,6 @@
+{"tMs": 0, "state": "running", "reason": "consent", "source": "mediaProjection", "outstanding": 0, "fps": 0}
+{"tMs": 5000, "state": "running", "reason": "heartbeat", "source": "mediaProjection", "outstanding": 1, "fps": 0.5}
+{"tMs": 70000, "state": "awaitingPermission", "reason": "keyguard", "source": "mediaProjection", "outstanding": 0, "fps": 0}
+{"tMs": 75000, "state": "running", "reason": "consent", "source": "mediaProjection", "outstanding": 0, "fps": 0}
+{"tMs": 80700, "state": "awaitingPermission", "reason": "projectionStopped", "source": "mediaProjection", "outstanding": 0, "fps": 0}
+{"tMs": 90000, "state": "running", "reason": "consent", "source": "mediaProjection", "outstanding": 0, "fps": 0}

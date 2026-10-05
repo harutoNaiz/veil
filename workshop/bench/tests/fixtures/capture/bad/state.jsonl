@@ -1,0 +1,2 @@
+{"tMs": 0, "state": "running", "reason": "consent", "source": "mediaProjection", "outstanding": 0, "fps": 0}
+{"tMs": 5000, "state": "running", "reason": "heartbeat", "source": "mediaProjection", "outstanding": 2, "fps": 3.0}

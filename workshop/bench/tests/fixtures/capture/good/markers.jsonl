@@ -1,0 +1,4 @@
+{"tMs": 10000, "event": "idleStart"}
+{"tMs": 40000, "event": "idleEnd"}
+{"tMs": 69600, "event": "lock"}
+{"tMs": 80000, "event": "kill"}
