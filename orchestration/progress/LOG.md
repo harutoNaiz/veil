@@ -233,3 +233,5 @@ Events:
 2026-10-05 22:55 | 5.2-W.2 | VERIFY PASS + COMMIT aec978e | [5.2-W.2] Frames in, real models, concepts
 2026-10-05 22:55 | 5.2-W.3 | VERIFY PASS + COMMIT 2ab2d60 | [5.2-W.3] Signals and overlay host
 - 2026-10-05 22:56 5.2-W committed+pushed (bd16085, aec978e, 2ab2d60); 5.2 closed WAITING_HUMAN; 3.3 Builders spawned
+- 2026-10-05 22:56 checkpoint (5.2 closed, 3.3 started): main 1a4eb88 pushed; WIP files: 0
+2026-10-05 23:01 | 3.3.2 | VERIFY PASS + COMMIT 524b12a | [3.3.2] Runtime wrapper (JVM) for residency and timing

@@ -59,7 +59,7 @@ Added 2026-10-02 after Phase 1.1 took about 4 hours. **Hard rule from the user: 
 | Next action | Verify and commit 3.3.2, then 3.3.1 and 3.3.3 (bash veil/tools/orchestrator/vc.sh; it pushes). Close 3.3 + the Chapter 3 gate HC. Then H4 = tools\verify\pt-3.1.ps1 alone → close 3.1. Then D-4.2-pt and the DEFERRED items (D-5.2W-* first) |
 | Session notes | Agent types: veil-planner-medium/high (Opus), veil-builder (Sonnet, medium); definitions in .claude/agents (mirrored at veil/orchestration/claude-agents). Remote: private GitHub harutoNaiz/veil. User 2026-10-05 22:30: commit AND push everything so another agent can resume from a fresh clone; mirror via `veil/tools/orchestrator/sync.sh`. Commit per sub-phase via `bash veil/tools/orchestrator/vc.sh`. ALL Gradle via `tools\gradle-locked.ps1` (mutex Global\veil-gradle); never wait on java.exe (VS Code Java server + its Gradle daemon never exit); close VS Code Java import during builds. PUSH with `git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin main` (gh token has the workflow scope; the Windows credential manager token does not). Last push 375f7e8 (2026-10-05 22:50). USER RULE (2026-10-05 22:50): commit + push every 10-15 min and keep STATE current. A background loop runs `bash veil/tools/orchestrator/checkpoint.sh` every 12 min (mirror to main + WIP snapshot to origin/checkpoint); restart the loop when it ends (2 h); vc.sh pushes after each verified commit |
 | Sessions run | 5 |
-| Last updated | 2026-10-05 23:10 |
+| Last updated | 2026-10-05 22:56 |
 <!-- STATE:END -->
 
 ## 2. Ledger

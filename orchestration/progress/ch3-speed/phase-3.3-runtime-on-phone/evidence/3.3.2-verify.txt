@@ -1,0 +1,20 @@
+=== 3.3.2 verify · 2026-10-05 23:00:47
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.3.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :runtime:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :runtime:compileKotlin UP-TO-DATE
+> Task :runtime:compileJava NO-SOURCE
+> Task :runtime:processResources NO-SOURCE
+> Task :runtime:classes UP-TO-DATE
+> Task :runtime:jar UP-TO-DATE
+> Task :runtime:compileTestKotlin UP-TO-DATE
+> Task :runtime:compileTestJava NO-SOURCE
+> Task :runtime:processTestResources NO-SOURCE
+> Task :runtime:testClasses UP-TO-DATE
+> Task :runtime:test UP-TO-DATE
+
+BUILD SUCCESSFUL in 14s
+4 actionable tasks: 4 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html
+VERIFY 3.3.2: PASS
+exit 0
