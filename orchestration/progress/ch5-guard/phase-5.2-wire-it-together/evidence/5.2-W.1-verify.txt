@@ -1,0 +1,8 @@
+=== 5.2-W.1 verify · 2026-10-05 22:53:18
+ok    (1) ktlint
+ok    (2) params asset == twin
+ok    (3) CaptureService wiring
+ok    (4) unit tests
+ok    (5) assembleDebug
+VERIFY 5.2-W.1: PASS
+exit 0

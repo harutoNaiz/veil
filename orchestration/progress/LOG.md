@@ -228,3 +228,8 @@ Events:
 - 2026-10-05 22:45 5.2-W Builders (W.1-W.3) cut off by the session limit (reset 22:40) before writing code; user asked to commit AND push everything for handoff: added veil/orchestration/ mirror (tools/orchestrator/sync.sh) + portable vc.sh
 - 2026-10-05 22:50 pushed 375f7e8 to origin (36 commits) after the user granted the gh workflow scope
 - 2026-10-05 22:48 checkpoint (checkpoint tooling added): main 702474d pushed; WIP files: 33
+- 2026-10-05 22:49 checkpoint (fix WIP snapshot): main 092ff56 pushed; WIP files: 33
+2026-10-05 22:54 | 5.2-W.1 | VERIFY PASS + COMMIT bd16085 | [5.2-W.1] Runtime, lifecycle, commands, stage log
+2026-10-05 22:55 | 5.2-W.2 | VERIFY PASS + COMMIT aec978e | [5.2-W.2] Frames in, real models, concepts
+2026-10-05 22:55 | 5.2-W.3 | VERIFY PASS + COMMIT 2ab2d60 | [5.2-W.3] Signals and overlay host
+- 2026-10-05 22:56 5.2-W committed+pushed (bd16085, aec978e, 2ab2d60); 5.2 closed WAITING_HUMAN; 3.3 Builders spawned
