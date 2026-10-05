@@ -10,6 +10,7 @@ import com.veil.conductor.DebugLog
 import com.veil.conductor.Frame
 import com.veil.conductor.Lane
 import com.veil.conductor.LayoutNode
+import com.veil.conductor.LookInput
 import com.veil.conductor.OverlayPort
 import com.veil.conductor.StatsSink
 
@@ -79,10 +80,25 @@ class GuardCore(
             }
         }
 
+    /** Delegates to a swappable lane list so concepts can change without rebuilding the Conductor. */
+    class SwapLane : Lane {
+        @Volatile var current: List<Lane> = emptyList()
+
+        override fun run(input: LookInput): List<Finding> = current.flatMap { it.run(input) }
+    }
+
+    private val swap = SwapLane()
+    private var counters = Counters()
+
+    var buildCount = 0
+        private set
+
     @Volatile private var conductor: Conductor = build()
 
     private fun build(): Conductor {
-        val counters = Counters()
+        buildCount++
+        counters = Counters()
+        swap.current = lanes(counters)
         val sentinel =
             Lane {
                 stages.ai(it.lookId, now())
@@ -91,7 +107,7 @@ class GuardCore(
         return Conductor(
             if (mode == "off") "balanced" else mode,
             paramsJson,
-            lanes(counters) + sentinel,
+            listOf(swap, sentinel),
             trackedWorker,
             port,
             StatsSink { lastStats = it },
@@ -142,6 +158,10 @@ class GuardCore(
     fun setSkipApps(s: Set<String>) {
         skipApps = s
         rebuild()
+    }
+
+    fun swapLanes() {
+        swap.current = lanes(counters)
     }
 
     fun rebuild() {

@@ -18,6 +18,8 @@ sealed class CaptureEvent {
 
     data object UserStop : CaptureEvent()
 
+    data object Restarted : CaptureEvent()
+
     data class ContentResized(val content: FrameSize, val display: FrameSize) : CaptureEvent()
 }
 
@@ -60,6 +62,9 @@ class CaptureStateMachine {
                         CaptureState.RUNNING, CaptureState.PAUSED -> CaptureState.AWAITING_PERMISSION to "keyguard"
                         else -> return null
                     }
+
+                CaptureEvent.Restarted ->
+                    if (state == CaptureState.STOPPED) CaptureState.AWAITING_PERMISSION to "restarted" else return null
 
                 CaptureEvent.Pause ->
                     if (state == CaptureState.RUNNING) CaptureState.PAUSED to null else return null
