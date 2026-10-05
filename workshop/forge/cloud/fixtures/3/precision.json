@@ -1,0 +1,158 @@
+{
+ "source": "fixture",
+ "models": [
+  {
+   "modelId": "nudenet-320n",
+   "float": {
+    "score": 90.0,
+    "latencyMs": 4.2
+   },
+   "candidates": [
+    {
+     "precision": "w8a16",
+     "score": 89.0,
+     "latencyMs": 2.1,
+     "inferenceJob": "finudenet-320n"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 1.0
+  },
+  {
+   "modelId": "nudenet-640m",
+   "float": {
+    "score": 90.0,
+    "latencyMs": 10.4
+   },
+   "candidates": [
+    {
+     "precision": "w8a16",
+     "score": 89.0,
+     "latencyMs": 5.2,
+     "inferenceJob": "finudenet-640m"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 1.0
+  },
+  {
+   "modelId": "yoloe-26s-embed-top100",
+   "float": {
+    "score": 90.0,
+    "latencyMs": 9.6
+   },
+   "candidates": [
+    {
+     "precision": "w8a16",
+     "score": 89.0,
+     "latencyMs": 4.8,
+     "inferenceJob": "fiyoloe-26s-embed-top100"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 1.0
+  },
+  {
+   "modelId": "siglip2-base-image-b1",
+   "float": {
+    "score": 90.0,
+    "latencyMs": 12.0
+   },
+   "candidates": [
+    {
+     "precision": "w8a16",
+     "score": 89.0,
+     "latencyMs": 6.0,
+     "inferenceJob": "fisiglip2-base-image-b1"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 1.0
+  },
+  {
+   "modelId": "siglip2-base-image-b4",
+   "float": {
+    "score": 90.0,
+    "latencyMs": 29.0
+   },
+   "candidates": [
+    {
+     "precision": "w8a16",
+     "score": 89.0,
+     "latencyMs": 14.5,
+     "inferenceJob": "fisiglip2-base-image-b4"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 1.0
+  },
+  {
+   "modelId": "siglip2-base-image-b16",
+   "float": {
+    "score": 90.0,
+    "latencyMs": 100.0
+   },
+   "candidates": [
+    {
+     "precision": "w8a16",
+     "score": 89.0,
+     "latencyMs": 50.0,
+     "inferenceJob": "fisiglip2-base-image-b16"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 1.0
+  },
+  {
+   "modelId": "toxicity-seq128",
+   "float": {
+    "score": 90.0,
+    "latencyMs": 6.4
+   },
+   "candidates": [
+    {
+     "precision": "w8a16",
+     "score": 89.0,
+     "latencyMs": 3.2,
+     "inferenceJob": "fitoxicity-seq128"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 1.0
+  },
+  {
+   "modelId": "toxicity-seq256",
+   "float": {
+    "score": 90.0,
+    "latencyMs": 12.2
+   },
+   "candidates": [
+    {
+     "precision": "w8a16",
+     "score": 89.0,
+     "latencyMs": 6.1,
+     "inferenceJob": "fitoxicity-seq256"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 1.0
+  },
+  {
+   "modelId": "siglip2-base-text",
+   "float": {
+    "score": 90.0,
+    "latencyMs": 10.0
+   },
+   "candidates": [
+    {
+     "precision": "w8a16",
+     "score": 89.0,
+     "latencyMs": 5.0,
+     "inferenceJob": "fisiglip2-base-text"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 1.0
+  }
+ ]
+}

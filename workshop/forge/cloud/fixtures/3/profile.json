@@ -1,0 +1,159 @@
+{
+ "source": "fixture",
+ "device": "Samsung Galaxy S26 (Family)",
+ "models": [
+  {
+   "modelId": "nudenet-320n",
+   "precision": "w8a16",
+   "batch": 1,
+   "compileJob": "fxnudenet-320n",
+   "profileJob": "fpnudenet-320n",
+   "quantizeJob": null,
+   "latencyMs": 2.1,
+   "peakMemMb": 100.0,
+   "layers": {
+    "npu": 100,
+    "gpu": 0,
+    "cpu": 0
+   },
+   "npuShare": 1.0,
+   "offChip": []
+  },
+  {
+   "modelId": "nudenet-640m",
+   "precision": "w8a16",
+   "batch": 1,
+   "compileJob": "fxnudenet-640m",
+   "profileJob": "fpnudenet-640m",
+   "quantizeJob": null,
+   "latencyMs": 5.2,
+   "peakMemMb": 100.0,
+   "layers": {
+    "npu": 100,
+    "gpu": 0,
+    "cpu": 0
+   },
+   "npuShare": 1.0,
+   "offChip": []
+  },
+  {
+   "modelId": "yoloe-26s-embed-top100",
+   "precision": "w8a16",
+   "batch": 1,
+   "compileJob": "fxyoloe-26s-embed-top100",
+   "profileJob": "fpyoloe-26s-embed-top100",
+   "quantizeJob": null,
+   "latencyMs": 4.8,
+   "peakMemMb": 100.0,
+   "layers": {
+    "npu": 100,
+    "gpu": 0,
+    "cpu": 0
+   },
+   "npuShare": 1.0,
+   "offChip": []
+  },
+  {
+   "modelId": "siglip2-base-image-b1",
+   "precision": "w8a16",
+   "batch": 1,
+   "compileJob": "fxsiglip2-base-image-b1",
+   "profileJob": "fpsiglip2-base-image-b1",
+   "quantizeJob": null,
+   "latencyMs": 6.0,
+   "peakMemMb": 100.0,
+   "layers": {
+    "npu": 100,
+    "gpu": 0,
+    "cpu": 0
+   },
+   "npuShare": 1.0,
+   "offChip": []
+  },
+  {
+   "modelId": "siglip2-base-image-b4",
+   "precision": "w8a16",
+   "batch": 1,
+   "compileJob": "fxsiglip2-base-image-b4",
+   "profileJob": "fpsiglip2-base-image-b4",
+   "quantizeJob": null,
+   "latencyMs": 14.5,
+   "peakMemMb": 100.0,
+   "layers": {
+    "npu": 100,
+    "gpu": 0,
+    "cpu": 0
+   },
+   "npuShare": 1.0,
+   "offChip": []
+  },
+  {
+   "modelId": "siglip2-base-image-b16",
+   "precision": "w8a16",
+   "batch": 1,
+   "compileJob": "fxsiglip2-base-image-b16",
+   "profileJob": "fpsiglip2-base-image-b16",
+   "quantizeJob": null,
+   "latencyMs": 50.0,
+   "peakMemMb": 100.0,
+   "layers": {
+    "npu": 100,
+    "gpu": 0,
+    "cpu": 0
+   },
+   "npuShare": 1.0,
+   "offChip": []
+  },
+  {
+   "modelId": "toxicity-seq128",
+   "precision": "w8a16",
+   "batch": 1,
+   "compileJob": "fxtoxicity-seq128",
+   "profileJob": "fptoxicity-seq128",
+   "quantizeJob": null,
+   "latencyMs": 3.2,
+   "peakMemMb": 100.0,
+   "layers": {
+    "npu": 100,
+    "gpu": 0,
+    "cpu": 0
+   },
+   "npuShare": 1.0,
+   "offChip": []
+  },
+  {
+   "modelId": "toxicity-seq256",
+   "precision": "w8a16",
+   "batch": 1,
+   "compileJob": "fxtoxicity-seq256",
+   "profileJob": "fptoxicity-seq256",
+   "quantizeJob": null,
+   "latencyMs": 6.1,
+   "peakMemMb": 100.0,
+   "layers": {
+    "npu": 100,
+    "gpu": 0,
+    "cpu": 0
+   },
+   "npuShare": 1.0,
+   "offChip": []
+  },
+  {
+   "modelId": "siglip2-base-text",
+   "precision": "w8a16",
+   "batch": 1,
+   "compileJob": "fxsiglip2-base-text",
+   "profileJob": "fpsiglip2-base-text",
+   "quantizeJob": null,
+   "latencyMs": 5.0,
+   "peakMemMb": 100.0,
+   "layers": {
+    "npu": 100,
+    "gpu": 0,
+    "cpu": 0
+   },
+   "npuShare": 1.0,
+   "offChip": []
+  }
+ ]
+}

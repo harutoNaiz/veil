@@ -1,0 +1,152 @@
+{
+ "source": "fixture",
+ "mode": "Balanced",
+ "rows": [
+  {
+   "step": "preprocessing (estimated)",
+   "ms": 3.0,
+   "job": null
+  },
+  {
+   "step": "nudenet-320n",
+   "ms": 2.1,
+   "job": "fpnudenet-320n"
+  },
+  {
+   "step": "yoloe-26s",
+   "ms": 4.8,
+   "job": "fpyoloe-26s-embed-top100"
+  },
+  {
+   "step": "siglip2 image b4",
+   "ms": 14.5,
+   "job": "fpsiglip2-base-image-b4"
+  },
+  {
+   "step": "toxicity-seq128",
+   "ms": 3.2,
+   "job": "fptoxicity-seq128"
+  },
+  {
+   "step": "logic (estimated)",
+   "ms": 1.0,
+   "job": null
+  }
+ ],
+ "totalMs": 28.6,
+ "limitMs": 45.0,
+ "pass": true,
+ "modes": {
+  "Light": {
+   "rows": [
+    {
+     "step": "preprocessing (estimated)",
+     "ms": 3.0,
+     "job": null
+    },
+    {
+     "step": "nudenet-320n",
+     "ms": 2.1,
+     "job": "fpnudenet-320n"
+    },
+    {
+     "step": "yoloe-26s",
+     "ms": 4.8,
+     "job": "fpyoloe-26s-embed-top100"
+    },
+    {
+     "step": "siglip2 image b1",
+     "ms": 6.0,
+     "job": "fpsiglip2-base-image-b1"
+    },
+    {
+     "step": "toxicity-seq128",
+     "ms": 3.2,
+     "job": "fptoxicity-seq128"
+    },
+    {
+     "step": "logic (estimated)",
+     "ms": 1.0,
+     "job": null
+    }
+   ],
+   "totalMs": 20.1,
+   "limitMs": 45.0,
+   "pass": true
+  },
+  "Balanced": {
+   "rows": [
+    {
+     "step": "preprocessing (estimated)",
+     "ms": 3.0,
+     "job": null
+    },
+    {
+     "step": "nudenet-320n",
+     "ms": 2.1,
+     "job": "fpnudenet-320n"
+    },
+    {
+     "step": "yoloe-26s",
+     "ms": 4.8,
+     "job": "fpyoloe-26s-embed-top100"
+    },
+    {
+     "step": "siglip2 image b4",
+     "ms": 14.5,
+     "job": "fpsiglip2-base-image-b4"
+    },
+    {
+     "step": "toxicity-seq128",
+     "ms": 3.2,
+     "job": "fptoxicity-seq128"
+    },
+    {
+     "step": "logic (estimated)",
+     "ms": 1.0,
+     "job": null
+    }
+   ],
+   "totalMs": 28.6,
+   "limitMs": 45.0,
+   "pass": true
+  },
+  "Strict": {
+   "rows": [
+    {
+     "step": "preprocessing (estimated)",
+     "ms": 3.0,
+     "job": null
+    },
+    {
+     "step": "nudenet-640m",
+     "ms": 5.2,
+     "job": "fpnudenet-640m"
+    },
+    {
+     "step": "yoloe-26s",
+     "ms": 4.8,
+     "job": "fpyoloe-26s-embed-top100"
+    },
+    {
+     "step": "siglip2 image b16",
+     "ms": 50.0,
+     "job": "fpsiglip2-base-image-b16"
+    },
+    {
+     "step": "toxicity-seq128",
+     "ms": 3.2,
+     "job": "fptoxicity-seq128"
+    },
+    {
+     "step": "logic (estimated)",
+     "ms": 1.0,
+     "job": null
+    }
+   ],
+   "totalMs": 67.2,
+   "limitMs": 45.0,
+   "pass": false
+  }
+ }
+}
