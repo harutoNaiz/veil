@@ -50,14 +50,14 @@ Added 2026-10-02 after Phase 1.1 took about 4 hours. **Hard rule from the user: 
 | Field | Value |
 | --- | --- |
 | STANDING ORDER (user) | Keep working every session until the WEEKLY usage limit (it resets Tuesday 2026-10-06 morning). When close to it: commit everything (per sub-phase), update this block, then shut down the laptop (`shutdown /s /t 60`) |
-| Active phases | 5.2-W NOT BUILT: its 3 Builders were cut off by the session limit at about 22:15 before writing code (only MODEL-line records exist). Restart them FRESH from SPEC-W.md · next: 3.3 (spec approved) · 3.1 needs H4 · D-4.2-pt |
-| Running agents | none |
+| Active phases | 5.2-W BUILDING (3 Builders resumed 22:52 after the limit reset) · next: 3.3 (spec approved) · 3.1 needs H4 · D-4.2-pt |
+| Running agents | W.1 a441c4850da8e5f25 · W.2 a46a5a4f54012e903 · W.3 a205375acd48913b5 |
 | Waiting on you | progress/HUMAN_CHECKS.md: Sitting 1 (Phase 1.1) and HC-002 to HC-026 (HC-016 = Chapter 2 gate decision). HC-002 (phone) and HC-003 (AI Hub token) unblock the most; HC-026 (live Guard) unblocks HC-020/021/024/025 |
 | Deferred heavy checks | `progress/DEFERRED.md`: D-1.1-01, D-1.3-07, D-6.1-apk, D-4.2-pt, D-5.3-perfetto, D-6.3-*, D-5.2W-* |
 | Phone at last boot | NOT connected |
 | Phases accepted | 0 of 18 · built (WAITING_HUMAN): 1.1-1.3, 2.1-2.3, 3.2, 4.1-4.3, 5.1, 5.2 (wiring in progress), 5.3, 6.1-6.3 · not built: 3.3; 3.1 needs H4 |
 | Next action | (1) Spawn veil-builder for 5.2-W.1, W.2, W.3 (prompts as in LOG 2026-10-05 19:10; SPEC-W.md §3; Gradle only via tools\gradle-locked.ps1). (2) Verify and commit each with `bash veil/tools/orchestrator/vc.sh`, then close 5.2. (3) 3.3 (3 Builders). (4) H4 = `tools\verify\pt-3.1.ps1` alone. (5) D-4.2-pt, then the DEFERRED items. Run `bash veil/tools/orchestrator/sync.sh` + commit + push after each batch |
-| Session notes | Agent types: veil-planner-medium/high (Opus), veil-builder (Sonnet, medium); definitions in .claude/agents (mirrored at veil/orchestration/claude-agents). Remote: private GitHub harutoNaiz/veil. User 2026-10-05 22:30: commit AND push everything so another agent can resume from a fresh clone; mirror via `veil/tools/orchestrator/sync.sh`. Commit per sub-phase via `bash veil/tools/orchestrator/vc.sh`. ALL Gradle via `tools\gradle-locked.ps1` (mutex Global\veil-gradle); never wait on java.exe (VS Code Java server + its Gradle daemon never exit); close VS Code Java import during builds |
+| Session notes | Agent types: veil-planner-medium/high (Opus), veil-builder (Sonnet, medium); definitions in .claude/agents (mirrored at veil/orchestration/claude-agents). Remote: private GitHub harutoNaiz/veil. User 2026-10-05 22:30: commit AND push everything so another agent can resume from a fresh clone; mirror via `veil/tools/orchestrator/sync.sh`. Commit per sub-phase via `bash veil/tools/orchestrator/vc.sh`. ALL Gradle via `tools\gradle-locked.ps1` (mutex Global\veil-gradle); never wait on java.exe (VS Code Java server + its Gradle daemon never exit); close VS Code Java import during builds. PUSH with `git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin main` (gh token has the workflow scope; the Windows credential manager token does not). Last push 375f7e8 (2026-10-05 22:50) |
 | Sessions run | 5 |
 | Last updated | 2026-10-05 22:45 |
 <!-- STATE:END -->

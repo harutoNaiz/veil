@@ -1,3 +1,4 @@
 - [Veil orchestration](veil-orchestration.md) — build runs via ORCHESTRATOR.md start prompt; state in its section 1
 - [Sub-agent model rule](subagent-model-rule.md) — agents print MODEL line; wrong model → kill and restart
 - [Fast-track phases](fast-track-phases.md) — hard rule: 20-30 min per phase, lean specs, defer heavy checks
+- [Veil push and handoff](veil-push-and-handoff.md) — always sync+commit+push everything; push via gh credential (workflow scope)
