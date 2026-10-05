@@ -13,5 +13,9 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "veil-guard"
-include(":app")
-if (file("testfeed/build.gradle.kts").exists()) include(":testfeed")
+include(":brain")
+if (file("teacher/build.gradle.kts").exists()) include(":teacher")
+if (!providers.gradleProperty("veil.brainOnly").isPresent) {
+    include(":app")
+    if (file("testfeed/build.gradle.kts").exists()) include(":testfeed")
+}
