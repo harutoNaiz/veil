@@ -1,0 +1,4 @@
+04-01 10:00:00.1 I/VeilSnap(1): VEIL_SNAP ms=12 nodes=80 truncated=false
+04-01 10:00:00.4 I/VeilSnap(1): VEIL_SNAP ms=20 nodes=120 truncated=false
+noise
+04-01 10:00:00.7 I/VeilSnap(1): VEIL_SNAP ms=41 nodes=300 truncated=true

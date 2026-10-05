@@ -1,0 +1,3 @@
+Total frames rendered: 500
+Janky frames: 25 (5.00%)
+Janky frames (legacy): 30 (6.00%)
