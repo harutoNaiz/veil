@@ -1,0 +1,207 @@
+{
+ "source": "fixture",
+ "models": [
+  {
+   "modelId": "nudenet-320n",
+   "float": {
+    "score": 90.0,
+    "latencyMs": 3.0
+   },
+   "candidates": [
+    {
+     "precision": "float16",
+     "score": 89.9,
+     "latencyMs": 3.0,
+     "inferenceJob": "fixture://i-nudenet-320n-float16"
+    },
+    {
+     "precision": "w8a16",
+     "score": 89.4,
+     "latencyMs": 2.2,
+     "inferenceJob": "fixture://i-nudenet-320n-w8a16"
+    },
+    {
+     "precision": "w8a8",
+     "score": 88.8,
+     "latencyMs": 1.6,
+     "inferenceJob": "fixture://i-nudenet-320n-w8a8"
+    }
+   ],
+   "chosen": "w8a8",
+   "delta": 1.2
+  },
+  {
+   "modelId": "nudenet-640m",
+   "float": {
+    "score": 89.0,
+    "latencyMs": 3.3
+   },
+   "candidates": [
+    {
+     "precision": "float16",
+     "score": 88.9,
+     "latencyMs": 3.3,
+     "inferenceJob": "fixture://i-nudenet-640m-float16"
+    },
+    {
+     "precision": "w8a16",
+     "score": 88.4,
+     "latencyMs": 2.42,
+     "inferenceJob": "fixture://i-nudenet-640m-w8a16"
+    },
+    {
+     "precision": "w8a8",
+     "score": 86.0,
+     "latencyMs": 1.76,
+     "inferenceJob": "fixture://i-nudenet-640m-w8a8"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 0.6
+  },
+  {
+   "modelId": "yoloe-26s-embed-top100",
+   "float": {
+    "score": 88.0,
+    "latencyMs": 3.6
+   },
+   "candidates": [
+    {
+     "precision": "float16",
+     "score": 87.9,
+     "latencyMs": 3.6,
+     "inferenceJob": "fixture://i-yoloe-26s-embed-top100-float16"
+    },
+    {
+     "precision": "w8a16",
+     "score": 87.4,
+     "latencyMs": 2.64,
+     "inferenceJob": "fixture://i-yoloe-26s-embed-top100-w8a16"
+    },
+    {
+     "precision": "w8a8",
+     "score": 86.8,
+     "latencyMs": 1.92,
+     "inferenceJob": "fixture://i-yoloe-26s-embed-top100-w8a8"
+    }
+   ],
+   "chosen": "w8a8",
+   "delta": 1.2
+  },
+  {
+   "modelId": "siglip2-base-image-b1",
+   "float": {
+    "score": 87.0,
+    "latencyMs": 7.8
+   },
+   "candidates": [
+    {
+     "precision": "float16",
+     "score": 86.9,
+     "latencyMs": 7.8,
+     "inferenceJob": "fixture://i-siglip2-base-image-b1-float16"
+    },
+    {
+     "precision": "w8a16",
+     "score": 86.4,
+     "latencyMs": 5.85,
+     "inferenceJob": "fixture://i-siglip2-base-image-b1-w8a16"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 0.6
+  },
+  {
+   "modelId": "siglip2-base-image-b4",
+   "float": {
+    "score": 86.0,
+    "latencyMs": 8.4
+   },
+   "candidates": [
+    {
+     "precision": "float16",
+     "score": 85.9,
+     "latencyMs": 8.4,
+     "inferenceJob": "fixture://i-siglip2-base-image-b4-float16"
+    },
+    {
+     "precision": "w8a16",
+     "score": 85.4,
+     "latencyMs": 6.3,
+     "inferenceJob": "fixture://i-siglip2-base-image-b4-w8a16"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 0.6
+  },
+  {
+   "modelId": "siglip2-base-image-b16",
+   "float": {
+    "score": 85.0,
+    "latencyMs": 9.0
+   },
+   "candidates": [
+    {
+     "precision": "float16",
+     "score": 84.9,
+     "latencyMs": 9.0,
+     "inferenceJob": "fixture://i-siglip2-base-image-b16-float16"
+    },
+    {
+     "precision": "w8a16",
+     "score": 84.4,
+     "latencyMs": 6.75,
+     "inferenceJob": "fixture://i-siglip2-base-image-b16-w8a16"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 0.6
+  },
+  {
+   "modelId": "toxicity-seq128",
+   "float": {
+    "score": 84.0,
+    "latencyMs": 9.6
+   },
+   "candidates": [
+    {
+     "precision": "float16",
+     "score": 83.9,
+     "latencyMs": 9.6,
+     "inferenceJob": "fixture://i-toxicity-seq128-float16"
+    },
+    {
+     "precision": "w8a16",
+     "score": 83.4,
+     "latencyMs": 7.2,
+     "inferenceJob": "fixture://i-toxicity-seq128-w8a16"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 0.6
+  },
+  {
+   "modelId": "toxicity-seq256",
+   "float": {
+    "score": 83.0,
+    "latencyMs": 10.2
+   },
+   "candidates": [
+    {
+     "precision": "float16",
+     "score": 82.9,
+     "latencyMs": 10.2,
+     "inferenceJob": "fixture://i-toxicity-seq256-float16"
+    },
+    {
+     "precision": "w8a16",
+     "score": 82.4,
+     "latencyMs": 7.65,
+     "inferenceJob": "fixture://i-toxicity-seq256-w8a16"
+    }
+   ],
+   "chosen": "w8a16",
+   "delta": 0.6
+  }
+ ]
+}

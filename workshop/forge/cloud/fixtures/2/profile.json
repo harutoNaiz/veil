@@ -1,0 +1,176 @@
+{
+ "source": "fixture",
+ "models": [
+  {
+   "modelId": "nudenet-320n",
+   "precision": "float16",
+   "batch": 1,
+   "latencyMs": 3.0,
+   "compileJob": "fixture://c-nudenet-320n-float16",
+   "profileJob": "fixture://p-nudenet-320n-float16",
+   "inferenceJob": "fixture://i-nudenet-320n-float16"
+  },
+  {
+   "modelId": "nudenet-320n",
+   "precision": "w8a16",
+   "batch": 1,
+   "latencyMs": 2.2,
+   "compileJob": "fixture://c-nudenet-320n-w8a16",
+   "profileJob": "fixture://p-nudenet-320n-w8a16",
+   "inferenceJob": "fixture://i-nudenet-320n-w8a16"
+  },
+  {
+   "modelId": "nudenet-320n",
+   "precision": "w8a8",
+   "batch": 1,
+   "latencyMs": 1.6,
+   "compileJob": "fixture://c-nudenet-320n-w8a8",
+   "profileJob": "fixture://p-nudenet-320n-w8a8",
+   "inferenceJob": "fixture://i-nudenet-320n-w8a8"
+  },
+  {
+   "modelId": "nudenet-640m",
+   "precision": "float16",
+   "batch": 1,
+   "latencyMs": 3.3,
+   "compileJob": "fixture://c-nudenet-640m-float16",
+   "profileJob": "fixture://p-nudenet-640m-float16",
+   "inferenceJob": "fixture://i-nudenet-640m-float16"
+  },
+  {
+   "modelId": "nudenet-640m",
+   "precision": "w8a16",
+   "batch": 1,
+   "latencyMs": 2.42,
+   "compileJob": "fixture://c-nudenet-640m-w8a16",
+   "profileJob": "fixture://p-nudenet-640m-w8a16",
+   "inferenceJob": "fixture://i-nudenet-640m-w8a16"
+  },
+  {
+   "modelId": "nudenet-640m",
+   "precision": "w8a8",
+   "batch": 1,
+   "latencyMs": 1.76,
+   "compileJob": "fixture://c-nudenet-640m-w8a8",
+   "profileJob": "fixture://p-nudenet-640m-w8a8",
+   "inferenceJob": "fixture://i-nudenet-640m-w8a8"
+  },
+  {
+   "modelId": "yoloe-26s-embed-top100",
+   "precision": "float16",
+   "batch": 1,
+   "latencyMs": 3.6,
+   "compileJob": "fixture://c-yoloe-26s-embed-top100-float16",
+   "profileJob": "fixture://p-yoloe-26s-embed-top100-float16",
+   "inferenceJob": "fixture://i-yoloe-26s-embed-top100-float16"
+  },
+  {
+   "modelId": "yoloe-26s-embed-top100",
+   "precision": "w8a16",
+   "batch": 1,
+   "latencyMs": 2.64,
+   "compileJob": "fixture://c-yoloe-26s-embed-top100-w8a16",
+   "profileJob": "fixture://p-yoloe-26s-embed-top100-w8a16",
+   "inferenceJob": "fixture://i-yoloe-26s-embed-top100-w8a16"
+  },
+  {
+   "modelId": "yoloe-26s-embed-top100",
+   "precision": "w8a8",
+   "batch": 1,
+   "latencyMs": 1.92,
+   "compileJob": "fixture://c-yoloe-26s-embed-top100-w8a8",
+   "profileJob": "fixture://p-yoloe-26s-embed-top100-w8a8",
+   "inferenceJob": "fixture://i-yoloe-26s-embed-top100-w8a8"
+  },
+  {
+   "modelId": "siglip2-base-image-b1",
+   "precision": "float16",
+   "batch": 1,
+   "latencyMs": 7.8,
+   "compileJob": "fixture://c-siglip2-base-image-b1-float16",
+   "profileJob": "fixture://p-siglip2-base-image-b1-float16",
+   "inferenceJob": "fixture://i-siglip2-base-image-b1-float16"
+  },
+  {
+   "modelId": "siglip2-base-image-b1",
+   "precision": "w8a16",
+   "batch": 1,
+   "latencyMs": 5.85,
+   "compileJob": "fixture://c-siglip2-base-image-b1-w8a16",
+   "profileJob": "fixture://p-siglip2-base-image-b1-w8a16",
+   "inferenceJob": "fixture://i-siglip2-base-image-b1-w8a16"
+  },
+  {
+   "modelId": "siglip2-base-image-b4",
+   "precision": "float16",
+   "batch": 1,
+   "latencyMs": 8.4,
+   "compileJob": "fixture://c-siglip2-base-image-b4-float16",
+   "profileJob": "fixture://p-siglip2-base-image-b4-float16",
+   "inferenceJob": "fixture://i-siglip2-base-image-b4-float16"
+  },
+  {
+   "modelId": "siglip2-base-image-b4",
+   "precision": "w8a16",
+   "batch": 1,
+   "latencyMs": 6.3,
+   "compileJob": "fixture://c-siglip2-base-image-b4-w8a16",
+   "profileJob": "fixture://p-siglip2-base-image-b4-w8a16",
+   "inferenceJob": "fixture://i-siglip2-base-image-b4-w8a16"
+  },
+  {
+   "modelId": "siglip2-base-image-b16",
+   "precision": "float16",
+   "batch": 1,
+   "latencyMs": 9.0,
+   "compileJob": "fixture://c-siglip2-base-image-b16-float16",
+   "profileJob": "fixture://p-siglip2-base-image-b16-float16",
+   "inferenceJob": "fixture://i-siglip2-base-image-b16-float16"
+  },
+  {
+   "modelId": "siglip2-base-image-b16",
+   "precision": "w8a16",
+   "batch": 1,
+   "latencyMs": 6.75,
+   "compileJob": "fixture://c-siglip2-base-image-b16-w8a16",
+   "profileJob": "fixture://p-siglip2-base-image-b16-w8a16",
+   "inferenceJob": "fixture://i-siglip2-base-image-b16-w8a16"
+  },
+  {
+   "modelId": "toxicity-seq128",
+   "precision": "float16",
+   "batch": 1,
+   "latencyMs": 9.6,
+   "compileJob": "fixture://c-toxicity-seq128-float16",
+   "profileJob": "fixture://p-toxicity-seq128-float16",
+   "inferenceJob": "fixture://i-toxicity-seq128-float16"
+  },
+  {
+   "modelId": "toxicity-seq128",
+   "precision": "w8a16",
+   "batch": 1,
+   "latencyMs": 7.2,
+   "compileJob": "fixture://c-toxicity-seq128-w8a16",
+   "profileJob": "fixture://p-toxicity-seq128-w8a16",
+   "inferenceJob": "fixture://i-toxicity-seq128-w8a16"
+  },
+  {
+   "modelId": "toxicity-seq256",
+   "precision": "float16",
+   "batch": 1,
+   "latencyMs": 10.2,
+   "compileJob": "fixture://c-toxicity-seq256-float16",
+   "profileJob": "fixture://p-toxicity-seq256-float16",
+   "inferenceJob": "fixture://i-toxicity-seq256-float16"
+  },
+  {
+   "modelId": "toxicity-seq256",
+   "precision": "w8a16",
+   "batch": 1,
+   "latencyMs": 7.65,
+   "compileJob": "fixture://c-toxicity-seq256-w8a16",
+   "profileJob": "fixture://p-toxicity-seq256-w8a16",
+   "inferenceJob": "fixture://i-toxicity-seq256-w8a16"
+  }
+ ]
+}

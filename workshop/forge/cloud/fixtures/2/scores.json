@@ -1,0 +1,45 @@
+{
+ "nudenet-320n": {
+  "float": 90.0,
+  "float16": 89.9,
+  "w8a16": 89.4,
+  "w8a8": 88.8
+ },
+ "nudenet-640m": {
+  "float": 89.0,
+  "float16": 88.9,
+  "w8a16": 88.4,
+  "w8a8": 86.0
+ },
+ "yoloe-26s-embed-top100": {
+  "float": 88.0,
+  "float16": 87.9,
+  "w8a16": 87.4,
+  "w8a8": 86.8
+ },
+ "siglip2-base-image-b1": {
+  "float": 87.0,
+  "float16": 86.9,
+  "w8a16": 86.4
+ },
+ "siglip2-base-image-b4": {
+  "float": 86.0,
+  "float16": 85.9,
+  "w8a16": 85.4
+ },
+ "siglip2-base-image-b16": {
+  "float": 85.0,
+  "float16": 84.9,
+  "w8a16": 84.4
+ },
+ "toxicity-seq128": {
+  "float": 84.0,
+  "float16": 83.9,
+  "w8a16": 83.4
+ },
+ "toxicity-seq256": {
+  "float": 83.0,
+  "float16": 82.9,
+  "w8a16": 82.4
+ }
+}
