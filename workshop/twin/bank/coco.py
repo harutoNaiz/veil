@@ -9,7 +9,7 @@ import zipfile
 from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 
 import numpy as np
 from PIL import Image
@@ -74,20 +74,26 @@ def item_url(file_name: str) -> str:
 
 def _get(url: str, sink=None, timeout: int = 60) -> bytes:
     """Plain http.client GET (requests/urllib stall on this network). Streams into sink."""
-    u = urlsplit(url)
-    c = http.client.HTTPConnection(u.netloc, timeout=timeout)
-    try:
-        c.request("GET", u.path)
-        r = c.getresponse()
-        if r.status != 200:
-            raise OSError(f"HTTP {r.status}")
-        if sink is None:
-            return r.read()
-        while chunk := r.read(1 << 20):
-            sink.write(chunk)
-        return b""
-    finally:
-        c.close()
+    for _ in range(4):
+        u = urlsplit(url)
+        cls = http.client.HTTPSConnection if u.scheme == "https" else http.client.HTTPConnection
+        c = cls(u.netloc, timeout=timeout)
+        try:
+            c.request("GET", u.path + (f"?{u.query}" if u.query else ""))
+            r = c.getresponse()
+            if r.status in (301, 302, 303, 307, 308) and r.getheader("Location"):
+                url = urljoin(url, r.getheader("Location"))
+                continue
+            if r.status != 200:
+                raise OSError(f"HTTP {r.status}")
+            if sink is None:
+                return r.read()
+            while chunk := r.read(1 << 20):
+                sink.write(chunk)
+            return b""
+        finally:
+            c.close()
+    raise OSError("too many redirects")
 
 
 def fetch_image(url: str) -> Image.Image | None:

@@ -46,7 +46,16 @@ def accepted(queue: list[str], state: dict[str, dict], quota: int) -> tuple[list
 
 def fetch_one(meta: dict, cache: Path) -> dict:
     try:
-        raw = coco._get(meta["url"].replace("https://", "http://"), timeout=40)
+        url = meta["url"].replace("http://", "https://")
+        raw = None
+        for attempt in range(4):
+            try:
+                raw = coco._get(url, timeout=40)
+                break
+            except Exception:  # noqa: BLE001
+                if attempt == 3:
+                    raw = coco._get(url.replace("https://", "http://"), timeout=40)
+                time.sleep(2 * (attempt + 1))  # 429 / transient: back off
         sha = hashlib.sha256(raw).hexdigest()
         im = Image.open(BytesIO(raw)).convert("RGB")
         if meta.get("rotation"):
@@ -170,6 +179,8 @@ def phase_embed(out: Path, manifest: dict, engine: str, provider: str) -> None:
         from workshop.twin.pieces import make_pieces
 
         regions = make_pieces(Image.new("RGB", compose.SIZE))
+    if not vecs:
+        raise SystemExit("no images fetched: nothing to embed (check fetched.jsonl / network)")
     allv = np.concatenate(vecs)
     h = fmt.write_bench(out, manifest, allv, regions)
     print(f"EMBED done vecs={allv.shape} manifestSha256={h}")
