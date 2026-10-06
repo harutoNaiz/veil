@@ -1,0 +1,6 @@
+=== D-blind-hint verify · 2026-10-06 11:37:20
+ok    (1) ktlint
+ok    (2) unit tests
+ok    (3) compile
+VERIFY D-blind-hint: PASS
+exit 0

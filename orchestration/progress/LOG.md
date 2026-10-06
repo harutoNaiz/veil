@@ -294,3 +294,8 @@ Events:
 - 2026-10-06 11:31 checkpoint (periodic): main 9630dd7 pushed; WIP files: 0
 - 2026-10-06 11:32 checkpoint (user: save everything now): main 86d27fa pushed; WIP files: 0
 - 2026-10-06 11:34 mini GPU bank: AC-7.1-03 FAILED (snakes false-cover 0.933, nPos 0, excluded 0) → repair Refiner; full bank on hold. Parallel: R-7.2, D-console-bridge, D-politics-pack, D-oov-words, D-blind-hint
+- 2026-10-06 11:34 checkpoint (parallel batch started): main a8a15e7 pushed; WIP files: 1
+2026-10-06 11:35 | D-politics-pack | VERIFY PASS + COMMIT 20cd570 | [D-politics-pack] Politics topic pack (text-first)
+2026-10-06 11:38 | D-blind-hint | VERIFY PASS + COMMIT 27b5397 | [D-blind-hint] Blind-app hint (protected video)
+2026-10-06 11:41 | D-oov-words | VERIFY PASS + COMMIT 30d60ff | [D-oov-words] On-phone SigLIP2 text encoder for out-of-vocabulary words
+- 2026-10-06 11:42 committed D-politics-pack 20cd570, D-blind-hint 27b5397, D-oov-words 30d60ff; 7.2 spec approved, Builders 7.2.1-3 spawned

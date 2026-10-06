@@ -1,0 +1,7 @@
+=== D-oov-words verify · 2026-10-06 11:38:27
+ok    (0) ktlint
+ok    (1) kit lists siglip2-text
+ok    (2) teacher tests + golden token test
+ok    (3) app compile
+VERIFY D-oov-words: PASS
+exit 0

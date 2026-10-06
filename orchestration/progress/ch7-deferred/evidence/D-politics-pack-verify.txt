@@ -1,0 +1,8 @@
+=== D-politics-pack verify · 2026-10-06 11:35:40
+ok    (1) ruff
+    politics: PENDING-HUMAN  image rows PENDING-HUMAN (text-only pack, no images); text recall 1.00, text false 0.00 on 64+63 hand-written lines.
+ok    (2) build + text eval
+ok    (3) report + catalogue
+ok    (4) pytest
+VERIFY D-politics-pack: PASS
+exit 0
