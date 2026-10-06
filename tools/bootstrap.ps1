@@ -170,10 +170,9 @@ try {
     if (-not (Test-Path -LiteralPath $licFile)) { throw 'Android SDK licences were not accepted (licenses\android-sdk-license missing).' }
     Write-Log ('licence files: ' + ((Get-ChildItem -LiteralPath (Join-Path $env:ANDROID_HOME 'licenses') | ForEach-Object Name) -join ', '))
 
-    # 6. Python (uv-managed; never the system Python)
-    Say "Python: installing $($pins.python) via uv"
-    $r = Invoke-Native 'uv' @('python', 'install', $pins.python, '--no-bin', '--no-registry')
-    if ($r.ExitCode -ne 0) { throw "uv python install failed (exit $($r.ExitCode)); see $logFile" }
+    # 6. Python: signed python.org 3.11.9 (NuGet package, installed with the archives above; Smart App Control blocks uv-managed builds)
+    if (-not (Test-Path -LiteralPath $env:UV_PYTHON)) { throw "python 3.11.9 missing: $env:UV_PYTHON" }
+    Say "Python: $env:UV_PYTHON"
 
     # 7. Flutter: first run fetches the Dart SDK; then Android artifacts. doctor is logged only.
     Say 'Flutter: first run (Dart SDK) and precache for Android'
@@ -246,15 +245,15 @@ try {
   # python
   # Run from the toolchain dir: inside the repo, "uv python find" would return the repo's .venv python.
   Push-Location $tc
-  try { $r = Invoke-Native 'uv' @('python', 'find', '3.11.16') } finally { Pop-Location }
+  try { $r = Invoke-Native 'uv' @('python', 'find') } finally { Pop-Location }
   $line = First-Line $r
-  Add-Row 'python' '3.11.16 under toolchain\python' $line (($r.ExitCode -eq 0) -and (Test-UnderToolchain $line) -and ($line -like "$tc\python\*"))
+  Add-Row 'python' '3.11.9 under toolchain\python-3.11.9' $line (($r.ExitCode -eq 0) -and (Test-UnderToolchain $line) -and ($line -like "$tc\python-3.11.9\*"))
   # repo-venv
   if (Test-Path -LiteralPath (Join-Path $repo '.venv')) {
     Push-Location $repo
     try { $r = Invoke-Native 'uv' @('run', '--no-sync', 'python', '--version') } finally { Pop-Location }
     $line = First-Line $r
-    Add-Row 'repo-venv' 'Python 3.11.16' $line (($r.ExitCode -eq 0) -and ($line -match '^Python 3\.11\.16'))
+    Add-Row 'repo-venv' 'Python 3.11.9' $line (($r.ExitCode -eq 0) -and ($line -match '^Python 3\.11\.9'))
   }
 
   Say ''
