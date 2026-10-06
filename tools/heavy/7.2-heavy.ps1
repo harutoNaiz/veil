@@ -18,7 +18,7 @@ function Run([string]$label, [scriptblock]$body) {
   if ($LASTEXITCODE -ne 0) { "FAILED $label" | Tee-Object -FilePath $log -Append | Out-Host; $script:failed = $true }
 }
 
-$flags = if ($Mini) { @('--mini') } else { @() }
+$flags = @(if ($Mini) { '--mini' })
 if (-not (Test-Path "$dir/selection.json")) {
   Run 'select' { uv run --locked python -m workshop.twin.bench.select --out $dir @flags }
 } else { "skip select (exists)" | Tee-Object -FilePath $log -Append | Out-Host }
