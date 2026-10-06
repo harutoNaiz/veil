@@ -1,0 +1,12 @@
+{
+ "templates": [
+  "a photo of a {w}",
+  "a {w}",
+  "a close-up of a {w}",
+  "a {w} in a meme",
+  "a drawing of a {w}"
+ ],
+ "quantilesPerMille": {"light": 999, "balanced": 995, "strict": 980},
+ "k": 8,
+ "margin": 0.0
+}
