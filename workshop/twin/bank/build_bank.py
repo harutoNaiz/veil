@@ -11,7 +11,7 @@ from pathlib import Path
 
 import numpy as np
 
-from workshop.twin.bank import bankio, coco, ui_synth, vocab
+from workshop.twin.bank import bankio, coco, engine, ui_synth, vocab
 from workshop.twin.teacher import IGNORE
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -35,6 +35,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--limit", type=int, required=True)
     ap.add_argument("--ui", type=int, required=True)
     ap.add_argument("--vocab-limit", type=int, default=5000)
+    ap.add_argument("--engine", choices=["torch", "onnx"], default="torch")
+    ap.add_argument("--provider", choices=["cpu", "dml"], default="cpu")
+    ap.add_argument("--threads", type=int, default=32)
     a = ap.parse_args(argv)
     out = Path(a.out)
     if not out.is_absolute():
@@ -43,6 +46,16 @@ def main(argv: list[str] | None = None) -> int:
     if (out / "bank.bin").exists() and (out / "vocab.bin").exists():
         print("bank already built:", out)
         return 0
+
+    eng_p = out / "engine.json"
+    if (out / "partial.npz").exists():
+        prev_eng = (
+            json.loads(eng_p.read_text(encoding="utf-8"))["engine"] if eng_p.exists() else "torch"
+        )
+        if prev_eng != a.engine:
+            print(f"partial bank was built with engine={prev_eng}, not {a.engine}; refusing")
+            return 3
+    eng_p.write_text(json.dumps({"engine": a.engine, "provider": a.provider}), encoding="utf-8")
 
     data = coco.load_captions(SRC)
     wn = vocab.wn_setup(SRC)
@@ -54,9 +67,7 @@ def main(argv: list[str] | None = None) -> int:
     cands = coco.filter_items(data)
     del data, all_caps
 
-    from workshop.forge.siglip2.runtime import OnnxDescriber
-
-    desc = OnnxDescriber(ONNX)
+    desc = engine.make_describer(a.engine, a.provider, ONNX)
 
     # resume state
     items_p, part_p = out / "items.jsonl", out / "partial.npz"
@@ -89,36 +100,36 @@ def main(argv: list[str] | None = None) -> int:
             checkpoint()
             rate = t_rows / max(time.time() - t0, 1e-9)
             total = a.limit + a.ui
-            print(f"rows {len(items)}/{total} {rate:.2f}/s eta {(total - len(items)) / rate:.0f}s")
+            print(f"rows {len(items)}/{total} {rate:.2f} img/s eta {(total - len(items)) / rate:.0f}s")
 
-    pos = 0
-    while n_coco < a.limit:
-        chunk = []
-        while len(chunk) < CHUNK and pos < len(cands) and n_coco + len(chunk) < a.limit:
-            c = cands[pos]
-            pos += 1
-            if ("coco", f"{c['id']:012d}") not in done:
-                chunk.append(c)
-        if not chunk:
-            break
-        imgs = coco.fetch_many([coco.item_url(c["file_name"]) for c in chunk])
-        ok = [(c, im) for c, im in zip(chunk, imgs, strict=True) if im is not None]
-        if not ok:
-            continue
-        rows = [
-            {
-                "row": 0,
-                "source": "coco",
-                "id": f"{c['id']:012d}",
-                "url": coco.item_url(c["file_name"]),
-                "licenseId": c["licenseId"],
-                "license": coco.LICENCES[c["licenseId"]],
-                "labels": _labels(c["captions"], form_to_idx),
-            }
-            for c, _ in ok
-        ]
-        flush(rows, [im for _, im in ok])
-        n_coco += len(ok)
+    def chunk_iter():
+        pending = [c for c in cands if ("coco", f"{c['id']:012d}") not in done]
+        for i in range(0, len(pending), CHUNK):
+            yield pending[i : i + CHUNK]
+
+    if n_coco < a.limit:
+        fetch = lambda c: coco.fetch_image(coco.item_url(c["file_name"]))  # noqa: E731
+        for chunk, imgs in engine.prefetch(chunk_iter(), fetch, a.threads):
+            ok = [(c, im) for c, im in zip(chunk, imgs, strict=True) if im is not None]
+            ok = ok[: a.limit - n_coco]
+            if not ok:
+                continue
+            rows = [
+                {
+                    "row": 0,
+                    "source": "coco",
+                    "id": f"{c['id']:012d}",
+                    "url": coco.item_url(c["file_name"]),
+                    "licenseId": c["licenseId"],
+                    "license": coco.LICENCES[c["licenseId"]],
+                    "labels": _labels(c["captions"], form_to_idx),
+                }
+                for c, _ in ok
+            ]
+            flush(rows, [im for _, im in ok])
+            n_coco += len(ok)
+            if n_coco >= a.limit:
+                break
     while n_ui < a.ui:
         idx = [i for i in range(n_ui, min(n_ui + CHUNK, a.ui))]
         rows = [
@@ -136,6 +147,7 @@ def main(argv: list[str] | None = None) -> int:
         flush(rows, [ui_synth.render_screen(i) for i in idx])
         n_ui += len(idx)
     checkpoint()
+    print(f"EMBED {t_rows} rows {t_rows / max(time.time() - t0, 1e-9):.2f} img/s")
 
     # vocab rows (cached text encodes), then thresholds on dequantised rows
     emb_p = out / "vocab_emb.npy"
@@ -200,6 +212,7 @@ def main(argv: list[str] | None = None) -> int:
             "sha256": {f: _sha(out / f) for f in ("bank.bin", "vocab.bin", "vocab.json")},
             "sources": dict(src),
             "licences": dict(lic),
+            "engine": a.engine,
             "onnxSha256": {p.name: _sha(p) for p in sorted(ONNX.glob("siglip2-*.onnx"))},
         }
         here = Path(__file__).parent
