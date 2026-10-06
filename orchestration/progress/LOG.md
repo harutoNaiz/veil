@@ -282,3 +282,5 @@ Events:
 - 2026-10-06 09:50 user said continue: checkpoint loop and heavy 7.1 -Mini restarted (2.8 GB free, VS Code closed)
 - 2026-10-06 10:02 checkpoint (periodic): main b77eba7 pushed; WIP files: 0
 - 2026-10-06 10:14 checkpoint (periodic): main c01df35 pushed; WIP files: 0
+- 2026-10-06 10:26 checkpoint (periodic): main 642c58d pushed; WIP files: 0
+- 2026-10-06 10:33 user restarting the terminal; mini bank at 768/2000 (resumable); downloads too slow for the full run (~45 img/min), parallel-download fix queued
