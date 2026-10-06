@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <permission
+        android:name="com.veil.guard.permission.CONSOLE"
+        android:protectionLevel="signature" />
+
     <application
         android:label="Veil Guard"
         android:theme="@android:style/Theme.DeviceDefault">
@@ -94,5 +98,11 @@
                 <action android:name="com.veil.guard.overlay.CMD" />
             </intent-filter>
         </receiver>
+
+        <!-- Console bridge: bound by the Console APK (same signature). -->
+        <service
+            android:name=".bridge.ConsoleBridgeService"
+            android:exported="true"
+            android:permission="com.veil.guard.permission.CONSOLE" />
     </application>
 </manifest>

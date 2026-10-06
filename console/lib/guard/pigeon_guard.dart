@@ -143,7 +143,7 @@ class PigeonGuard implements GuardClient {
   @override
   Future<List<InstalledApp>> installedApps() async => [
     for (final a in await _api.installedApps())
-      InstalledApp(a.package, a.label),
+      InstalledApp(a.packageName, a.label),
   ];
 
   @override

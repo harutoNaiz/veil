@@ -455,20 +455,20 @@ data class StatsMsg (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class InstalledAppMsg (
-  val package: String,
+  val packageName: String,
   val label: String
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InstalledAppMsg {
-      val package = pigeonVar_list[0] as String
+      val packageName = pigeonVar_list[0] as String
       val label = pigeonVar_list[1] as String
-      return InstalledAppMsg(package, label)
+      return InstalledAppMsg(packageName, label)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      package,
+      packageName,
       label,
     )
   }
@@ -480,17 +480,17 @@ data class InstalledAppMsg (
       return true
     }
     val other = other as InstalledAppMsg
-    return GuardApiPigeonUtils.deepEquals(this.package, other.package) && GuardApiPigeonUtils.deepEquals(this.label, other.label)
+    return GuardApiPigeonUtils.deepEquals(this.packageName, other.packageName) && GuardApiPigeonUtils.deepEquals(this.label, other.label)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
-    result = 31 * result + GuardApiPigeonUtils.deepHash(this.package)
+    result = 31 * result + GuardApiPigeonUtils.deepHash(this.packageName)
     result = 31 * result + GuardApiPigeonUtils.deepHash(this.label)
     return result
   }
   override fun toString(): String {
-    return "InstalledAppMsg(package=$package, label=$label)"
+    return "InstalledAppMsg(packageName=$packageName, label=$label)"
   }
 }
 
