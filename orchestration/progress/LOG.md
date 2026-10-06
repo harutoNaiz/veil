@@ -348,3 +348,7 @@ Events:
 - 2026-10-07 02:04 D-72-flags committed a43e3a5; 3d runner launched
 - 2026-10-07 02:06 3d 7.2 -Mini FAILED fetch_embed: 0/507 fetched (Flickr http->301 https, coco._get no redirect); D-72-fetch Builder spawned
 - 2026-10-07 02:09 checkpoint (periodic): main ea44645 pushed; WIP files: 3
+- 2026-10-07 02:21 checkpoint (periodic): main 3ab9c71 pushed; WIP files: 3
+2026-10-07 02:22 | D-72-fetch | VERIFY PASS + COMMIT 9ffcd89 | [D-72-fetch] Bench fetch over https (Flickr 301/429: redirects + ALPN)
+- 2026-10-07 02:22 D-72-fetch committed 9ffcd89 (https + redirects + ALPN; Flickr 429 on no-ALPN TLS); 3d runner relaunched
+- 2026-10-07 02:24 USER: pause after next step -> runner parent stopped; 7.2 -Mini allowed to finish; 7.2 full NOT started
