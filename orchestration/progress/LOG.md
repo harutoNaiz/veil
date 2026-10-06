@@ -324,3 +324,5 @@ Events:
 - 2026-10-06 23:50 checkpoint (user: commit every 12 min): main f5adb54 pushed; WIP files: 0
 - 2026-10-06 23:50 checkpoint (user: commit every 12 min): main f5adb54 pushed; unbounded 12-min checkpoint loop started
 - 2026-10-07 00:02 checkpoint (periodic): main 9f03c37 pushed; WIP files: 0
+- 2026-10-07 00:14 checkpoint (periodic): main 7967f1d pushed; WIP files: 0
+- 2026-10-07 00:22 3a siglip2 export DONE (4 onnx); 3b mini bank + checkpoint loop KILLED by Claude Code (system low on memory); waiting for the user

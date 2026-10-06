@@ -7,7 +7,7 @@ This file is two things at once:
 
 The orchestrator does not write product code. It plans with an **Opus 5.5 Refiner**, builds with **Sonnet 5.5 Builders**, checks everything itself, asks you only for what needs a human, and writes down what happened under `progress/`.
 
-Words used here: **chapter ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ phase ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ sub-phase** (you called these "pages" and "sub-pages"). IDs come from `PLAN.md`: Phase `1.1`, sub-phase `1.1.2`.
+Words used here: **chapter ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ phase ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ sub-phase** (you called these "pages" and "sub-pages"). IDs come from `PLAN.md`: Phase `1.1`, sub-phase `1.1.2`.
 
 ---
 
@@ -29,17 +29,17 @@ Added 2026-10-02 after Phase 1.1 took about 4 hours. **Hard rule from the user: 
 
 | # | Rule |
 | --- | --- |
-| F1 | **Time box per phase: 20-30 min.** Refine ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 8 min ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· build ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 15 min (all sub-phases in parallel) ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· verify and record ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 5 min. If a phase passes 30 min, log `OVERRUN <reason>`, cut scope (defer what's left, see F6) and close it. Never keep polishing. |
+| F1 | **Time box per phase: 20-30 min.** Refine ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤ 8 min ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· build ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤ 15 min (all sub-phases in parallel) ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· verify and record ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤ 5 min. If a phase passes 30 min, log `OVERRUN <reason>`, cut scope (defer what's left, see F6) and close it. Never keep polishing. |
 | F2 | **Pipeline.** In the same message that spawns phase N's Builders, spawn the Refiner for the next phase in the section 7 order (the phase that will be startable once N is built). At most one phase BUILDING plus one REFINING at a time. When N closes, the next spec is already waiting. |
-| F3 | **Lean spec: ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 250 lines.** For each sub-phase: goal, owned paths, the files and key interfaces (signatures only), short steps, the verify script and its expected output, and any human needs. A compact AC table. **No exhaustive version research:** reuse the pinned toolchain and `uv.lock`, and let Builders pin new deps with `uv add`. Search the web only for a genuinely unknown API. Design all three sub-phases to run **in parallel**: define shared interfaces and stubs in the spec, so no sub-phase waits for another (one-file stubs are fine). |
-| F4 | **Lean build.** Build the minimum that meets PLAN's "Done when" and the AC rows. No extra features, no extra tests beyond what the verify script needs (a handful of meaningful tests, not hundreds). Each Builder writes **one verify script**, `veil/tools/verify/<x.y.z>.ps1`. It runs all its checks and ends with `VERIFY <x.y.z>: PASS` or `FAIL`. Builder reply ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 10 lines; record ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 30 lines. |
+| F3 | **Lean spec: ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤ 250 lines.** For each sub-phase: goal, owned paths, the files and key interfaces (signatures only), short steps, the verify script and its expected output, and any human needs. A compact AC table. **No exhaustive version research:** reuse the pinned toolchain and `uv.lock`, and let Builders pin new deps with `uv add`. Search the web only for a genuinely unknown API. Design all three sub-phases to run **in parallel**: define shared interfaces and stubs in the spec, so no sub-phase waits for another (one-file stubs are fine). |
+| F4 | **Lean build.** Build the minimum that meets PLAN's "Done when" and the AC rows. No extra features, no extra tests beyond what the verify script needs (a handful of meaningful tests, not hundreds). Each Builder writes **one verify script**, `veil/tools/verify/<x.y.z>.ps1`. It runs all its checks and ends with `VERIFY <x.y.z>: PASS` or `FAIL`. Builder reply ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤ 10 lines; record ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤ 30 lines. |
 | F5 | **Lean verify.** The orchestrator runs each sub-phase's verify script once (still an independent re-run), plus a `git status` boundary check. Then **one** fix round at most (prompt F). If it still fails, mark it BLOCKED with the evidence, raise a human check, and move on. No Opus repair unless the whole phase is blocked. |
 | F6 | **Deferred heavy checks.** Anything that takes more than 5 min or is heavy goes into `progress/DEFERRED.md` and never runs inline. Examples: clean-room re-installs, soak tests, battery runs, long recordings, full re-downloads, big model downloads beyond what the phase needs. Deferred checks run as one batch at a chapter's end or while you're away. The AC row is marked `DEFERRED` and the phase still closes. |
 | F7 | **Phone and human checks never block the flow.** Mark them PENDING-HUMAN, batch them into `HUMAN_CHECKS.md` (one short item per phase), and keep going. |
-| F8 | **Lean records.** Sub-phase record = the Builder's ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 30 lines + the orchestrator's 1-3 verification lines. `PHASE.md` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 40 lines. Update sections 1-2 only at sub-phase and phase transitions, with one LOG line per transition. Write `veil/docs/acceptance/<x.y>.md` only when the phase becomes ACCEPTED. |
+| F8 | **Lean records.** Sub-phase record = the Builder's ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤ 30 lines + the orchestrator's 1-3 verification lines. `PHASE.md` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤ 40 lines. Update sections 1-2 only at sub-phase and phase transitions, with one LOG line per transition. Write `veil/docs/acceptance/<x.y>.md` only when the phase becomes ACCEPTED. |
 | F9 | **One commit per sub-phase** (user's rule, 2026-10-02), right after its verify script passes. Stage only that sub-phase's owned paths: `git add <owned paths>`, message `[x.y.z] <name>`. Records and state in `progress/` are not in git. |
 | F10 | **Orchestrator context.** Never read a whole spec or long logs: read the spec's summary, its waves and its verify lines. Run verification in one tool call per sub-phase. |
-| F11 | **Models and effort** (user's rule, 2026-10-02 18:40, for token economy and speed). Planning only: Opus at **medium** effort (`subagent_type: "veil-planner-medium"`) for routine phases, or **high** effort (`"veil-planner-high"`) for hard ones (bit-exact ports, Android platform edge cases, repairs). All coding: Sonnet 5.5 at **medium** effort (`"veil-builder"`). Agent definitions live in `D:\iqoo finale\.claude\agents\`. Specs ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 150 lines. The model-line check still applies. |
+| F11 | **Models and effort** (user's rule, 2026-10-02 18:40, for token economy and speed). Planning only: Opus at **medium** effort (`subagent_type: "veil-planner-medium"`) for routine phases, or **high** effort (`"veil-planner-high"`) for hard ones (bit-exact ports, Android platform edge cases, repairs). All coding: Sonnet 5.5 at **medium** effort (`"veil-builder"`). Agent definitions live in `D:\iqoo finale\.claude\agents\`. Specs ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤ 150 lines. The model-line check still applies. |
 | F12 | **Throughput.** Up to two phases may build at once if at most one of them runs Gradle or Flutter builds and no heavy model job is running. Refiners (light) may run alongside anything. |
 
 ---
@@ -51,15 +51,15 @@ Added 2026-10-02 after Phase 1.1 took about 4 hours. **Hard rule from the user: 
 | --- | --- |
 | STANDING ORDER (user) | Keep working every session until the WEEKLY usage limit. When close to it: commit + push everything, update this block, stop. HANDOFF override (2026-10-06): NEVER shut down / restart / log off this machine (someone else's). Also: commit + push every 10-15 min (checkpoint loop) |
 | Active phases | 7.1 BUILT: AC-7.1-03 PASS on the mini bank (snakes 0.0; all 12 words 0.0 false-cover; cats/spiders recall 1.0); warning: bank recall motorcycle 0.67, broccoli 0.62. Full 30k bank was building when the old laptop died: data/ must be rebuilt on the new machine (HANDOFF.md step 3 a-d). 7.2 code committed; heavy 7.2 next |
-| Running agents | step 3a siglip2 export (bg, log veil/data/forge/siglip2-export.log); next 3b 7.1 -Mini  · checkpoint loop (12 min, unbounded) |
+| Running agents | none: Claude Code killed the 3b mini bank run and the checkpoint loop (system low on memory, 2026-10-07); restart only when the user asks |
 | Waiting on you | progress/HUMAN_CHECKS.md: Sitting 1 (Phase 1.1) and HC-002 to HC-027 (HC-016 = Chapter 2 gate decision). HC-002 (phone) and HC-003 (AI Hub token) unblock the most; HC-026 (live Guard) unblocks HC-020/021/024/025 |
 | Deferred heavy checks | `progress/DEFERRED.md`: D-1.1-01, D-1.3-07, D-6.1-apk, D-4.2-pt, D-5.3-perfetto, D-6.3-*, D-5.2W-* |
 | Phone at last boot | NOT connected (adb 2026-10-06, new machine) |
-| Phases accepted | 0 of 18 accepted (needs the human checks) ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· ALL built: 1.1-1.3, 2.1-2.3, 3.1, 3.2, 3.3, 4.1-4.3, 5.1, 5.2 (+5.2-W), 5.3, 6.1-6.3, + 7.0 |
-| Next action | HANDOFF steps 1-2 DONE (BOOTSTRAP OK, 28110ab). Rebuild data/ (siglip2 export ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ 7.1 -Mini ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ full 7.1 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ 7.2 -Mini ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ full 7.2), one heavy job at a time. Then: when the full bank finishes: commit the report and update the 7.1 PHASE.md. Then `tools\heavy\7.2-heavy.ps1 -Mini`, then the full run ALONE; then evaluate (attempt 1) and write docs/reports/ch7-name-anything.md with the Chapter 7 gate result and the fallback choice (a/b/c). Speed-up option: run the vocab text encoding on DirectML too (currently ~21 min on CPU) |
+| Phases accepted | 0 of 18 accepted (needs the human checks) ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· ALL built: 1.1-1.3, 2.1-2.3, 3.1, 3.2, 3.3, 4.1-4.3, 5.1, 5.2 (+5.2-W), 5.3, 6.1-6.3, + 7.0 |
+| Next action | HANDOFF steps 1-2 DONE (BOOTSTRAP OK, 28110ab). Rebuild data/ (siglip2 export ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ 7.1 -Mini ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ full 7.1 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ 7.2 -Mini ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ full 7.2), one heavy job at a time. Then: when the full bank finishes: commit the report and update the 7.1 PHASE.md. Then `tools\heavy\7.2-heavy.ps1 -Mini`, then the full run ALONE; then evaluate (attempt 1) and write docs/reports/ch7-name-anything.md with the Chapter 7 gate result and the fallback choice (a/b/c). Speed-up option: run the vocab text encoding on DirectML too (currently ~21 min on CPU) |
 | Session notes | 2026-10-06: project moved to a new machine (SUPRITH S, RTX 4050, 23.6 GB RAM, D: = subst C:\veil-d); data/ being rebuilt; cmdline-tools pinned to 19.0 because Smart App Control blocks 23.0; Python = signed python.org 3.11.9 (NuGet, D:\veil-toolchain\python-3.11.9) because SAC blocks uv's unsigned 3.11.16. Never run uv sync / change .python-version while a heavy job uses .venv. SDK licences accepted by writing licenses\android-sdk-license hash (stdin piping into 19.0 fails). Chapter 1-2 hand-collected data (screenshots, labels, recordings) LOST with the old laptop (never pushed). Agent types: veil-planner-medium/high (Opus), veil-builder (Sonnet, medium); definitions in .claude/agents (mirrored at veil/orchestration/claude-agents). Remote: private GitHub harutoNaiz/veil. User 2026-10-05 22:30: commit AND push everything so another agent can resume from a fresh clone; mirror via `veil/tools/orchestrator/sync.sh`. Commit per sub-phase via `bash veil/tools/orchestrator/vc.sh`. ALL Gradle via `tools\gradle-locked.ps1` (mutex Global\veil-gradle); never wait on java.exe (VS Code Java server + its Gradle daemon never exit); close VS Code Java import during builds. PUSH with `git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin main` (gh token has the workflow scope; the Windows credential manager token does not). Last push 375f7e8 (2026-10-05 22:50). USER RULE (2026-10-05 22:50): commit + push every 10-15 min and keep STATE current. A background loop runs `bash veil/tools/orchestrator/checkpoint.sh` every 12 min (mirror to main + WIP snapshot to origin/checkpoint); restart the loop when it ends (2 h); vc.sh pushes after each verified commit |
 | Sessions run | 9 |
-| Last updated | 2026-10-06 23:35 |
+| Last updated | 2026-10-07 00:22 |
 <!-- STATE:END -->
 
 ## 2. Ledger
@@ -73,18 +73,18 @@ Added 2026-10-02 after Phase 1.1 took about 4 hours. **Hard rule from the user: 
 | 2.1 | Recordings and replay | WAITING_HUMAN | VERIFIED | VERIFIED | VERIFIED | 014 | 4095bfb |
 | 2.2 | Deciding when to look (Gatekeeper) | WAITING_HUMAN | VERIFIED | VERIFIED | VERIFIED | 015 | d521a07 |
 | 2.3 | Steady covers (Follower and Painter) | WAITING_HUMAN (gate decision HC-016) | VERIFIED | VERIFIED | VERIFIED | 016 | c9bbc4a |
-| 3.1 | Export the models | VERIFYING (H4 = pt-3.1 pending) | VERIFIED | VERIFIED (text enc. = accepted deviation) | VERIFIED | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | 71d67c9 |
+| 3.1 | Export the models | VERIFYING (H4 = pt-3.1 pending) | VERIFIED | VERIFIED (text enc. = accepted deviation) | VERIFIED | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | 71d67c9 |
 | 3.2 | Profile on cloud phones | WAITING_HUMAN (live run HC-017) | VERIFIED | VERIFIED | VERIFIED | 017 | 5830edf |
-| 3.3 | Runtime on the real phone | SPEC APPROVED (Gradle queue) | TODO | TODO | TODO | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
+| 3.3 | Runtime on the real phone | SPEC APPROVED (Gradle queue) | TODO | TODO | TODO | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
 | 4.1 | Screen capture | WAITING_HUMAN (phone, HC-020) | VERIFIED | VERIFIED | VERIFIED | 020 | 0f6ff20 |
-| 4.2 | Screen signals | BUILDING | TODO | TODO | TODO | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
-| 4.3 | Drawing covers | REFINING | TODO | TODO | TODO | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
-| 5.1 | Port the brain | WAITING_HUMAN (phone, HC-018) | VERIFIED | VERIFIED | VERIFIED | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
-| 5.2 | Wire it together | SPEC APPROVED (after 4.1) | TODO | TODO | TODO | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
-| 5.3 | Real-world performance | TODO | TODO | TODO | TODO | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
-| 6.1 | The Console app (Flutter) | WAITING_HUMAN (real Guard + HC-019) | VERIFIED | VERIFIED | VERIFIED | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
-| 6.2 | Learning and packs | BUILDING | QUEUED (Gradle) | VERIFIED | BUILDING | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
-| 6.3 | Ship the demo | TODO | TODO | TODO | TODO | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
+| 4.2 | Screen signals | BUILDING | TODO | TODO | TODO | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
+| 4.3 | Drawing covers | REFINING | TODO | TODO | TODO | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
+| 5.1 | Port the brain | WAITING_HUMAN (phone, HC-018) | VERIFIED | VERIFIED | VERIFIED | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
+| 5.2 | Wire it together | SPEC APPROVED (after 4.1) | TODO | TODO | TODO | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
+| 5.3 | Real-world performance | TODO | TODO | TODO | TODO | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
+| 6.1 | The Console app (Flutter) | WAITING_HUMAN (real Guard + HC-019) | VERIFIED | VERIFIED | VERIFIED | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
+| 6.2 | Learning and packs | BUILDING | QUEUED (Gradle) | VERIFIED | BUILDING | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
+| 6.3 | Ship the demo | TODO | TODO | TODO | TODO | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
 <!-- LEDGER:END -->
 
 Status values are defined in [section 6](#6-status-values).
@@ -99,7 +99,7 @@ Status values are defined in [section 6](#6-status-values).
 | **Refiner** | Opus 5.5: Agent tool, `subagent_type: "general-purpose"`, `model: "opus"` | By the orchestrator, once per phase | 1 per phase, plus at most 1 repair | That phase's `SPEC.md` only | Code |
 | **Builder** | Sonnet 5.5: Agent tool, `subagent_type: "general-purpose"`, `model: "sonnet"` | By the orchestrator, per sub-phase | 1 per sub-phase, up to 3 in parallel | Its owned paths in `veil/`, plus the Builder sections of its sub-phase record | Paths it does not own; git commits; spawning agents |
 | **Checker** | Sonnet 5.5, `model: "sonnet"` | Only when a check needs "someone who did not build it" | As needed | Evidence files only | Fixing anything |
-| **You** | Human | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | Answers in `progress/HUMAN_CHECKS.md` | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
+| **You** | Human | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | Answers in `progress/HUMAN_CHECKS.md` | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
 
 ### The model rule (hard rule)
 
@@ -157,7 +157,7 @@ Large media (videos, frame dumps, battery traces) stay in `veil/data/evidence/<p
 
 The orchestrator runs these steps in order. **Checkpoint rule:** after any step that changes something, update section 1 (and section 2 if a status changed) *before* doing anything else. If the session dies at any moment, the next session resumes from section 1 and loses at most one step.
 
-### Step 0 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Boot
+### Step 0 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Boot
 
 1. Read this whole file.
 2. Read `progress/HUMAN_CHECKS.md` and the last 30 lines of `progress/LOG.md`.
@@ -165,7 +165,7 @@ The orchestrator runs these steps in order. **Checkpoint rule:** after any step 
 4. Run `adb devices` and note whether the iQOO is connected (PHONE checks need it). Write the result into section 1.
 5. Append `SESSION START` to the log and increase "Sessions run" by one.
 
-### Step 1 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Reconcile
+### Step 1 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Reconcile
 
 1. **Your answers.** For every human check you have changed (PASS, FAIL, DONE or WAIVED, with a note), apply it:
    - update the affected record, `PHASE.md`, the ledger and the statuses;
@@ -177,11 +177,11 @@ The orchestrator runs these steps in order. **Checkpoint rule:** after any step 
      - a sub-phase that was BUILDING gets a new Builder, using the *resume* version of prompt B;
      - a phase that was REFINING without a finished `SPEC.md` gets a new Refiner.
 
-### Step 2 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Pick the work
+### Step 2 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Pick the work
 
 Apply [section 7](#7-choosing-the-next-phase). If nothing can move, go to Step 8.
 
-### Step 3 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Refine (once per phase)
+### Step 3 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Refine (once per phase)
 
 Skip this step if the phase already has a `SPEC.md` marked `Status: APPROVED`.
 
@@ -196,7 +196,7 @@ Skip this step if the phase already has a `SPEC.md` marked `Status: APPROVED`.
 6. Any "Proposed waivers" in the spec become human checks. The orchestrator never accepts a waiver itself.
 7. Write `Status: APPROVED (orchestrator, <date>)` in the spec header.
 
-### Step 4 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Build
+### Step 4 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Build
 
 1. Take the wave plan from the spec. For the current wave, spawn one Builder per sub-phase (**prompt B**), all in a single message so they run in parallel.
    - Only do this if their owned paths don't overlap and at most one of them uses the phone.
@@ -206,7 +206,7 @@ Skip this step if the phase already has a `SPEC.md` marked `Status: APPROVED`.
 4. As each Builder returns, run Step 5 for its sub-phase.
 5. The next wave starts only when every sub-phase in the current wave is VERIFIED, or is WAITING_HUMAN on something the next wave doesn't need.
 
-### Step 5 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Verify a sub-phase
+### Step 5 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Verify a sub-phase
 
 1. **Model line.** Check it is correct.
 2. **Boundaries.** Run `git status --short`; every changed path must be inside the Builder's owned paths. A change anywhere else is a failure.
@@ -220,7 +220,7 @@ Skip this step if the phase already has a `SPEC.md` marked `Status: APPROVED`.
 7. **SPEC_ISSUE.** If the Builder reports one, go straight to 6b.
 8. **NEEDS_HUMAN.** If the Builder reports this, verify everything that can be verified, raise human checks for the rest, and set the sub-phase to WAITING_HUMAN.
 
-### Step 6 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Verify the phase
+### Step 6 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Verify the phase
 
 Start when all three sub-phases are VERIFIED or WAITING_HUMAN.
 
@@ -236,7 +236,7 @@ Start when all three sub-phases are VERIFIED or WAITING_HUMAN.
    - Write `veil/docs/acceptance/<x.y>.md` in `PLAN.md`'s acceptance-record template, with the results so far.
    - Commit them.
 
-### Step 7 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Close the phase
+### Step 7 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Close the phase
 
 | Situation | New status |
 | --- | --- |
@@ -246,7 +246,7 @@ Start when all three sub-phases are VERIFIED or WAITING_HUMAN.
 
 Update the ledger, section 1 and the log. If later work ever breaks a guarantee of an ACCEPTED phase (`PLAN.md` acceptance rule 6), set that phase to REOPENED and re-run its affected checks.
 
-### Step 8 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Continue or stop
+### Step 8 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Continue or stop
 
 Go back to Step 2. Stop the session only when:
 
@@ -275,7 +275,7 @@ If the session is cut off (usage limit, closed terminal or laptop sleep), nothin
 | Phase | `BLOCKED` | Can't pass without a decision from you |
 | Phase | `ACCEPTED` | Every criterion and the proof test passed (or waived by you); upstream accepted |
 | Phase | `REOPENED` | Was accepted, but a guarantee was broken later; affected checks being re-run |
-| Sub-phase | `TODO` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ `BUILDING` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ `VERIFIED` / `WAITING_HUMAN` / `BLOCKED` | Same meanings, one level down |
+| Sub-phase | `TODO` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ `BUILDING` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ `VERIFIED` / `WAITING_HUMAN` / `BLOCKED` | Same meanings, one level down |
 
 **"Built"** means WAITING_HUMAN or ACCEPTED. Later phases may *start* on built phases. They may only be *accepted* once their upstream phases are ACCEPTED (from `PLAN.md`: "Work may start earlier; sign-off may not").
 
@@ -291,11 +291,11 @@ Only one phase may be REFINING, BUILDING or VERIFYING at a time. Phases that are
 
 | Order | Phase | Can start when (built = WAITING_HUMAN or ACCEPTED) | Accept needs (`PLAN.md` entry conditions) | Runs on | Human load |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 1.1 Foundations | Now | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ | Laptop, phone, cloud | Light |
+| 1 | 1.1 Foundations | Now | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ | Laptop, phone, cloud | Light |
 | 2 | 1.2 Test data | 1.1 built | 1.1 | Laptop, phone | **Heavy** |
 | 3 | 4.1 Screen capture | 1.1 built | 1.1 | Phone | Medium |
 | 4 | 4.2 Screen signals | 1.1 built | 1.1 | Phone | Light |
-| 5 | **3.3.1 only** (runtime smoke test, early risk check) | 1.1 built and the phone connected | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ (3.3 is accepted later as a whole) | Phone | None |
+| 5 | **3.3.1 only** (runtime smoke test, early risk check) | 1.1 built and the phone connected | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ (3.3 is accepted later as a whole) | Phone | None |
 | 6 | 2.1 Recordings and replay | 1.1 built (4.2 built preferred, for logged scroll) | 1.1 | Phone, laptop | **Heavy** |
 | 7 | 4.3 Drawing covers | 4.1 and 4.2 built | 4.1, 4.2 | Phone | Light |
 | 8 | 1.3 SEE prototype | 1.2 built (the dev labels exist) | 1.2 | Laptop | Light |
@@ -354,7 +354,7 @@ Only one phase may be REFINING, BUILDING or VERIFYING at a time. Phases that are
 All in `progress/HUMAN_CHECKS.md`. Item format:
 
 ```markdown
-### HC-012 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Phase 1.2 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Label the screenshots  [OPEN]
+### HC-012 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Phase 1.2 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Label the screenshots  [OPEN]
 - Why a human: <one line>
 - Blocks: START of x.y / ACCEPTANCE of x.y / nothing (FYI)
 - Time: ~<estimate>
@@ -381,20 +381,20 @@ Rules:
 ### 10.1 SPEC.md (the Refiner's output)
 
 ```markdown
-# SPEC ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Phase x.y <name>
+# SPEC ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Phase x.y <name>
 MODEL: claude-opus-5-5
 Status: DRAFT | APPROVED (orchestrator, <date>)
-Based on: PLAN.md Phase x.y (lines a-b) ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· veil commit <hash or "none"> ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· records read: <list>
+Based on: PLAN.md Phase x.y (lines a-b) ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· veil commit <hash or "none"> ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· records read: <list>
 
 ## 1. Reality check
 - Already exists and will be reused: <paths>
-- Facts verified: <tool / library / API / model / version ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ source URL>
+- Facts verified: <tool / library / API / model / version ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ source URL>
 - Deviations from PLAN.md: <what and why>. None may change a threshold, a deliverable or a guarantee.
 - Risks and how this spec handles them
 
 ## 2. Waves
 Wave 1: x.y.1                  (phone: no)
-Wave 2: x.y.2 ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â Ãƒâ€šÃ‚Â¥ x.y.3          (phone: x.y.3 only)
+Wave 2: x.y.2 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¥ x.y.3          (phone: x.y.3 only)
 
 ## 3. Shared setup
 Environment and dependencies every sub-phase relies on, assigned to exactly one sub-phase's owned paths.
@@ -423,7 +423,7 @@ Environment and dependencies every sub-phase relies on, assigned to exactly one 
 One checklist you can do in one go, with a total time estimate.
 
 ## 8. Proposed waivers
-<"none", or: criterion ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· why it can't be met as written ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· risk ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· alternative>
+<"none", or: criterion ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· why it can't be met as written ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· risk ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· alternative>
 
 ## Amendments
 <appended by repairs; earlier text is never rewritten>
@@ -445,7 +445,7 @@ One checklist you can do in one go, with a total time estimate.
 MODEL: <written by the Builder as its first action>
 # x.y.z <name>
 Status: BUILDING | VERIFIED | WAITING_HUMAN | BLOCKED
-Builders: <agent id ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· model line ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· started> (one line per Builder, including resumed ones)
+Builders: <agent id ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· model line ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· started> (one line per Builder, including resumed ones)
 
 ## What was asked
 <2-4 lines summarising SPEC section 4 for this sub-phase>
@@ -459,7 +459,7 @@ Builders: <agent id ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· model line Ãƒ
 | Command | Result |
 
 ## Fix rounds                      (Builder, if any)
-- Round n: <what failed ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ what changed>
+- Round n: <what failed ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ what changed>
 
 ## Independent verification        (orchestrator)
 | # | Command | Expected | Got | Result |
@@ -470,14 +470,14 @@ Builders: <agent id ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· model line Ãƒ
 <HC ids, or "none">
 
 ## Outcome                         (orchestrator)
-<VERIFIED / WAITING_HUMAN / BLOCKED> ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· commit <hash> ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· <date>
+<VERIFIED / WAITING_HUMAN / BLOCKED> ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· commit <hash> ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· <date>
 ```
 
 ### 10.3 PHASE.md
 
 ```markdown
-# Phase x.y <name> ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· <STATUS>
-Updated: <date> ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Commits: <first>..<last> ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Spec: SPEC.md
+# Phase x.y <name> ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· <STATUS>
+Updated: <date> ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Commits: <first>..<last> ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Spec: SPEC.md
 
 ## Summary
 <3-5 plain-language lines: what now works and how we know>
@@ -507,8 +507,8 @@ Updated: <date> ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Commits: <first>..<
 Printed to you at the end of every session:
 
 ```
-VEIL ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· session <n> ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· <date>
-Done this session:  1.1 ACCEPTED ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· 4.1 built (waiting on you)
+VEIL ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· session <n> ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· <date>
+Done this session:  1.1 ACCEPTED ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· 4.1 built (waiting on you)
 Waiting on you (most important first; then paste the start prompt again):
   HC-007  Connect the phone                              ~2 min    unblocks 4.1, 4.2 checks
   HC-009  Label 300 screenshots (pre-labelled)           ~3 h      unblocks 1.2, then 1.3
@@ -522,7 +522,7 @@ Problems:           <BLOCKED items with one line each, or "none">
 
 Fill in the `{...}` parts. Always set `model` explicitly on the Agent call.
 
-### R ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Refiner (`model: "opus"`, description `Refine phase x.y`) ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· FAST TRACK
+### R ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Refiner (`model: "opus"`, description `Refine phase x.y`) ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· FAST TRACK
 
 ```
 RULE 1: The first line of your final reply must be `MODEL: <your exact model id>`.
@@ -557,7 +557,7 @@ Write only SPEC.md. Do not spawn agents. Do not commit. Do not install anything.
 Final reply: the MODEL line, then at most 8 lines.
 ```
 
-### B ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Builder (`model: "sonnet"`, description `Build x.y.z`) ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· FAST TRACK
+### B ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Builder (`model: "sonnet"`, description `Build x.y.z`) ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· FAST TRACK
 
 ```
 RULE 1: The first line of your final reply must be `MODEL: <your exact model id>`.
@@ -571,13 +571,13 @@ Run commands from D:\iqoo finale\veil with `powershell -NoProfile -ExecutionPoli
 - If the spec is wrong or impossible, report SPEC_ISSUE with the evidence; don't work around it at length.
 - Human-only steps (phone, judgement, accounts): build around them, list exact steps, and report NEEDS_HUMAN.
 - Make your verify script pass. Do not commit.
-- Record (ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 30 lines): what you built (files), deviations, the verify result.
+- Record (ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤ 30 lines): what you built (files), deviations, the verify result.
 {Resume note, only when resuming: "A previous Builder stopped early; check `git status` on your paths and finish."}
 
 Final reply: the MODEL line; DONE / SPEC_ISSUE / NEEDS_HUMAN; the verify script result. At most 10 lines.
 ```
 
-### F ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Fix round (SendMessage to the same Builder)
+### F ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Fix round (SendMessage to the same Builder)
 
 ```
 Verification of {x.y.z} failed (round {n} of 2). Failing checks:
@@ -586,7 +586,7 @@ Fix only what makes these fail. Stay inside your owned paths. Re-run your whole 
 Reply with the MODEL line and at most 10 lines.
 ```
 
-### P ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Repair (Refiner, `model: "opus"`, description `Repair spec x.y.z`)
+### P ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Repair (Refiner, `model: "opus"`, description `Repair spec x.y.z`)
 
 ```
 RULE 1: The first line of your final reply must be `MODEL: <your exact model id>`.
@@ -597,7 +597,7 @@ Find the root cause; read the code and run read-only commands as needed. Append 
 Final reply: the MODEL line and at most 10 lines.
 ```
 
-### C ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Clean-room Checker (`model: "sonnet"`, description `Check x.y clean-room`)
+### C ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Clean-room Checker (`model: "sonnet"`, description `Check x.y clean-room`)
 
 ```
 RULE 1: The first line of your final reply must be `MODEL: <your exact model id>`.
@@ -672,7 +672,7 @@ Final reply: the MODEL line, then PASS/FAIL per item with a one-line reason. At 
 | Blind re-labelling, gallery review, "watch it like a user", "from a user's point of view" | You or a teammate (HUMAN) |
 | "All four owners approve" (contracts, waivers) | You |
 | "3 first-time users", "someone outside the team" | Real people you bring in |
-| A waiver | Only you, through a human check: reason ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· risk ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· plan ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· approved |
+| A waiver | Only you, through a human check: reason ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· risk ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· plan ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· approved |
 | `docs/acceptance/<phase>.md` | Written by the orchestrator in `veil/docs/acceptance/`, mirrored in `PHASE.md` |
 
 ---
@@ -689,14 +689,14 @@ These are rough guesses so you can plan your time. The real list is in each phas
 | 2.1 | Help with scripted recording sessions (logins, Reels); label recordings at keyframes | 3-5 h |
 | 2.2 | Review a timeline chart | 15 min |
 | 2.3 | Watch side-by-side videos and mark issues | 1 h |
-| 3.1, 3.2 | Nothing (uses the AI Hub token from setup) | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
+| 3.1, 3.2 | Nothing (uses the AI Hub token from setup) | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
 | 3.3 | Hold the phone during the 10-minute run and say if it gets uncomfortably warm | 15 min |
 | 4.1 | Tap the screen-capture consent; check the lock/unlock and "Resume Veil" flows; Netflix blind-spot check | 30-45 min |
 | 4.2 | Enable the accessibility service once through "Allow restricted settings", with screenshots | 15 min |
 | 4.3 | Tap through covers in 5 apps; try the long-press | 20 min |
-| 5.1 | Nothing; keep the phone plugged in | ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ |
+| 5.1 | Nothing; keep the phone plugged in | ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ |
 | 5.2 | Supply the controlled Layer 1 evaluation images by hand; a 5-minute real Instagram session | 30 min, plus sourcing |
-| 5.3 | Battery runs: phone off the charger (wireless adb), fixed brightness, 4 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â 30 min | 2-3 h, mostly waiting |
+| 5.3 | Battery runs: phone off the charger (wireless adb), fixed brightness, 4 ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â 30 min | 2-3 h, mostly waiting |
 | 6.1 | Find 3 people who have never seen Veil and watch them set it up | 1-2 h |
 | 6.2 | Run PCAPdroid during the fox test | 20 min |
 | 6.3 | Three rehearsals, a 30-minute session by an outsider, review the deck | 2-3 h |
