@@ -315,3 +315,9 @@ Events:
 - 2026-10-06 12:20 memory pressure: Claude Code stopped the A1 mini re-eval and the checkpoint loop; waiting for the user
 - 2026-10-06 12:20 checkpoint (memory pressure stop): main 7b8fdb1 pushed; WIP files: 1
 - 2026-10-06 14:02 AC-7.1-03 PASS on the mini bank after A1 (10f61e4); 7.1 PHASE.md written; full 30k bank build started
+- 2026-10-06 23:35 SESSION START (9) on new machine (SUPRITH S); HANDOFF list: SDK licences via hash file, packages installing; D-cmdline19 Builder (Sonnet) spawned
+2026-10-06 23:36 | D-cmdline19 | VERIFY PASS + COMMIT 1928230 | [D-cmdline19] Pin Android cmdline-tools 19.0 (Smart App Control blocks 23.0)
+- 2026-10-06 23:40 D-cmdline19 committed 1928230 (pushed); SDK packages installed; Smart App Control also blocks uv Python 3.11.16 -> signed python.org 3.11.9 (NuGet) works; D-signed-python Builder spawned; siglip2 export started
+2026-10-06 23:41 | D-signed-python | VERIFY PASS + COMMIT 5543ea9 | [D-signed-python] Use signed python.org 3.11.9 (Smart App Control blocks uv Python)
+2026-10-06 23:46 | D-signed-python | VERIFY PASS + COMMIT 28110ab | [D-signed-python] Signed Python on PATH + venv check fix (fix round 1)
+- 2026-10-06 23:47 D-signed-python committed 5543ea9 + fix round 1 28110ab (pushed); BOOTSTRAP OK; two export attempts broken by venv rebuilds; export re-run alone

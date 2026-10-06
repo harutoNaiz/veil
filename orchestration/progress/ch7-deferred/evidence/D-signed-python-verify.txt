@@ -1,0 +1,16 @@
+=== D-signed-python verify · 2026-10-06 23:46:31
+ok    toolchain.json python 3.11.9 nuget pin
+ok    .python-version 3.11.9
+ok    env.ps1 sets UV_PYTHON + downloads never
+ok    env.sh sets UV_PYTHON + downloads never
+ok    bootstrap.ps1 parses
+ok    bootstrap has no uv python install
+ok    UV_PYTHON exists
+Using CPython 3.11.9 interpreter at: D:\veil-toolchain\python-3.11.9\tools\python.exe
+Removed virtual environment at: .venv
+Creating virtual environment at: .venv
+Installed 122 packages in 4.52s
+3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]
+ok    uv run prints 3.11.9
+VERIFY D-signed-python: PASS
+exit 0
