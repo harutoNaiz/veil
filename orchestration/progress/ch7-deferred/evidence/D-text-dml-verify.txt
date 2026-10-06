@@ -1,0 +1,8 @@
+=== D-text-dml verify · 2026-10-07 01:16:45
+[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.
+cpu: 2.23 texts/s
+dml: 195.18 texts/s
+cosine min=1.000000 max=1.000000 n=32
+VERIFY D-text-dml: PASS
+exit 0

@@ -331,3 +331,9 @@ Events:
 - 2026-10-07 00:32 user: 'assume autonomy and get this done' -> detached data-rebuild runner (3b..3d chained) + detached 12-min checkpoint loop
 - 2026-10-07 00:44 checkpoint (periodic): main e5e2f48 pushed; WIP files: 0
 - 2026-10-07 00:56 checkpoint (periodic): main 0ba70ad pushed; WIP files: 0
+- 2026-10-07 01:08 checkpoint (periodic): main 7406fe9 pushed; WIP files: 0
+- 2026-10-07 01:11 3b: DML confirmed (engine.json provider dml; 2000 imgs in 3 min); CPU vocab slow -> runner parent stopped, D-text-dml Builder spawned
+2026-10-07 01:18 | D-text-dml | VERIFY PASS + COMMIT 16ca97e | [D-text-dml] SigLIP2 text encoder on DirectML for the bank vocab
+- 2026-10-07 01:18 D-text-dml committed 16ca97e (DML text 171 vs CPU 2.3 texts/s, cos 1.0). 3b: build+bank_check OK, autocal_eval FAILED (uv rebuilt .venv: subst path vs UV_PYTHON path) -> D-signed-python fix round 2
+2026-10-07 01:19 | D-signed-python | VERIFY PASS + COMMIT c613968 | [D-signed-python] uv Python as version request (subst D: rebuilt .venv every run) (fix round 2)
+- 2026-10-07 01:19 D-signed-python round 2 committed c613968 (UV_PYTHON=3.11.9; no venv churn); runner relaunched

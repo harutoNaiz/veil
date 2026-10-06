@@ -9,3 +9,7 @@ Fix rounds: Round 1: added python-3.11.9\tools to PATH in env.ps1/env.sh; repo-v
 
 ## Independent verification (orchestrator)
 - 23:46: `tools/verify/D-signed-python.ps1` re-run → VERIFY D-signed-python: PASS (evidence/D-signed-python-verify.txt). Commit 28110ab.
+Round 2: UV_PYTHON=3.11.9 (version request; path request mismatched under subst D:) in env.ps1/env.sh, PREFERENCE only-system, DOWNLOADS never; bootstrap step 6 checks python-3.11.9\tools\python.exe directly; verify adds second-run no-recreate check.
+
+## Independent verification (orchestrator)
+- 01:19: `tools/verify/D-signed-python.ps1` re-run → VERIFY D-signed-python: PASS (evidence/D-signed-python-verify.txt). Commit c613968.
