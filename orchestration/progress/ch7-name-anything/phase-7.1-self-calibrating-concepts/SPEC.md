@@ -214,3 +214,68 @@ data class AutoRule(val positives: List<AutoTerm>, val competitors: List<AutoTer
 - **W-7.1-card:** approve the additive optional `auto` and `alsoHide` contract fields (v1.0 stays, old cards stay valid).
 - **HC-7.1 (phone, PENDING-HUMAN, batch with HC-026):** the AC-02 timing and the PT "Buffalo" cover check above.
 - **Licence note for review:** COCO images are kept only under CC BY 2.0, CC BY-SA 2.0, "No known copyright" or US Gov; the annotations are CC BY 4.0; WordNet uses the WordNet 3.0 licence. Attribution comes from licences-v1.csv.
+
+## Amendment A1 (repair) · after the failed `7.1-heavy.ps1 -Mini` (snakes clean false-cover 0.933)
+MODEL: claude-opus-5-5 · Evidence: read-only scripts on data/bank/mini-gpu + data/ch1/cache/synthetic-dev-A (ONNX text loaded once).
+
+### A1.1 Root cause: a per-image "text affinity" offset that changes with the domain. It is not a unit bug.
+- **Same model, same scale (Q1).** The dev cache and fresh ONNX-CPU embeddings agree to cos ≥ 0.9999999 (2 screens, 44 pieces). Bank vs torch is 0.99941. Bank rows and dev pieces are both the L2-normalised pooled `fingerprint` with norm 1.0. The bank and the dev set are scored with the same text vector, so a text-side mismatch cannot cause a gap between them.
+- **No unit mismatch (Q2).** Thresholds and the judge both use the raw cosine. Neither uses SigLIP's logit_scale or bias; the sigmoid ×100 is only for display. The threshold is computed per whole COCO photo but applied per piece: 22 pieces per screen (whole + tiles + crops), not ~10, and a screen counts as covered if any piece hides. This alone would give ≤ ~10% screen false-cover. It is not the cause.
+- **The cause (Q3).** SigLIP2 text rows share one large common direction: ē = mean of the noun vocab rows, with ‖ē‖ = **0.92**. How strongly an image projects onto ē depends on its domain. The mean score over all 1,000 nouns is 0.016 on COCO rows, 0.038 on the bank's UI rows, and **0.078 on the dev synthetic pieces**. That offset swamps the word signal:
+  - "snakes" on the bank: p50 −0.0003, p99 0.0369, **p99.5 (thr) 0.0406**, max 0.0492. UI rows max out at 0.0253.
+  - "snakes" on the dev CLEAN pieces: min **0.0425**, p50 0.0663, max 0.0905. **100% of clean pieces score ≥ the threshold**, and every clean screen's best piece is above the bank's MAXIMUM. On the dev positive (cats/spiders) pieces, 97.4% score ≥ the threshold.
+  - Only the competitor margin kept 1 of 15 screens clean (0.933). No value in the Q table can fix this (raw Q=998 gives 1.00). Measured on raw cosine, the same failure hits pizza, motorcycle, giraffe, broccoli and clock (1.00 each).
+  - The top nouns on the clean dev pieces are block, tile, plaid, window, screen and box, so this is a domain effect, not a snake effect.
+- **Exclusion and nPos (Q4).** "snakes"/"snake" is **OOV in the mini vocab** (top 1,000 lemmas; "snake" appears only 32 times in all train captions). On the OOV path excl = {} by design (§2), so excluded = 0 and nPos = 0 are correct for the mini bank. There is no singular/plural bug: `_singular` maps snakes → snake. A separate bug was found: **"kite" is OOV even though it appears 8,946 times in the captions**, because `vocab._ok_synset` checks only the FIRST WordNet synset (kite.n.01 is "a bank check that has been fraudulently altered"). Its kite photos are then not excluded, which inflates the threshold (balanced 0.13; 0.27 centred). That gives a meaningless 0.0 false-cover with poor recall.
+- **Domain shift (Q5).** Yes: photos vs drawn screen tiles, and the shift is a common-mode offset. Synthetic dev A is still a VALID test for AC-03: it is the set the 0.533 baseline was measured on, and it is exactly the screenshot-piece domain that exposed the failure.
+
+### A1.2 Fix: one global change to the method ("null-quantile-v2", centred directions). Nothing is per word.
+Define **ē = mean over the dequantised NOUN rows of vocab.bin (float64, index order, not normalised)**, and **dir(e) = l2(e − ē)**. Every auto score becomes v·dir(e_t) for positives, competitors and ignore entries alike, and every null quantile is taken over bank·dir(e). The raw e is still used for `lookup` and for the competitor/chip ranking, so chips do not change. The judge code does not change, because it already L2-normalises the card embeddings. The card stores dir(e_t) in the place of e_t.
+- **Measured on mini-gpu + synthetic dev A, Q table unchanged (995), real scorer:**
+  - clean false-cover is **0.000 for all 10 words** (snakes thr 0.0437).
+  - Control words on the same screens: cats recall 1.00 (prec 0.79), spiders recall 1.00 (prec 0.78).
+  - Bank recall on held-out positives (old → new): umbrella 0.88→1.00, pizza 0.92→0.94, motorcycle 0.67→0.67, giraffe 0.975→0.975, surfboard 0.96→0.90, clock 0.93→0.98, broccoli 0.71→0.62, cats 0.92.
+- **Global constants:** Q_PER_MILLE stays at {999, 995, 980}. TEMPLATES, K, N_CHIPS, the margin and the near band are unchanged. The only new global is the centring rule itself.
+
+### A1.3 Exact code changes (one builder; Python, then the Kotlin port)
+1. `workshop/twin/bank/bankio.py`
+   - `Vocab` gains `center: np.ndarray`, computed in `read_vocab` as `rows[[i for i,e in enumerate(meta["entries"]) if e["kind"]=="noun"]].mean(0)` (float64).
+   - Add `def direction(e, center) -> np.ndarray: return l2(np.float64(e) - center)`.
+2. `workshop/twin/bank/vocab.py`
+   - `_ok_synset`: accept a lemma if ANY of its noun synsets has a ROOT in its hypernym closure, not only `syns[0]`. This is the kite bug.
+   - `thresholds(...)` takes the centre and scores `bank_rows @ direction(vocab_row, center)`. The ignore rows use the same centre.
+3. `workshop/twin/bank/build_bank.py`
+   - Compute the centre from `vdeq[:len(names)]` exactly as `read_vocab` does, and pass it to both `thresholds` calls.
+   - Add `--revocab`: reuse `bank.bin` rows + `items.jsonl`. Recompute the lemmas, item labels (captions by COCO id; UI rows get []), vocab_emb (text model, CPU) and thresholds. Rewrite bank.bin (labels change, so the bankId changes), vocab.bin, vocab.json and items.jsonl. It must not re-embed images. `--revocab` deletes `vocab_emb.npy` first.
+4. `workshop/twin/autocal.py`
+   - `RULE = "null-quantile-v2"`.
+   - In `compile_auto`: d = direction(q, vocab.center). The OOV thresholds come from `null_thresholds(bank, d, set())`. In-vocab words still use the stored thr (now centred).
+   - Positive, chip-positive and competitor embeddings are `_emb(direction(row, center))`.
+   - `competitors()` and `chips_for()` keep ranking on the RAW rows.
+5. `contracts/compiled-concept.schema.json`
+   - `Auto.rule`: `{"enum":["null-quantile-v1","null-quantile-v2"]}`. Regenerate `workshop/contracts/models.py`. The waiver W-7.1-card covers this as an additive enum value.
+6. Fixture: re-run `tests/fixtures/autocal/make.py` to regenerate `expected.json` and the vocabThr. Add one test that the centre equals the mean of the noun rows, and one test that `_ok_synset("kite")` is True.
+7. Kotlin `guard/teacher/.../autocal/{VocabFile,AutoCal}.kt`
+   - `VocabFile.center` is the same mean (double, index order).
+   - `AutoCal` applies `direction` exactly as in step 4 and uses rule "null-quantile-v2".
+   - `Judge.kt` does not change. AutoCalParityTest keeps its tolerances (1e-4 / 1e-6).
+8. `workshop/twin/autocal_eval.py`
+   - Add the CONTROL words `cats,spiders` (evaluated, but outside the 10-word table). Report their screen recall.
+   - Exit 1 if snakes cleanFalseCover > 0.05 **or** cats or spiders screen recall < 0.9. This guards against a fix that passes by hiding nothing.
+   - Also print `AUTOCAL <w> thr=<balanced>`.
+- Verify: `tools/verify/7.1.1.ps1` and `7.1.2.ps1`, `7.1.3.ps1` (with the fixture regenerated); the golden tapes must stay exact, because old cards do not touch this code.
+
+### A1.4 AC-7.1-03 test set: unchanged
+Keep synthetic dev A, for the reasons in A1.1 Q5.
+- It has 15 clean screens, so a pass means 0 of 15 covered (1/15 = 0.067). This is recorded as a small-n caveat.
+- The cats/spiders recall controls (A1.3 step 8) are added to the gate.
+- The public dev set has no cache and `data/screens` (real screenshots) does not exist. A real-screenshot false-cover check moves to HC-7.1 (phone Test Feed), as already planned.
+
+### A1.5 Bank composition: build v1 as specified (28,500 COCO + 1,500 UI + 5,000 vocab)
+- Do not add screenshot-style tiles. Centring removes the offset without them, and tiles cut from the dev generator (workshop.screens.synth) would leak the test domain into the null.
+- Sequence (one model process at a time):
+  1. The builder lands A1 (no model needed).
+  2. `build_bank --out data/bank/mini-gpu --revocab` (text encodes only).
+  3. `autocal_eval --bank data/bank/mini-gpu`, which must PASS.
+  4. Only then start the full `7.1-heavy.ps1`.
+- Do not start the full build before step 3. The kite fix changes the vocab and labels, and the mini re-eval cannot run while the full build holds the model.

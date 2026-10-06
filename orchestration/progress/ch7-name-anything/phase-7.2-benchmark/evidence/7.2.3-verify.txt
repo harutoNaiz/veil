@@ -1,0 +1,11 @@
+=== 7.2.3 verify · 2026-10-06 11:49:09
+All checks passed!
+3 files already formatted
+ok    0 ruff
+..                                                                       [100%]
+2 passed in 0.91s
+ok    1 pytest
+NO DEVICE
+ok    2 phone script without device
+VERIFY 7.2.3: PASS
+exit 0

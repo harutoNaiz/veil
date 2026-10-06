@@ -1,0 +1,10 @@
+=== D-console-bridge verify · 2026-10-06 11:51:37
+ok    (1) pigeon regenerates cleanly (no change, no Kotlin keyword fields)
+ok    (2) flutter analyze
+ok    (3) flutter test
+ok    (4) flutter build apk --debug (under Global\veil-gradle)
+ok    (5) Guard bridge unit tests
+ok    (6) :app:assembleDebug
+ok    (7) ktlint
+VERIFY D-console-bridge: PASS
+exit 0

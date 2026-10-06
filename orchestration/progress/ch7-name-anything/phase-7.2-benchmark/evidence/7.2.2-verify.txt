@@ -1,0 +1,12 @@
+=== 7.2.2 verify · 2026-10-06 11:48:42
+All checks passed!
+ok    1 ruff check
+4 files already formatted
+ok    2 ruff format --check
+.......                                                                  [100%]
+7 passed in 0.48s
+ok    3 pytest bench eval
+NO_WORD_PARAMS hits=0
+ok    4 no per-word params
+VERIFY 7.2.2: PASS
+exit 0

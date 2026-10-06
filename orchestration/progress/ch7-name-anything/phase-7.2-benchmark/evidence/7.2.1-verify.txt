@@ -1,0 +1,12 @@
+=== 7.2.1 verify · 2026-10-06 11:48:27
+All checks passed!
+7 files already formatted
+ok    0 ruff
+....                                                                     [100%]
+4 passed in 0.37s
+ok    1 pytest
+SELECT test=2 dev=0 balance={'animal': 1, 'object': 1, 'food': 0, 'vehicle': 0}
+SELECT eligible=36/41077 pool=12
+ok    2 select --smoke
+VERIFY 7.2.1: PASS
+exit 0
