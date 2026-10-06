@@ -1,0 +1,60 @@
+{
+  "contractVersion": "1.0",
+  "packId": "politics",
+  "name": "Politics",
+  "version": "1.0.0",
+  "description": "Hides posts about elections, parties, campaigns and political debate. Result (PENDING-HUMAN): image rows PENDING-HUMAN (text-only pack, no images); text recall 1.00, text false 0.00 on 64+63 hand-written lines.",
+  "sensitive": false,
+  "concepts": [
+    {
+      "contractVersion": "1.0",
+      "layer": 2,
+      "enabled": true,
+      "coverStyle": "solid",
+      "showLabel": false,
+      "sensitive": false,
+      "conceptId": "politics",
+      "displayName": "Politics",
+      "scope": "wholeElement",
+      "looksLike": [
+        "a rally crowd holding political placards",
+        "a ballot box at a polling station",
+        "a parliament chamber during a debate",
+        "a political campaign poster",
+        "a televised election debate stage",
+        "a protest march about government policy"
+      ],
+      "butNot": [
+        "a birthday party with balloons",
+        "a marketing campaign slide deck",
+        "a kitchen cabinet",
+        "a poll about favourite pizza",
+        "a cricket match crowd"
+      ],
+      "keywords": [
+        "election",
+        "elections",
+        "ballot",
+        "parliament",
+        "lok sabha",
+        "politician",
+        "politicians",
+        "political party",
+        "campaign rally",
+        "manifesto",
+        "polling booth",
+        "chunav",
+        "rajneeti",
+        "neta",
+        "sansad"
+      ]
+    }
+  ],
+  "licence": "CC0-1.0",
+  "accuracy": {
+    "recall": 1.0,
+    "cleanFalseCoverRate": 0.0,
+    "testImages": 127,
+    "testSet": "hand-written text lines (image set PENDING-HUMAN)"
+  }
+}
