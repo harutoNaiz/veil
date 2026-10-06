@@ -1,0 +1,721 @@
+{
+ "banned": [
+  "cat",
+  "spider",
+  "snake",
+  "dog",
+  "fox",
+  "buffalo",
+  "umbrella",
+  "pizza",
+  "motorcycle",
+  "giraffe",
+  "kite",
+  "broccoli",
+  "surfboard",
+  "clock",
+  "cow",
+  "horse",
+  "cattle",
+  "bull",
+  "ox",
+  "bison",
+  "yak",
+  "kitten",
+  "puppy",
+  "motorbike",
+  "moped",
+  "scooter",
+  "pony"
+ ],
+ "block": [
+  "Brassiere",
+  "Swimwear",
+  "Bikini",
+  "Lingerie",
+  "Underpants",
+  "Undergarment",
+  "Miniskirt",
+  "Nudity"
+ ],
+ "tags": [
+  "Drawing",
+  "Cartoon",
+  "Illustration",
+  "Painting",
+  "Toy",
+  "Art"
+ ],
+ "dev": [
+  "snake",
+  "buffalo",
+  "umbrella",
+  "pizza",
+  "motorcycle",
+  "giraffe",
+  "kite",
+  "broccoli",
+  "surfboard",
+  "clock",
+  "cat",
+  "spider"
+ ],
+ "categories": {
+  "animal": [
+   {
+    "word": "zebra",
+    "oi": "zebra"
+   },
+   {
+    "word": "elephant",
+    "oi": "elephant"
+   },
+   {
+    "word": "lion",
+    "oi": "lion"
+   },
+   {
+    "word": "tiger",
+    "oi": "tiger"
+   },
+   {
+    "word": "bear",
+    "oi": "bear"
+   },
+   {
+    "word": "monkey",
+    "oi": "monkey"
+   },
+   {
+    "word": "rabbit",
+    "oi": "rabbit"
+   },
+   {
+    "word": "squirrel",
+    "oi": "squirrel"
+   },
+   {
+    "word": "owl",
+    "oi": "owl"
+   },
+   {
+    "word": "penguin",
+    "oi": "penguin"
+   },
+   {
+    "word": "duck",
+    "oi": "duck"
+   },
+   {
+    "word": "swan",
+    "oi": "swan"
+   },
+   {
+    "word": "goose",
+    "oi": "goose"
+   },
+   {
+    "word": "parrot",
+    "oi": "parrot"
+   },
+   {
+    "word": "eagle",
+    "oi": "eagle"
+   },
+   {
+    "word": "chicken",
+    "oi": "chicken"
+   },
+   {
+    "word": "pig",
+    "oi": "pig"
+   },
+   {
+    "word": "sheep",
+    "oi": "sheep"
+   },
+   {
+    "word": "goat",
+    "oi": "goat"
+   },
+   {
+    "word": "camel",
+    "oi": "camel"
+   },
+   {
+    "word": "kangaroo",
+    "oi": "kangaroo"
+   },
+   {
+    "word": "deer",
+    "oi": "deer"
+   },
+   {
+    "word": "butterfly",
+    "oi": "butterfly"
+   },
+   {
+    "word": "bee",
+    "oi": "bee"
+   },
+   {
+    "word": "frog",
+    "oi": "frog"
+   },
+   {
+    "word": "turtle",
+    "oi": "turtle"
+   },
+   {
+    "word": "lizard",
+    "oi": "lizard"
+   },
+   {
+    "word": "crab",
+    "oi": "crab"
+   },
+   {
+    "word": "jellyfish",
+    "oi": "jellyfish"
+   },
+   {
+    "word": "dolphin",
+    "oi": "dolphin"
+   },
+   {
+    "word": "shark",
+    "oi": "shark"
+   },
+   {
+    "word": "whale",
+    "oi": "whale"
+   },
+   {
+    "word": "starfish",
+    "oi": "starfish"
+   },
+   {
+    "word": "snail",
+    "oi": "snail"
+   },
+   {
+    "word": "ladybug",
+    "oi": "ladybug"
+   },
+   {
+    "word": "hedgehog",
+    "oi": "hedgehog"
+   },
+   {
+    "word": "koala",
+    "oi": "koala"
+   },
+   {
+    "word": "panda",
+    "oi": "panda"
+   },
+   {
+    "word": "hamster",
+    "oi": "hamster"
+   },
+   {
+    "word": "alpaca",
+    "oi": "alpaca"
+   },
+   {
+    "word": "ostrich",
+    "oi": "ostrich"
+   }
+  ],
+  "object": [
+   {
+    "word": "chair",
+    "oi": "chair"
+   },
+   {
+    "word": "bottle",
+    "oi": "bottle"
+   },
+   {
+    "word": "book",
+    "oi": "book"
+   },
+   {
+    "word": "laptop",
+    "oi": "laptop"
+   },
+   {
+    "word": "television",
+    "oi": "television"
+   },
+   {
+    "word": "guitar",
+    "oi": "guitar"
+   },
+   {
+    "word": "piano",
+    "oi": "piano"
+   },
+   {
+    "word": "backpack",
+    "oi": "backpack"
+   },
+   {
+    "word": "handbag",
+    "oi": "handbag"
+   },
+   {
+    "word": "suitcase",
+    "oi": "suitcase"
+   },
+   {
+    "word": "sunglasses",
+    "oi": "sunglasses"
+   },
+   {
+    "word": "hat",
+    "oi": "hat"
+   },
+   {
+    "word": "boot",
+    "oi": "boot"
+   },
+   {
+    "word": "watch",
+    "oi": "watch"
+   },
+   {
+    "word": "lamp",
+    "oi": "lamp"
+   },
+   {
+    "word": "vase",
+    "oi": "vase"
+   },
+   {
+    "word": "candle",
+    "oi": "candle"
+   },
+   {
+    "word": "teddy bear",
+    "oi": "teddy bear"
+   },
+   {
+    "word": "balloon",
+    "oi": "balloon"
+   },
+   {
+    "word": "flag",
+    "oi": "flag"
+   },
+   {
+    "word": "bench",
+    "oi": "bench"
+   },
+   {
+    "word": "couch",
+    "oi": "couch"
+   },
+   {
+    "word": "bed",
+    "oi": "bed"
+   },
+   {
+    "word": "ladder",
+    "oi": "ladder"
+   },
+   {
+    "word": "scissors",
+    "oi": "scissors"
+   },
+   {
+    "word": "teapot",
+    "oi": "teapot"
+   },
+   {
+    "word": "mug",
+    "oi": "mug"
+   },
+   {
+    "word": "wine glass",
+    "oi": "wine glass"
+   },
+   {
+    "word": "mirror",
+    "oi": "mirror"
+   },
+   {
+    "word": "drum",
+    "oi": "drum"
+   },
+   {
+    "word": "violin",
+    "oi": "violin"
+   },
+   {
+    "word": "camera",
+    "oi": "camera"
+   },
+   {
+    "word": "mobile phone",
+    "oi": "mobile phone"
+   },
+   {
+    "word": "headphones",
+    "oi": "headphones"
+   },
+   {
+    "word": "microphone",
+    "oi": "microphone"
+   },
+   {
+    "word": "toothbrush",
+    "oi": "toothbrush"
+   },
+   {
+    "word": "tent",
+    "oi": "tent"
+   },
+   {
+    "word": "christmas tree",
+    "oi": "christmas tree"
+   },
+   {
+    "word": "skateboard",
+    "oi": "skateboard"
+   },
+   {
+    "word": "tennis racket",
+    "oi": "tennis racket"
+   },
+   {
+    "word": "knife",
+    "oi": "knife"
+   }
+  ],
+  "food": [
+   {
+    "word": "hamburger",
+    "oi": "hamburger"
+   },
+   {
+    "word": "hot dog",
+    "oi": "hot dog"
+   },
+   {
+    "word": "sandwich",
+    "oi": "sandwich"
+   },
+   {
+    "word": "cake",
+    "oi": "cake"
+   },
+   {
+    "word": "ice cream",
+    "oi": "ice cream"
+   },
+   {
+    "word": "doughnut",
+    "oi": "doughnut"
+   },
+   {
+    "word": "cookie",
+    "oi": "cookie"
+   },
+   {
+    "word": "bread",
+    "oi": "bread"
+   },
+   {
+    "word": "croissant",
+    "oi": "croissant"
+   },
+   {
+    "word": "pancake",
+    "oi": "pancake"
+   },
+   {
+    "word": "waffle",
+    "oi": "waffle"
+   },
+   {
+    "word": "muffin",
+    "oi": "muffin"
+   },
+   {
+    "word": "pasta",
+    "oi": "pasta"
+   },
+   {
+    "word": "sushi",
+    "oi": "sushi"
+   },
+   {
+    "word": "salad",
+    "oi": "salad"
+   },
+   {
+    "word": "apple",
+    "oi": "apple"
+   },
+   {
+    "word": "banana",
+    "oi": "banana"
+   },
+   {
+    "word": "orange",
+    "oi": "orange"
+   },
+   {
+    "word": "strawberry",
+    "oi": "strawberry"
+   },
+   {
+    "word": "grape",
+    "oi": "grape"
+   },
+   {
+    "word": "lemon",
+    "oi": "lemon"
+   },
+   {
+    "word": "pineapple",
+    "oi": "pineapple"
+   },
+   {
+    "word": "watermelon",
+    "oi": "watermelon"
+   },
+   {
+    "word": "tomato",
+    "oi": "tomato"
+   },
+   {
+    "word": "carrot",
+    "oi": "carrot"
+   },
+   {
+    "word": "potato",
+    "oi": "potato"
+   },
+   {
+    "word": "cucumber",
+    "oi": "cucumber"
+   },
+   {
+    "word": "mushroom",
+    "oi": "mushroom"
+   },
+   {
+    "word": "cheese",
+    "oi": "cheese"
+   },
+   {
+    "word": "french fries",
+    "oi": "french fries"
+   },
+   {
+    "word": "coffee",
+    "oi": "coffee"
+   },
+   {
+    "word": "wine",
+    "oi": "wine"
+   },
+   {
+    "word": "beer",
+    "oi": "beer"
+   },
+   {
+    "word": "cocktail",
+    "oi": "cocktail"
+   },
+   {
+    "word": "pretzel",
+    "oi": "pretzel"
+   },
+   {
+    "word": "popcorn",
+    "oi": "popcorn"
+   },
+   {
+    "word": "burrito",
+    "oi": "burrito"
+   },
+   {
+    "word": "taco",
+    "oi": "taco"
+   },
+   {
+    "word": "pumpkin",
+    "oi": "pumpkin"
+   },
+   {
+    "word": "peach",
+    "oi": "peach"
+   }
+  ],
+  "vehicle": [
+   {
+    "word": "car",
+    "oi": "car"
+   },
+   {
+    "word": "bus",
+    "oi": "bus"
+   },
+   {
+    "word": "truck",
+    "oi": "truck"
+   },
+   {
+    "word": "van",
+    "oi": "van"
+   },
+   {
+    "word": "taxi",
+    "oi": "taxi"
+   },
+   {
+    "word": "ambulance",
+    "oi": "ambulance"
+   },
+   {
+    "word": "bicycle",
+    "oi": "bicycle"
+   },
+   {
+    "word": "train",
+    "oi": "train"
+   },
+   {
+    "word": "tram",
+    "oi": "tram"
+   },
+   {
+    "word": "boat",
+    "oi": "boat"
+   },
+   {
+    "word": "sailboat",
+    "oi": "sailboat"
+   },
+   {
+    "word": "canoe",
+    "oi": "canoe"
+   },
+   {
+    "word": "yacht",
+    "oi": "yacht"
+   },
+   {
+    "word": "airplane",
+    "oi": "airplane"
+   },
+   {
+    "word": "helicopter",
+    "oi": "helicopter"
+   },
+   {
+    "word": "tank",
+    "oi": "tank"
+   },
+   {
+    "word": "tractor",
+    "oi": "tractor"
+   },
+   {
+    "word": "limousine",
+    "oi": "limousine"
+   },
+   {
+    "word": "golf cart",
+    "oi": "golf cart"
+   },
+   {
+    "word": "snowmobile",
+    "oi": "snowmobile"
+   },
+   {
+    "word": "jet ski",
+    "oi": "jet ski"
+   },
+   {
+    "word": "forklift",
+    "oi": "forklift"
+   },
+   {
+    "word": "fire engine",
+    "oi": "fire engine"
+   },
+   {
+    "word": "police car",
+    "oi": "police car"
+   },
+   {
+    "word": "wheelchair",
+    "oi": "wheelchair"
+   },
+   {
+    "word": "school bus",
+    "oi": "school bus"
+   },
+   {
+    "word": "pickup truck",
+    "oi": "pickup truck"
+   },
+   {
+    "word": "minivan",
+    "oi": "minivan"
+   },
+   {
+    "word": "sports car",
+    "oi": "sports car"
+   },
+   {
+    "word": "jeep",
+    "oi": "jeep"
+   },
+   {
+    "word": "bulldozer",
+    "oi": "bulldozer"
+   },
+   {
+    "word": "excavator",
+    "oi": "excavator"
+   },
+   {
+    "word": "gondola",
+    "oi": "gondola"
+   },
+   {
+    "word": "submarine",
+    "oi": "submarine"
+   },
+   {
+    "word": "barge",
+    "oi": "barge"
+   },
+   {
+    "word": "hot air balloon",
+    "oi": "hot air balloon"
+   },
+   {
+    "word": "unicycle",
+    "oi": "unicycle"
+   },
+   {
+    "word": "segway",
+    "oi": "segway"
+   },
+   {
+    "word": "stroller",
+    "oi": "stroller"
+   },
+   {
+    "word": "rocket",
+    "oi": "rocket"
+   }
+  ]
+ }
+}
