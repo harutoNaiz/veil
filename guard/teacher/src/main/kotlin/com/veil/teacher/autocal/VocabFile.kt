@@ -22,6 +22,9 @@ class VocabFile(bytes: ByteArray, json: String) {
     val meta: JsonObject = Json.parseToJsonElement(json).jsonObject
     val entries: List<VocabEntry>
 
+    /** Mean of the noun rows (double, index order); the null-quantile-v2 centre. */
+    val center: DoubleArray
+
     init {
         val b = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
         require(b.int == MAGIC) { "not a VVOC file" }
@@ -45,6 +48,8 @@ class VocabFile(bytes: ByteArray, json: String) {
             )
         }
         require(entries.size == n) { "vocab.json has ${entries.size} entries, vocab.bin $n" }
+        val nouns = entries.indices.filter { entries[it].kind == "noun" }
+        center = DoubleArray(dim) { d -> nouns.sumOf { rows[it][d] } / nouns.size }
     }
 
     fun lookup(word: String): Int? {

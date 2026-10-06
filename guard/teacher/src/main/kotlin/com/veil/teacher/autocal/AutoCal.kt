@@ -7,7 +7,7 @@ import com.veil.brain.contract.Embedding
 import com.veil.teacher.Teacher
 import com.veil.teacher.TextEncoder
 
-/** Port of workshop/twin/autocal.py (null-quantile-v1). Every constant is global; nothing per word. */
+/** Port of workshop/twin/autocal.py (null-quantile-v2). Every constant is global; nothing per word. */
 object AutoCal {
     val TEMPLATES = listOf(
         "a photo of a {w}",
@@ -32,6 +32,10 @@ object AutoCal {
         val n = Math.sqrt(s)
         return if (n > 0) DoubleArray(v.size) { v[it] / n } else v
     }
+
+    const val RULE = "null-quantile-v2"
+
+    fun direction(e: DoubleArray, center: DoubleArray): DoubleArray = l2(DoubleArray(e.size) { e[it] - center[it] })
 
     fun dot(a: DoubleArray, b: DoubleArray): Double {
         var s = 0.0
@@ -94,18 +98,21 @@ object AutoCal {
         val text = collapse(word)
         val idx = vocab.lookup(text)
         val e: DoubleArray
+        val d: DoubleArray
         val thr: DoubleArray
         val excl: Set<Int>
         val rel: Set<Int>
         if (idx != null) {
             e = vocab.rows[idx]
+            d = direction(e, vocab.center)
             thr = vocab.thr[idx]
             excl = vocab.entries[idx].excl
             rel = vocab.entries[idx].rel + idx
         } else {
             requireNotNull(enc) { "'$text' is not in the vocabulary and no text encoder is available" }
             e = ensemble(text, enc)
-            thr = thresholds(e, bank, emptySet())
+            d = direction(e, vocab.center)
+            thr = thresholds(d, bank, emptySet())
             excl = emptySet()
             val sing = Teacher.singular(text)
             rel = vocab.entries.indices.filter { vocab.entries[it].name == sing }.toSet()
@@ -122,15 +129,22 @@ object AutoCal {
         val chips = rank(emptySet()).take(N_CHIPS).map { vocab.entries[it].name }
         val ranked = rank(positives)
         val ignores = vocab.entries.indices.filter { vocab.entries[it].kind == "ignore" }
-        val pos = listOf(term(text, e, thrMap(thr), enc)) +
-            selected.map { term(vocab.entries[it].name, vocab.rows[it], thrMap(vocab.thr[it]), enc) }
+        val pos = listOf(term(text, d, thrMap(thr), enc)) +
+            selected.map {
+                term(vocab.entries[it].name, direction(vocab.rows[it], vocab.center), thrMap(vocab.thr[it]), enc)
+            }
         val comps = (ranked + ignores).map {
-            term(vocab.entries[it].name, vocab.rows[it], linkedMapOf("balanced" to vocab.thr[it][1]), enc)
+            term(
+                vocab.entries[it].name,
+                direction(vocab.rows[it], vocab.center),
+                linkedMapOf("balanced" to vocab.thr[it][1]),
+                enc
+            )
         }
         val butNot = comps.dropLast(ignores.size)
         val ignore = comps.takeLast(ignores.size)
         val rawAuto = linkedMapOf<String, Any?>(
-            "rule" to "null-quantile-v1",
+            "rule" to RULE,
             "bankId" to bank.bankId,
             "margin" to AUTO_MARGIN,
             "excluded" to excluded,

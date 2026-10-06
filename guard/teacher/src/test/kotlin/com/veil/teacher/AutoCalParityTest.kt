@@ -67,7 +67,7 @@ class AutoCalParityTest {
     fun vocabThresholdsRecompute() {
         val vt = expected["vocabThr"]!!.jsonArray
         for (i in 0 until vocab.n) {
-            val t = AutoCal.thresholds(vocab.rows[i], bank, vocab.entries[i].excl)
+            val t = AutoCal.thresholds(AutoCal.direction(vocab.rows[i], vocab.center), bank, vocab.entries[i].excl)
             for (m in 0..2) assertEquals("vocab $i/$m", vt[i].jsonArray[m].jsonPrimitive.double, t[m], 1e-4)
         }
     }

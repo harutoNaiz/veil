@@ -753,7 +753,7 @@ class CompiledConceptAuto(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    rule: Literal["null-quantile-v1"] = "null-quantile-v1"
+    rule: Literal["null-quantile-v1", "null-quantile-v2"]
     bankId: str = Field(..., max_length=64, min_length=1)
     """
     Id of the reference bank.

@@ -9,6 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
+from workshop.twin.bank.bankio import direction
 from workshop.twin.teacher import IGNORE
 
 TEMPLATES = [
@@ -48,9 +49,11 @@ def _ok_synset(wn, lemma: str) -> bool:
     syns = wn.synsets(lemma, "n")
     if not syns:
         return False
-    first = syns[0]
-    closure = {first.name()} | {s.name() for s in first.closure(lambda s: s.hypernyms())}
-    return any(r in closure for r in ROOTS)
+    for s in syns:
+        closure = {s.name()} | {x.name() for x in s.closure(lambda x: x.hypernyms())}
+        if any(r in closure for r in ROOTS):
+            return True
+    return False
 
 
 def build_lemmas(captions: Iterable[str], limit: int, wn) -> list[dict]:
@@ -133,7 +136,11 @@ def quantile(d: np.ndarray, qm: int) -> float:
 
 
 def thresholds(
-    bank_rows: np.ndarray, vocab_rows: np.ndarray, excl: list[list[int]], lab_sets: list[set[int]]
+    bank_rows: np.ndarray,
+    vocab_rows: np.ndarray,
+    excl: list[list[int]],
+    lab_sets: list[set[int]],
+    center: np.ndarray | None = None,
 ) -> np.ndarray:
     """(n_vocab, 3) float32 thresholds (light, balanced, strict) from the null scores."""
     by_label: dict[int, list[int]] = {}
@@ -142,7 +149,10 @@ def thresholds(
             by_label.setdefault(lab, []).append(r)
     thr = np.zeros((len(vocab_rows), 3), dtype=np.float32)
     for lo in range(0, len(vocab_rows), 256):
-        scores = bank_rows @ vocab_rows[lo : lo + 256].T  # float64
+        blk = vocab_rows[lo : lo + 256]
+        if center is not None:
+            blk = direction(blk, center)
+        scores = bank_rows @ blk.T  # float64
         for j in range(scores.shape[1]):
             v = lo + j
             keep = np.ones(len(bank_rows), dtype=bool)
