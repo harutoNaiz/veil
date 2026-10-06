@@ -147,8 +147,17 @@ class PigeonGuard implements GuardClient {
   ];
 
   @override
-  Future<ConceptView> compileConcept(String text, List<FileRef> photos) async =>
-      _concept(await _api.compilePack(text, photos.map(_msg).toList()));
+  Future<WordPreview> previewWord(String text) async =>
+      WordPreview(word: text.trim());
+
+  @override
+  Future<ConceptView> compileConcept(
+    String text,
+    List<FileRef> photos, {
+    List<String> alsoHide = const [],
+  }) async =>
+      _concept(await _api.compilePack(text, photos.map(_msg).toList()))
+          .copyWith(alsoHide: alsoHide);
 
   PackResult _result(String s) => switch (s) {
     'accepted' => PackResult.accepted,

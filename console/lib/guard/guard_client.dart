@@ -26,10 +26,22 @@ class FileRef {
   const FileRef(this.path, this.sha256);
 }
 
+class WordPreview {
+  final String word;
+  final List<String> alsoHide, preview;
+  final int elapsedMs;
+  const WordPreview({
+    required this.word,
+    this.alsoHide = const [],
+    this.preview = const [],
+    this.elapsedMs = 0,
+  });
+}
+
 class ConceptView {
   final String conceptId, displayName;
   final bool enabled;
-  final List<String> looksLike, butNot;
+  final List<String> looksLike, butNot, alsoHide;
   final CoverStyle coverStyle;
   final List<FileRef> examplePhotos;
   const ConceptView({
@@ -38,6 +50,7 @@ class ConceptView {
     this.enabled = true,
     this.looksLike = const [],
     this.butNot = const [],
+    this.alsoHide = const [],
     this.coverStyle = CoverStyle.blur,
     this.examplePhotos = const [],
   });
@@ -47,6 +60,7 @@ class ConceptView {
     bool? enabled,
     List<String>? looksLike,
     List<String>? butNot,
+    List<String>? alsoHide,
     CoverStyle? coverStyle,
     List<FileRef>? examplePhotos,
   }) => ConceptView(
@@ -55,6 +69,7 @@ class ConceptView {
     enabled: enabled ?? this.enabled,
     looksLike: looksLike ?? this.looksLike,
     butNot: butNot ?? this.butNot,
+    alsoHide: alsoHide ?? this.alsoHide,
     coverStyle: coverStyle ?? this.coverStyle,
     examplePhotos: examplePhotos ?? this.examplePhotos,
   );
@@ -169,7 +184,14 @@ abstract class GuardClient {
   Future<List<InstalledApp>> installedApps();
 
   /// draft with looksLike/butNot
-  Future<ConceptView> compileConcept(String text, List<FileRef> photos);
+  Future<ConceptView> compileConcept(
+    String text,
+    List<FileRef> photos, {
+    List<String> alsoHide = const [],
+  });
+
+  /// chips ("Also hide?") and a preview for a typed word
+  Future<WordPreview> previewWord(String text);
 
   /// writes pack file + setConceptPack
   Future<PackResult> applyConcepts(List<ConceptView> concepts);

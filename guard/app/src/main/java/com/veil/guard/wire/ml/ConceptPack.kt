@@ -1,5 +1,7 @@
 package com.veil.guard.wire.ml
 
+import com.veil.brain.contract.AutoRule
+import com.veil.brain.contract.AutoTerm
 import com.veil.brain.contract.CompiledConcept
 import com.veil.brain.contract.Embedding
 import com.veil.conductor.Concepts
@@ -29,6 +31,24 @@ object ConceptPack {
         else -> e.jsonPrimitive.content
     }
 
+    private fun autoTerms(a: JsonObject, k: String) = (a[k] as? JsonArray)?.map {
+        val o = it.jsonObject
+        AutoTerm(
+            o["term"]!!.jsonPrimitive.content,
+            emb(o["embedding"]!!),
+            o["thresholds"]!!.jsonObject.mapValues { t -> t.value.jsonPrimitive.double }
+        )
+    } ?: emptyList()
+
+    private fun auto(cj: JsonObject): AutoRule? = (cj["auto"] as? JsonObject)?.let { a ->
+        AutoRule(
+            autoTerms(a, "positives"),
+            autoTerms(a, "competitors"),
+            a["margin"]?.jsonPrimitive?.double ?: 0.0,
+            (a["chips"] as? JsonArray)?.map { c -> c.jsonPrimitive.content } ?: emptyList()
+        )
+    }
+
     private fun one(cj: JsonObject) = CompiledConcept(
         conceptId = cj["conceptId"]!!.jsonPrimitive.content,
         looksLike = embs(cj, "looksLike"),
@@ -40,7 +60,8 @@ object ConceptPack {
         margin = cj["margin"]?.jsonPrimitive?.double ?: 0.0,
         exampleCentroid = cj["exampleCentroid"]?.takeIf { it !is JsonNull }?.let { emb(it) },
         exampleThreshold = cj["exampleThreshold"]?.takeIf { it !is JsonNull }?.jsonPrimitive?.double,
-        raw = cj.mapValues { toAny(it.value) }
+        raw = cj.mapValues { toAny(it.value) },
+        auto = auto(cj)
     )
 
     fun parse(json: String): List<CompiledConcept> {

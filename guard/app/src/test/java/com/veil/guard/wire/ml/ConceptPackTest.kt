@@ -18,6 +18,18 @@ class ConceptPackTest {
     }
 
     @Test
+    fun parsesAuto() {
+        val e = """{"dim":8,"vectorF16":"AAAAAAAAAAAAAAAAAAAAAA=="}"""
+        val j = one.dropLast(1) + ""","auto":{"rule":"null-quantile-v1","margin":0.0,"chips":["yak"],
+            "positives":[{"term":"cats","embedding":$e,"thresholds":{"light":0.6,"balanced":0.5,"strict":0.4}}],
+            "competitors":[{"term":"dog","embedding":$e,"thresholds":{"balanced":0.45}}]}}"""
+        val a = ConceptPack.parse(j)[0].auto!!
+        assertEquals(listOf("yak"), a.chips)
+        assertEquals(0.45, a.competitors[0].thresholds["balanced"]!!, 1e-9)
+        assertEquals(null, ConceptPack.parse(one)[0].auto)
+    }
+
+    @Test
     fun keywordsPicked() {
         val c = ConceptPack.toConcepts(ConceptPack.parse(one))
         assertEquals(listOf("kitten", "cat"), c.keywords["cats"])
