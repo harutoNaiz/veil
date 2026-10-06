@@ -327,3 +327,5 @@ Events:
 - 2026-10-07 00:14 checkpoint (periodic): main 7967f1d pushed; WIP files: 0
 - 2026-10-07 00:22 3a siglip2 export DONE (4 onnx); 3b mini bank + checkpoint loop KILLED by Claude Code (system low on memory); waiting for the user
 - 2026-10-07 00:22 checkpoint (memory pressure stop): main 7eca0c9 pushed; WIP files: 0
+- 2026-10-07 00:32 checkpoint (periodic): main 488f691 pushed; WIP files: 0
+- 2026-10-07 00:32 user: 'assume autonomy and get this done' -> detached data-rebuild runner (3b..3d chained) + detached 12-min checkpoint loop
