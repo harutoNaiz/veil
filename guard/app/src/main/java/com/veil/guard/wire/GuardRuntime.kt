@@ -29,6 +29,12 @@ object GuardRuntime {
         if (core != null) return
         val app = ctx.applicationContext
         appCtx = app
+        com.veil.guard.overlay.blind.BlindHintHub.run {
+            foreground =
+                { com.veil.guard.signals.SignalsHub.foregroundPackage }
+            listener =
+                com.veil.guard.overlay.blind.BlindHintChip(app)
+        }
         val params = app.assets.open("params.json").bufferedReader().use { it.readText() }
         val mode = prefs(app).getString("mode", "balanced") ?: "balanced"
         val t = HandlerThread("veil-conductor").also { it.start() }

@@ -132,6 +132,9 @@ class AccessibilityScreenSource(
             return
         }
         val blind = BlindSpotDetector.detect(luma, target.width, target.height, emptyList())
+        com.veil.guard.overlay.blind.BlindHintHub.onFrame(
+            com.veil.guard.overlay.blind.BlindHintHub.isFullBlind(blind, target.width, target.height)
+        )
         out.onFrame(
             BitmapFrame(
                 frameId++,
