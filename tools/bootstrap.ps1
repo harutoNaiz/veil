@@ -171,8 +171,9 @@ try {
     Write-Log ('licence files: ' + ((Get-ChildItem -LiteralPath (Join-Path $env:ANDROID_HOME 'licenses') | ForEach-Object Name) -join ', '))
 
     # 6. Python: signed python.org 3.11.9 (NuGet package, installed with the archives above; Smart App Control blocks uv-managed builds)
-    if (-not (Test-Path -LiteralPath $env:UV_PYTHON)) { throw "python 3.11.9 missing: $env:UV_PYTHON" }
-    Say "Python: $env:UV_PYTHON"
+    $pyExe = Join-Path $tc 'python-3.11.9\tools\python.exe'
+    if (-not (Test-Path -LiteralPath $pyExe)) { throw "python 3.11.9 missing: $pyExe" }
+    Say "Python: $pyExe"
 
     # 7. Flutter: first run fetches the Dart SDK; then Android artifacts. doctor is logged only.
     Say 'Flutter: first run (Dart SDK) and precache for Android'
