@@ -102,6 +102,69 @@
       "minimum": 0,
       "maximum": 1,
       "description": "Threshold for matches against the example centroid."
+    },
+    "auto": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule",
+        "bankId",
+        "margin",
+        "excluded",
+        "chips",
+        "positives",
+        "competitors"
+      ],
+      "description": "Optional self-calibrating rule (Chapter 7). When present the Judge takes the auto path.",
+      "properties": {
+        "rule": {
+          "const": "null-quantile-v1"
+        },
+        "bankId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "Id of the reference bank."
+        },
+        "margin": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Competitor margin."
+        },
+        "excluded": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Bank rows excluded."
+        },
+        "chips": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "Lookalike names to offer."
+        },
+        "positives": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 17,
+          "items": {
+            "$ref": "#/$defs/AutoTerm"
+          },
+          "description": "Positive terms."
+        },
+        "competitors": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/AutoCompetitor"
+          },
+          "description": "Competitor terms."
+        }
+      }
     }
   },
   "required": [
@@ -151,6 +214,108 @@
         "balanced",
         "strict"
       ]
+    },
+    "AutoThresholds3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "light",
+        "balanced",
+        "strict"
+      ],
+      "properties": {
+        "light": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Threshold in light mode."
+        },
+        "balanced": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Threshold in balanced mode."
+        },
+        "strict": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Threshold in strict mode."
+        }
+      },
+      "title": "AutoThresholds3",
+      "description": "Cosine thresholds per mode."
+    },
+    "AutoThresholds1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "balanced"
+      ],
+      "properties": {
+        "balanced": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Threshold in balanced mode."
+        }
+      },
+      "title": "AutoThresholds1",
+      "description": "Balanced cosine threshold."
+    },
+    "AutoTerm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "term",
+        "embedding",
+        "thresholds"
+      ],
+      "properties": {
+        "term": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "The word."
+        },
+        "embedding": {
+          "$ref": "embedding.schema.json",
+          "description": "Ensemble text fingerprint of the word."
+        },
+        "thresholds": {
+          "$ref": "#/$defs/AutoThresholds3",
+          "description": "Null-quantile cosine thresholds."
+        }
+      },
+      "title": "AutoTerm",
+      "description": "A positive term of the auto rule."
+    },
+    "AutoCompetitor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "term",
+        "embedding",
+        "thresholds"
+      ],
+      "properties": {
+        "term": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "The word."
+        },
+        "embedding": {
+          "$ref": "embedding.schema.json",
+          "description": "Ensemble text fingerprint of the word."
+        },
+        "thresholds": {
+          "$ref": "#/$defs/AutoThresholds1",
+          "description": "Null-quantile cosine thresholds."
+        }
+      },
+      "title": "AutoCompetitor",
+      "description": "A competitor term of the auto rule."
     }
   }
 }
