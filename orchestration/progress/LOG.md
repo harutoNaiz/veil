@@ -341,3 +341,9 @@ Events:
 - 2026-10-07 01:32 3b HEAVY 7.1 -Mini PASS on new machine: AC-7.1-03 all 12 words cleanFalseCover 0.0 (snakes thr 0.0361); 3c full 30k bank started (runner)
 - 2026-10-07 01:32 checkpoint (periodic): main 4e3ff8d pushed; WIP files: 1
 - 2026-10-07 01:45 checkpoint (periodic): main 1df3f8e pushed; WIP files: 1
+- 2026-10-07 01:57 checkpoint (periodic): main 4b43e73 pushed; WIP files: 3
+- 2026-10-07 02:03 3c full bank v1 HEAVY 7.1 PASS (n=30000, AC-7.1-03 0.0 all words; recall snakes 0.14 buffalo 0.33); committed 958b0d3; 3d 7.2 -Mini running
+- 2026-10-07 02:03 3d 7.2 -Mini FAILED at select (PowerShell splat bug in 7.2-heavy.ps1: '- - m i n i'); D-72-flags Builder spawned
+2026-10-07 02:04 | D-72-flags | VERIFY PASS + COMMIT a43e3a5 | [D-72-flags] Fix --mini splat in 7.2-heavy.ps1
+- 2026-10-07 02:04 D-72-flags committed a43e3a5; 3d runner launched
+- 2026-10-07 02:06 3d 7.2 -Mini FAILED fetch_embed: 0/507 fetched (Flickr http->301 https, coco._get no redirect); D-72-fetch Builder spawned
