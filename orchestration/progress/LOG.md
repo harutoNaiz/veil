@@ -321,3 +321,5 @@ Events:
 2026-10-06 23:41 | D-signed-python | VERIFY PASS + COMMIT 5543ea9 | [D-signed-python] Use signed python.org 3.11.9 (Smart App Control blocks uv Python)
 2026-10-06 23:46 | D-signed-python | VERIFY PASS + COMMIT 28110ab | [D-signed-python] Signed Python on PATH + venv check fix (fix round 1)
 - 2026-10-06 23:47 D-signed-python committed 5543ea9 + fix round 1 28110ab (pushed); BOOTSTRAP OK; two export attempts broken by venv rebuilds; export re-run alone
+- 2026-10-06 23:50 checkpoint (user: commit every 12 min): main f5adb54 pushed; WIP files: 0
+- 2026-10-06 23:50 checkpoint (user: commit every 12 min): main f5adb54 pushed; unbounded 12-min checkpoint loop started
