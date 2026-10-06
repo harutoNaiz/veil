@@ -81,7 +81,7 @@ def relabel_bank(path: Path, labels: list[list[int]]) -> str:
         off[i + 1] = off[i] + len(lab)
     idx = np.array([x for lab in labels for x in lab], dtype="<u2")
     out = bytearray(head)
-    out[12:16] = struct.pack("<I", len(idx))
+    out[16:20] = struct.pack("<I", len(idx))  # header: magic, ver, n, dim, nLabels
     out += off.tobytes() + idx.tobytes()
     Path(path).write_bytes(bytes(out))
     return hashlib.sha256(bytes(out)).hexdigest()[:16]

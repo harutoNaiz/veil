@@ -63,3 +63,16 @@ def test_relations():
 def test_quantile():
     d = np.arange(1000, dtype=np.float64)
     assert vocab.quantile(d, 995) == 994.0
+
+
+def test_relabel_keeps_header(tmp_path):
+    """relabel_bank must update nLabels, never the dim field (A1 regression)."""
+    rng = np.random.default_rng(1)
+    vecs = rng.normal(size=(5, 8)).astype(np.float32)
+    path = tmp_path / "bank.bin"
+    bankio.write_bank(path, vecs, [[1], [2, 3], [], [4], [5, 6, 7]])
+    bankio.relabel_bank(path, [[1, 2, 3, 4], [], [5], [6], [7, 8]])
+    bk = bankio.read_bank(path)
+    assert bk.rows.shape == (5, 8)
+    got = [bk.lab_idx[bk.lab_off[i] : bk.lab_off[i + 1]].tolist() for i in range(5)]
+    assert got == [[1, 2, 3, 4], [], [5], [6], [7, 8]]
