@@ -337,3 +337,5 @@ Events:
 - 2026-10-07 01:18 D-text-dml committed 16ca97e (DML text 171 vs CPU 2.3 texts/s, cos 1.0). 3b: build+bank_check OK, autocal_eval FAILED (uv rebuilt .venv: subst path vs UV_PYTHON path) -> D-signed-python fix round 2
 2026-10-07 01:19 | D-signed-python | VERIFY PASS + COMMIT c613968 | [D-signed-python] uv Python as version request (subst D: rebuilt .venv every run) (fix round 2)
 - 2026-10-07 01:19 D-signed-python round 2 committed c613968 (UV_PYTHON=3.11.9; no venv churn); runner relaunched
+- 2026-10-07 01:20 checkpoint (periodic): main 9ccfe78 pushed; WIP files: 0
+- 2026-10-07 01:32 3b HEAVY 7.1 -Mini PASS on new machine: AC-7.1-03 all 12 words cleanFalseCover 0.0 (snakes thr 0.0361); 3c full 30k bank started (runner)
