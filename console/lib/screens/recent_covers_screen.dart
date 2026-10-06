@@ -35,8 +35,9 @@ class _RecentCoversScreenState extends State<RecentCoversScreen> {
       future: _covers,
       builder: (context, snap) {
         final covers = snap.data;
-        if (covers == null)
+        if (covers == null) {
           return const Center(child: CircularProgressIndicator());
+        }
         if (covers.isEmpty) return const Center(child: Text('No covers yet.'));
         return ListView(
           children: [

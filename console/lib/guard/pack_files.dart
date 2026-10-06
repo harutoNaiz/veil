@@ -17,6 +17,7 @@ Map<String, Object?> conceptToJson(ConceptView c) => {
   'examplePhotos': [
     for (final p in c.examplePhotos) {'path': p.path, 'sha256': p.sha256},
   ],
+  if (c.alsoHide.isNotEmpty) 'alsoHide': c.alsoHide,
 };
 
 /// Writes a concept-pack JSON (contractVersion "1.0") into [dir]; returns path + sha256.

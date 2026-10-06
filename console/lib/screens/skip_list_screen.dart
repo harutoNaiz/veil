@@ -20,8 +20,9 @@ class _SkipListScreenState extends State<SkipListScreen> {
       future: _apps,
       builder: (context, snap) {
         final apps = snap.data;
-        if (apps == null)
+        if (apps == null) {
           return const Center(child: CircularProgressIndicator());
+        }
         return ListView(
           children: [
             const Padding(

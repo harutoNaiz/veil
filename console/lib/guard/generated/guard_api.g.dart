@@ -426,14 +426,14 @@ class StatsMsg {
 }
 
 class InstalledAppMsg {
-  InstalledAppMsg({required this.package, required this.label});
+  InstalledAppMsg({required this.packageName, required this.label});
 
-  String package;
+  String packageName;
 
   String label;
 
   List<Object?> _toList() {
-    return <Object?>[package, label];
+    return <Object?>[packageName, label];
   }
 
   Object encode() {
@@ -443,7 +443,7 @@ class InstalledAppMsg {
   static InstalledAppMsg decode(Object result) {
     result as List<Object?>;
     return InstalledAppMsg(
-      package: result[0]! as String,
+      packageName: result[0]! as String,
       label: result[1]! as String,
     );
   }
@@ -457,7 +457,7 @@ class InstalledAppMsg {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(package, other.package) &&
+    return _deepEquals(packageName, other.packageName) &&
         _deepEquals(label, other.label);
   }
 
@@ -467,7 +467,7 @@ class InstalledAppMsg {
 
   @override
   String toString() {
-    return 'InstalledAppMsg(package: $package, label: $label)';
+    return 'InstalledAppMsg(packageName: $packageName, label: $label)';
   }
 }
 

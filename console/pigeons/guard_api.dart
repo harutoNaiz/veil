@@ -76,8 +76,8 @@ class StatsMsg {
 }
 
 class InstalledAppMsg {
-  InstalledAppMsg({required this.package, required this.label});
-  String package;
+  InstalledAppMsg({required this.packageName, required this.label});
+  String packageName;
   String label;
 }
 
