@@ -1,18 +1,18 @@
 # Chapter 7.1 auto calibration eval
 
-Bank `mini-gpu` (id `d29d13f5619fcf3c`), set `synthetic` dev, variant A, Balanced.
+Bank `v1` (id `2f82a5e9b31fda91`), set `synthetic` dev, variant A, Balanced.
 
 | word | clean false-cover | screen recall | bank recall | nPos | excluded | compile s |
 |---|---|---|---|---|---|---|
-| snakes | 0.0 | None | n/a | 1 | 1 | 0.028 |
-| buffalo | 0.0 | None | n/a | 0 | 0 | 0.023 |
-| umbrella | 0.0 | None | 1.0 | 25 | 25 | 0.023 |
-| pizza | 0.0 | None | 0.9411764705882353 | 51 | 51 | 0.034 |
-| motorcycle | 0.0 | None | 0.6721311475409836 | 61 | 61 | 0.023 |
-| giraffe | 0.0 | None | 0.975 | 40 | 40 | 0.022 |
-| kite | 0.0 | None | 0.9302325581395349 | 43 | 43 | 0.023 |
-| broccoli | 0.0 | None | 0.6190476190476191 | 21 | 21 | 0.023 |
-| surfboard | 0.0 | None | 0.9215686274509803 | 51 | 51 | 0.024 |
-| clock | 0.0 | None | 0.9777777777777777 | 45 | 45 | 0.023 |
-| cats | 0.0 | 1.0 | 0.9032258064516129 | 62 | 62 | 0.024 |
-| spiders | 0.0 | 1.0 | n/a | 0 | 0 | 0.024 |
+| snakes | 0.0 | None | 0.14285714285714285 | 14 | 14 | 0.144 |
+| buffalo | 0.0 | None | 0.3333333333333333 | 12 | 12 | 0.118 |
+| umbrella | 0.0 | None | 0.8819776714513556 | 627 | 627 | 0.143 |
+| pizza | 0.0 | None | 0.9539918809201624 | 739 | 739 | 0.148 |
+| motorcycle | 0.0 | None | 0.6152304609218436 | 998 | 998 | 0.129 |
+| giraffe | 0.0 | None | 0.9341864716636198 | 547 | 547 | 0.125 |
+| kite | 0.0 | None | 0.961038961038961 | 462 | 462 | 0.146 |
+| broccoli | 0.0 | None | 0.6719745222929936 | 314 | 314 | 0.123 |
+| surfboard | 0.0 | None | 0.9401840490797546 | 652 | 652 | 0.13 |
+| clock | 0.0 | None | 0.9207792207792208 | 770 | 770 | 0.124 |
+| cats | 0.0 | 1.0 | 0.9036269430051813 | 965 | 965 | 0.124 |
+| spiders | 0.0 | 1.0 | n/a | 0 | 0 | 0.127 |
