@@ -272,3 +272,9 @@ Events:
 - 2026-10-06 09:00 checkpoint (periodic): main bc1973c pushed; WIP files: 15
 - 2026-10-06 09:12 checkpoint (periodic): main 6116e9d pushed; WIP files: 42
 - 2026-10-06 09:24 checkpoint (periodic): main a6c1384 pushed; WIP files: 42
+- 2026-10-06 09:36 checkpoint (periodic): main cd946df pushed; WIP files: 42
+2026-10-06 09:38 | 7.1.1 | VERIFY PASS + COMMIT 0ce0c2c | [7.1.1] Reference bank
+2026-10-06 09:40 | 7.1.3 | VERIFY PASS + COMMIT 7310cb2 | [7.1.3] Kotlin port and the Also hide? Console flow
+2026-10-06 09:41 | 7.1.2 | VERIFY PASS + COMMIT f863bf2 | [7.1.2] Auto threshold, competitors, ensembles (twin)
+- 2026-10-06 09:41 7.1.1 0ce0c2c, 7.1.3 7310cb2, 7.1.2 f863bf2 (after regenerating models.py) committed+pushed; heavy 7.1 -Mini started alone
+- 2026-10-06 09:43 heavy 7.1 -Mini and the checkpoint loop were stopped by Claude Code (system critically low on memory); waiting for the user before restarting

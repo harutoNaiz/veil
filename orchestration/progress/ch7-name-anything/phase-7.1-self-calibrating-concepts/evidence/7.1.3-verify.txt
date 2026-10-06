@@ -1,0 +1,7 @@
+=== 7.1.3 verify · 2026-10-06 09:39:23
+ok    (0) ktlint
+ok    (1) gradle brain+teacher+app tests
+ok    (2) dart format
+ok    (3) flutter test
+VERIFY 7.1.3: PASS
+exit 0

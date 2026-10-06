@@ -6,3 +6,10 @@ ok    0 ruff
 5 passed in 0.32s
 ok    1 pytest
 ok    2 build smoke (already done)
+[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.
+LICENCES ok=220/220
+BANK_CHECK min_cos=0.99943 n=16
+ok    3 bank_check
+VERIFY 7.1.1: PASS
+exit 0
