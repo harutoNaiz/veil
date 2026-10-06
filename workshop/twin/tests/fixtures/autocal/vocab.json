@@ -1,0 +1,549 @@
+{
+ "version": 1,
+ "bankId": "0bde089aa65f8462",
+ "dim": 32,
+ "templates": [
+  "a photo of a {w}",
+  "a {w}",
+  "a close-up of a {w}",
+  "a {w} in a meme",
+  "a drawing of a {w}"
+ ],
+ "ignore": [
+  "a screenshot of an app",
+  "text on a screen",
+  "a user interface"
+ ],
+ "quantilesPerMille": {
+  "light": 999,
+  "balanced": 995,
+  "strict": 980
+ },
+ "k": 8,
+ "chips": 6,
+ "margin": 0.0,
+ "entries": [
+  {
+   "name": "noun00",
+   "kind": "noun",
+   "forms": [
+    "noun00",
+    "noun00s"
+   ],
+   "excl": [
+    0,
+    1
+   ],
+   "rel": [
+    0,
+    1,
+    2
+   ],
+   "nPos": 41
+  },
+  {
+   "name": "noun01",
+   "kind": "noun",
+   "forms": [
+    "noun01",
+    "noun01s"
+   ],
+   "excl": [
+    1
+   ],
+   "rel": [
+    1,
+    3
+   ],
+   "nPos": 22
+  },
+  {
+   "name": "noun02",
+   "kind": "noun",
+   "forms": [
+    "noun02",
+    "noun02s"
+   ],
+   "excl": [
+    2
+   ],
+   "rel": [
+    2,
+    4
+   ],
+   "nPos": 23
+  },
+  {
+   "name": "noun03",
+   "kind": "noun",
+   "forms": [
+    "noun03",
+    "noun03s"
+   ],
+   "excl": [
+    3
+   ],
+   "rel": [
+    3,
+    5
+   ],
+   "nPos": 17
+  },
+  {
+   "name": "noun04",
+   "kind": "noun",
+   "forms": [
+    "noun04",
+    "noun04s"
+   ],
+   "excl": [
+    4
+   ],
+   "rel": [
+    4,
+    6
+   ],
+   "nPos": 25
+  },
+  {
+   "name": "noun05",
+   "kind": "noun",
+   "forms": [
+    "noun05",
+    "noun05s"
+   ],
+   "excl": [
+    5,
+    6
+   ],
+   "rel": [
+    5,
+    6,
+    7
+   ],
+   "nPos": 50
+  },
+  {
+   "name": "noun06",
+   "kind": "noun",
+   "forms": [
+    "noun06",
+    "noun06s"
+   ],
+   "excl": [
+    6
+   ],
+   "rel": [
+    6,
+    8
+   ],
+   "nPos": 24
+  },
+  {
+   "name": "noun07",
+   "kind": "noun",
+   "forms": [
+    "noun07",
+    "noun07s"
+   ],
+   "excl": [
+    7
+   ],
+   "rel": [
+    7,
+    9
+   ],
+   "nPos": 17
+  },
+  {
+   "name": "noun08",
+   "kind": "noun",
+   "forms": [
+    "noun08",
+    "noun08s"
+   ],
+   "excl": [
+    8
+   ],
+   "rel": [
+    8,
+    10
+   ],
+   "nPos": 22
+  },
+  {
+   "name": "noun09",
+   "kind": "noun",
+   "forms": [
+    "noun09",
+    "noun09s"
+   ],
+   "excl": [
+    9
+   ],
+   "rel": [
+    9,
+    11
+   ],
+   "nPos": 19
+  },
+  {
+   "name": "noun10",
+   "kind": "noun",
+   "forms": [
+    "noun10",
+    "noun10s"
+   ],
+   "excl": [
+    10,
+    11
+   ],
+   "rel": [
+    10,
+    11,
+    12
+   ],
+   "nPos": 34
+  },
+  {
+   "name": "noun11",
+   "kind": "noun",
+   "forms": [
+    "noun11",
+    "noun11s"
+   ],
+   "excl": [
+    11
+   ],
+   "rel": [
+    11,
+    13
+   ],
+   "nPos": 19
+  },
+  {
+   "name": "noun12",
+   "kind": "noun",
+   "forms": [
+    "noun12",
+    "noun12s"
+   ],
+   "excl": [
+    12
+   ],
+   "rel": [
+    12,
+    14
+   ],
+   "nPos": 18
+  },
+  {
+   "name": "noun13",
+   "kind": "noun",
+   "forms": [
+    "noun13",
+    "noun13s"
+   ],
+   "excl": [
+    13
+   ],
+   "rel": [
+    13,
+    15
+   ],
+   "nPos": 24
+  },
+  {
+   "name": "noun14",
+   "kind": "noun",
+   "forms": [
+    "noun14",
+    "noun14s"
+   ],
+   "excl": [
+    14
+   ],
+   "rel": [
+    14,
+    16
+   ],
+   "nPos": 19
+  },
+  {
+   "name": "noun15",
+   "kind": "noun",
+   "forms": [
+    "noun15",
+    "noun15s"
+   ],
+   "excl": [
+    15,
+    16
+   ],
+   "rel": [
+    15,
+    16,
+    17
+   ],
+   "nPos": 35
+  },
+  {
+   "name": "noun16",
+   "kind": "noun",
+   "forms": [
+    "noun16",
+    "noun16s"
+   ],
+   "excl": [
+    16
+   ],
+   "rel": [
+    16,
+    18
+   ],
+   "nPos": 15
+  },
+  {
+   "name": "noun17",
+   "kind": "noun",
+   "forms": [
+    "noun17",
+    "noun17s"
+   ],
+   "excl": [
+    17
+   ],
+   "rel": [
+    17,
+    19
+   ],
+   "nPos": 24
+  },
+  {
+   "name": "noun18",
+   "kind": "noun",
+   "forms": [
+    "noun18",
+    "noun18s"
+   ],
+   "excl": [
+    18
+   ],
+   "rel": [
+    18,
+    20
+   ],
+   "nPos": 19
+  },
+  {
+   "name": "noun19",
+   "kind": "noun",
+   "forms": [
+    "noun19",
+    "noun19s"
+   ],
+   "excl": [
+    19
+   ],
+   "rel": [
+    19,
+    21
+   ],
+   "nPos": 18
+  },
+  {
+   "name": "noun20",
+   "kind": "noun",
+   "forms": [
+    "noun20",
+    "noun20s"
+   ],
+   "excl": [
+    20,
+    21
+   ],
+   "rel": [
+    20,
+    21,
+    22
+   ],
+   "nPos": 49
+  },
+  {
+   "name": "noun21",
+   "kind": "noun",
+   "forms": [
+    "noun21",
+    "noun21s"
+   ],
+   "excl": [
+    21
+   ],
+   "rel": [
+    21,
+    23
+   ],
+   "nPos": 24
+  },
+  {
+   "name": "noun22",
+   "kind": "noun",
+   "forms": [
+    "noun22",
+    "noun22s"
+   ],
+   "excl": [
+    22
+   ],
+   "rel": [
+    22,
+    24
+   ],
+   "nPos": 14
+  },
+  {
+   "name": "noun23",
+   "kind": "noun",
+   "forms": [
+    "noun23",
+    "noun23s"
+   ],
+   "excl": [
+    23
+   ],
+   "rel": [
+    23,
+    25
+   ],
+   "nPos": 20
+  },
+  {
+   "name": "noun24",
+   "kind": "noun",
+   "forms": [
+    "noun24",
+    "noun24s"
+   ],
+   "excl": [
+    24
+   ],
+   "rel": [
+    24,
+    26
+   ],
+   "nPos": 17
+  },
+  {
+   "name": "noun25",
+   "kind": "noun",
+   "forms": [
+    "noun25",
+    "noun25s"
+   ],
+   "excl": [
+    25,
+    26
+   ],
+   "rel": [
+    25,
+    26,
+    27
+   ],
+   "nPos": 32
+  },
+  {
+   "name": "noun26",
+   "kind": "noun",
+   "forms": [
+    "noun26",
+    "noun26s"
+   ],
+   "excl": [
+    26
+   ],
+   "rel": [
+    26,
+    28
+   ],
+   "nPos": 19
+  },
+  {
+   "name": "noun27",
+   "kind": "noun",
+   "forms": [
+    "noun27",
+    "noun27s"
+   ],
+   "excl": [
+    27
+   ],
+   "rel": [
+    27,
+    29
+   ],
+   "nPos": 17
+  },
+  {
+   "name": "noun28",
+   "kind": "noun",
+   "forms": [
+    "noun28",
+    "noun28s"
+   ],
+   "excl": [
+    28
+   ],
+   "rel": [
+    0,
+    28
+   ],
+   "nPos": 18
+  },
+  {
+   "name": "noun29",
+   "kind": "noun",
+   "forms": [
+    "noun29",
+    "noun29s"
+   ],
+   "excl": [
+    29
+   ],
+   "rel": [
+    1,
+    29
+   ],
+   "nPos": 26
+  },
+  {
+   "name": "a screenshot of an app",
+   "kind": "ignore",
+   "forms": [
+    "a screenshot of an app"
+   ],
+   "excl": [],
+   "rel": [],
+   "nPos": 0
+  },
+  {
+   "name": "text on a screen",
+   "kind": "ignore",
+   "forms": [
+    "text on a screen"
+   ],
+   "excl": [],
+   "rel": [],
+   "nPos": 0
+  },
+  {
+   "name": "a user interface",
+   "kind": "ignore",
+   "forms": [
+    "a user interface"
+   ],
+   "excl": [],
+   "rel": [],
+   "nPos": 0
+  }
+ ]
+}

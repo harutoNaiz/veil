@@ -14,6 +14,7 @@ dependencies {
 tasks.test {
     exclude("**/TeacherParity*")
     maxHeapSize = "512m"
+    systemProperty("veil.repo", rootProject.file("..").path)
 }
 
 tasks.register<Test>("teacherParity") {
