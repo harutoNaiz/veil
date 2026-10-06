@@ -31,6 +31,7 @@ $env:PYTHONUTF8 = '1'
 
 $veilPathEntries = @(
   "$tc\uv",
+  "$tc\python-3.11.9\tools",
   "$tc\jdk17\bin",
   "$tc\android-sdk\platform-tools",
   "$tc\android-sdk\cmdline-tools\latest\bin",

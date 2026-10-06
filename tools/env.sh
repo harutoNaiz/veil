@@ -55,7 +55,7 @@ export MSYS_NO_PATHCONV=1
 export MSYS2_ARG_CONV_EXCL='*'
 
 # Prepend the toolchain entries; drop any older toolchain entries first so re-sourcing is idempotent.
-_veil_new="$_veil_tc_u/uv:$_veil_tc_u/jdk17/bin:$_veil_tc_u/android-sdk/platform-tools:$_veil_tc_u/android-sdk/cmdline-tools/latest/bin:$_veil_tc_u/flutter/bin:$_veil_tc_u/scrcpy:$_veil_tc_u/ffmpeg/bin:$_veil_tc_u/gradle/bin:$_veil_tc_u/uv-tools/bin"
+_veil_new="$_veil_tc_u/uv:$_veil_tc_u/python-3.11.9/tools:$_veil_tc_u/jdk17/bin:$_veil_tc_u/android-sdk/platform-tools:$_veil_tc_u/android-sdk/cmdline-tools/latest/bin:$_veil_tc_u/flutter/bin:$_veil_tc_u/scrcpy:$_veil_tc_u/ffmpeg/bin:$_veil_tc_u/gradle/bin:$_veil_tc_u/uv-tools/bin"
 _veil_kept=""
 _veil_old_ifs="$IFS"
 IFS=':'

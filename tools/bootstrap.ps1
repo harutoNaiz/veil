@@ -251,7 +251,7 @@ try {
   # repo-venv
   if (Test-Path -LiteralPath (Join-Path $repo '.venv')) {
     Push-Location $repo
-    try { $r = Invoke-Native 'uv' @('run', '--no-sync', 'python', '--version') } finally { Pop-Location }
+    try { $r = Invoke-Native (Join-Path $repo '.venv\Scripts\python.exe') @('--version') } finally { Pop-Location }
     $line = First-Line $r
     Add-Row 'repo-venv' 'Python 3.11.9' $line (($r.ExitCode -eq 0) -and ($line -match '^Python 3\.11\.9'))
   }
