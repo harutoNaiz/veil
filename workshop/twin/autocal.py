@@ -10,7 +10,7 @@ import numpy as np
 
 from workshop.contracts.rules import concept_sha256, encode_f16
 from workshop.twin import teacher
-from workshop.twin.bank.bankio import Bank, Vocab, excluded_rows
+from workshop.twin.bank.bankio import Bank, Vocab, direction, excluded_rows
 
 TEMPLATES = [
     "a photo of a {w}",
@@ -25,6 +25,7 @@ N_CHIPS = 6
 AUTO_MARGIN = 0.0
 AUTO_NEAR_BAND = 0.02
 IGNORE = teacher.IGNORE
+RULE = "null-quantile-v2"
 MODES = ("light", "balanced", "strict")
 
 
@@ -116,14 +117,16 @@ def compile_auto(word: str, enc, bank: Bank, vocab: Vocab, also_hide=()) -> dict
     idx = lookup(vocab, word)
     if idx is not None:
         q = vocab.rows[idx]
+        d = direction(q, vocab.center)
         thr = dict(zip(MODES, (float(x) for x in vocab.thr[idx]), strict=True))
-        _, n_excl = null_thresholds(bank, q, set(entries[idx]["excl"]))
+        _, n_excl = null_thresholds(bank, d, set(entries[idx]["excl"]))
     else:
         q = ensemble(enc, word)
-        thr, n_excl = null_thresholds(bank, q, set())
+        d = direction(q, vocab.center)
+        thr, n_excl = null_thresholds(bank, d, set())
     chips = [entries[i]["name"] for i in competitors(vocab, q, idx, word)[:N_CHIPS]]
     pos_idx = set()
-    pos = [(word, q, thr)]
+    pos = [(word, d, thr)]
     for name in also_hide:
         j = lookup(vocab, name)
         if j is None or j == idx or j in pos_idx:
@@ -132,13 +135,13 @@ def compile_auto(word: str, enc, bank: Bank, vocab: Vocab, also_hide=()) -> dict
         pos.append(
             (
                 entries[j]["name"],
-                vocab.rows[j],
+                direction(vocab.rows[j], vocab.center),
                 dict(zip(MODES, map(float, vocab.thr[j]), strict=True)),
             )
         )
     comp = competitors(vocab, q, idx, word, pos_idx | ({idx} if idx is not None else set()))
     auto = {
-        "rule": "null-quantile-v1",
+        "rule": RULE,
         "bankId": bank.bank_id,
         "margin": AUTO_MARGIN,
         "excluded": n_excl,
@@ -150,7 +153,7 @@ def compile_auto(word: str, enc, bank: Bank, vocab: Vocab, also_hide=()) -> dict
         "competitors": [
             {
                 "term": entries[i]["name"][:64],
-                "embedding": _emb(enc, vocab.rows[i], entries[i]["name"]),
+                "embedding": _emb(enc, direction(vocab.rows[i], vocab.center), entries[i]["name"]),
                 "thresholds": {"balanced": float(vocab.thr[i][1])},
             }
             for i in comp

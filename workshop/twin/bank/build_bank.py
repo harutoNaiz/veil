@@ -29,11 +29,90 @@ def _labels(captions: list[str], form_to_idx: dict[str, int]) -> list[int]:
     return sorted({form_to_idx[t] for c in captions for t in vocab.tokens(c) if t in form_to_idx})
 
 
+def _write_vocab(out, desc, lemmas, excl, rel, bank_id, labels, items, dim) -> int:
+    """Vocab rows (cached text encodes), centred thresholds, vocab.bin/json, items.jsonl."""
+    names = [x["name"] for x in lemmas]
+    emb_p = out / "vocab_emb.npy"
+    if emb_p.exists():
+        vrows = np.load(emb_p)
+    else:
+        vrows = np.concatenate(
+            [vocab.ensemble(desc.embed_texts, names), vocab.ignore_rows(desc.embed_texts)]
+        )
+        np.save(emb_p, vrows)
+    bank = bankio.read_bank(out / "bank.bin")
+    q, scale = bankio.quantise(vrows)
+    vdeq = bankio.dequant(q, scale)
+    lab_sets = [set(x) for x in labels]
+    center = vdeq[: len(names)].mean(0)
+    thr = vocab.thresholds(bank.rows, vdeq[: len(names)], excl, lab_sets, center)
+    ign_thr = vocab.thresholds(
+        bank.rows, vdeq[len(names) :], [[] for _ in IGNORE], lab_sets, center
+    )
+    thr = np.concatenate([thr, ign_thr])
+    n_pos = Counter()
+    for labs in lab_sets:
+        for lab in labs:
+            n_pos[lab] += 1
+    entries = [
+        {
+            "name": x["name"],
+            "kind": "noun",
+            "forms": x["forms"],
+            "excl": excl[i],
+            "rel": rel[i],
+            "nPos": sum(n_pos[j] for j in excl[i]),
+        }
+        for i, x in enumerate(lemmas)
+    ] + [
+        {"name": p, "kind": "ignore", "forms": [p], "excl": [], "rel": [], "nPos": 0}
+        for p in IGNORE
+    ]
+    meta = {
+        "version": 1,
+        "bankId": bank_id,
+        "dim": dim,
+        "templates": vocab.TEMPLATES,
+        "ignore": list(IGNORE),
+        "quantilesPerMille": vocab.Q_PER_MILLE,
+        "k": 8,
+        "chips": 6,
+        "margin": 0.0,
+        "entries": entries,
+    }
+    bankio.write_vocab(out, vdeq, thr, meta)
+    (out / "items.jsonl").write_text("".join(json.dumps(i) + "\n" for i in items), encoding="utf-8")
+    return len(entries)
+
+
+def _revocab(out, a, lemmas, excl, rel, form_to_idx, cands) -> int:
+    """Rebuild vocab, labels and thresholds from the existing bank rows (no image embedding)."""
+    items_p = out / "items.jsonl"
+    items = [json.loads(x) for x in items_p.read_text(encoding="utf-8").splitlines() if x]
+    caps = {f"{c['id']:012d}": c["captions"] for c in cands}
+    for it in items:
+        coco_it = it["source"] == "coco"
+        it["labels"] = _labels(caps.get(it["id"], []), form_to_idx) if coco_it else []
+    labels = [it["labels"] for it in items]
+    bank_id = bankio.relabel_bank(out / "bank.bin", labels)
+    eng = (
+        json.loads((out / "engine.json").read_text(encoding="utf-8"))
+        if (out / "engine.json").exists()
+        else {"engine": a.engine, "provider": "cpu"}
+    )
+    desc = engine.make_describer(eng["engine"], "cpu", ONNX)
+    dim = bankio.read_bank(out / "bank.bin").rows.shape[1]
+    n = _write_vocab(out, desc, lemmas, excl, rel, bank_id, labels, items, dim)
+    print(f"REVOCAB OK n={len(items)} vocab={n} bankId={bank_id}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
-    ap.add_argument("--limit", type=int, required=True)
-    ap.add_argument("--ui", type=int, required=True)
+    ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--ui", type=int, default=0)
+    ap.add_argument("--revocab", action="store_true")
     ap.add_argument("--vocab-limit", type=int, default=5000)
     ap.add_argument("--engine", choices=["torch", "onnx"], default="torch")
     ap.add_argument("--provider", choices=["cpu", "dml"], default="cpu")
@@ -43,19 +122,24 @@ def main(argv: list[str] | None = None) -> int:
     if not out.is_absolute():
         out = ROOT / out
     out.mkdir(parents=True, exist_ok=True)
-    if (out / "bank.bin").exists() and (out / "vocab.bin").exists():
+    if a.revocab:
+        (out / "vocab_emb.npy").unlink(missing_ok=True)
+    elif (out / "bank.bin").exists() and (out / "vocab.bin").exists():
         print("bank already built:", out)
         return 0
 
     eng_p = out / "engine.json"
-    if (out / "partial.npz").exists():
+    if a.revocab:
+        pass
+    elif (out / "partial.npz").exists():
         prev_eng = (
             json.loads(eng_p.read_text(encoding="utf-8"))["engine"] if eng_p.exists() else "torch"
         )
         if prev_eng != a.engine:
             print(f"partial bank was built with engine={prev_eng}, not {a.engine}; refusing")
             return 3
-    eng_p.write_text(json.dumps({"engine": a.engine, "provider": a.provider}), encoding="utf-8")
+    if not a.revocab:
+        eng_p.write_text(json.dumps({"engine": a.engine, "provider": a.provider}), encoding="utf-8")
 
     data = coco.load_captions(SRC)
     wn = vocab.wn_setup(SRC)
@@ -66,6 +150,9 @@ def main(argv: list[str] | None = None) -> int:
     form_to_idx = {f: i for i, x in enumerate(lemmas) for f in x["forms"]}
     cands = coco.filter_items(data)
     del data, all_caps
+
+    if a.revocab:
+        return _revocab(out, a, lemmas, excl, rel, form_to_idx, cands)
 
     desc = engine.make_describer(a.engine, a.provider, ONNX)
 
@@ -151,57 +238,10 @@ def main(argv: list[str] | None = None) -> int:
     checkpoint()
     print(f"EMBED {t_rows} rows {t_rows / max(time.time() - t0, 1e-9):.2f} img/s")
 
-    # vocab rows (cached text encodes), then thresholds on dequantised rows
-    emb_p = out / "vocab_emb.npy"
-    if emb_p.exists():
-        vrows = np.load(emb_p)
-    else:
-        vrows = np.concatenate(
-            [vocab.ensemble(desc.embed_texts, names), vocab.ignore_rows(desc.embed_texts)]
-        )
-        np.save(emb_p, vrows)
     allv = np.concatenate(vecs)
     labels = [it["labels"] for it in items]
     bank_id = bankio.write_bank(out / "bank.bin", allv, labels)
-    bank = bankio.read_bank(out / "bank.bin")
-    q, scale = bankio.quantise(vrows)
-    vdeq = bankio.dequant(q, scale)
-    lab_sets = [set(x) for x in labels]
-    thr = vocab.thresholds(bank.rows, vdeq[: len(names)], excl, lab_sets)
-    ign_thr = vocab.thresholds(bank.rows, vdeq[len(names) :], [[] for _ in IGNORE], lab_sets)
-    thr = np.concatenate([thr, ign_thr])
-    n_pos = Counter()
-    for labs in lab_sets:
-        for lab in labs:
-            n_pos[lab] += 1
-    entries = [
-        {
-            "name": x["name"],
-            "kind": "noun",
-            "forms": x["forms"],
-            "excl": excl[i],
-            "rel": rel[i],
-            "nPos": sum(n_pos[j] for j in excl[i]),
-        }
-        for i, x in enumerate(lemmas)
-    ] + [
-        {"name": p, "kind": "ignore", "forms": [p], "excl": [], "rel": [], "nPos": 0}
-        for p in IGNORE
-    ]
-    meta = {
-        "version": 1,
-        "bankId": bank_id,
-        "dim": int(allv.shape[1]),
-        "templates": vocab.TEMPLATES,
-        "ignore": list(IGNORE),
-        "quantilesPerMille": vocab.Q_PER_MILLE,
-        "k": 8,
-        "chips": 6,
-        "margin": 0.0,
-        "entries": entries,
-    }
-    bankio.write_vocab(out, vdeq, thr, meta)
-    (out / "items.jsonl").write_text("".join(json.dumps(i) + "\n" for i in items), encoding="utf-8")
+    _write_vocab(out, desc, lemmas, excl, rel, bank_id, labels, items, int(allv.shape[1]))
     part_p.unlink(missing_ok=True)
 
     if out.name == "v1":
@@ -224,7 +264,7 @@ def main(argv: list[str] | None = None) -> int:
             for i in items
         ]
         (here / "licences-v1.csv").write_text("\n".join(rows) + "\n", encoding="utf-8")
-    print(f"BUILD OK n={len(items)} vocab={len(entries)} bankId={bank_id}")
+    print(f"BUILD OK n={len(items)} vocab={len(lemmas) + len(IGNORE)} bankId={bank_id}")
     return 0
 
 

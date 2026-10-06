@@ -273,7 +273,7 @@
       "description": "Optional self-calibrating rule (Chapter 7). When present the Judge takes the auto path.",
       "properties": {
         "rule": {
-          "const": "null-quantile-v1"
+          "enum": ["null-quantile-v1", "null-quantile-v2"]
         },
         "bankId": {
           "type": "string",

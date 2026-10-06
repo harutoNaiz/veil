@@ -138,6 +138,8 @@ def test_enums_are_lower_camel_case(type_name):
         "onnxruntime-cpu",
         "litert-npu",
         "litert-cpu",
+        "null-quantile-v1",
+        "null-quantile-v2",
     }
     for node in walk(load_schema(type_name)):
         for value in node.get("enum", []):
