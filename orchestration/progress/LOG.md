@@ -313,3 +313,5 @@ Events:
 2026-10-06 12:19 | 7.1-A1 | VERIFY PASS + COMMIT 48e18a9 | [7.1-A1] Fix relabel_bank header offset (corrupted dim)
 - 2026-10-06 12:19 checkpoint (periodic): main e168ca8 pushed; WIP files: 1
 - 2026-10-06 12:20 memory pressure: Claude Code stopped the A1 mini re-eval and the checkpoint loop; waiting for the user
+- 2026-10-06 12:20 checkpoint (memory pressure stop): main 7b8fdb1 pushed; WIP files: 1
+- 2026-10-06 14:02 AC-7.1-03 PASS on the mini bank after A1 (10f61e4); 7.1 PHASE.md written; full 30k bank build started
