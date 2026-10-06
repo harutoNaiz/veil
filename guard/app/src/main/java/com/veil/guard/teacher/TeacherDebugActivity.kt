@@ -7,9 +7,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.veil.teacher.OrtTextEncoder
+import com.veil.guard.wire.ml.LazyTextEncoder
+import com.veil.guard.wire.ml.ModelStore
 import com.veil.teacher.Teacher
-import com.veil.teacher.TextTokenizer
 import com.veil.teacher.autocal.AutoCal
 import com.veil.teacher.autocal.BankFile
 import com.veil.teacher.autocal.VocabFile
@@ -41,15 +41,15 @@ class TeacherDebugActivity : Activity() {
             thread {
                 val t0 = System.nanoTime()
                 val card = Teacher.conceptCard(word)
-                val model = File(filesDir, "siglip2-text.onnx")
-                val tokenizer = TOKENIZER
+                val lazy = LazyTextEncoder(ModelStore(this@TeacherDebugActivity))
+                val haveText = lazy.available()
                 val md = File(externalMediaDirs.first(), "models")
                 val bankF = File(md, "bank-v1.bin")
                 val vocF = File(md, "vocab-v1.bin")
                 val vocJ = File(md, "vocab-v1.json")
                 val note =
                     if (bankF.isFile && vocF.isFile && vocJ.isFile) {
-                        val enc = if (model.isFile && tokenizer != null) OrtTextEncoder(model.path, tokenizer) else null
+                        val enc = if (haveText) lazy else null
                         val chips = runCatching {
                             AutoCal.compileAuto(
                                 word,
@@ -60,12 +60,12 @@ class TeacherDebugActivity : Activity() {
                             )
                                 .second
                         }
-                        enc?.close()
+                        lazy.close()
                         val ms0 = (System.nanoTime() - t0) / NS_PER_MS
                         Log.i("VeilTeacher", "ADD word=$word ms=$ms0 chips=${chips.getOrNull()}")
                         "auto-compiled chips=${chips.getOrNull()} err=${chips.exceptionOrNull()?.message}"
-                    } else if (model.isFile && tokenizer != null) {
-                        OrtTextEncoder(model.path, tokenizer).use { Teacher.compile(card, it) }
+                    } else if (haveText) {
+                        lazy.use { Teacher.compile(card, it) }
                         "compiled"
                     } else {
                         "card only (model/tokenizer not on device)"
@@ -86,6 +86,5 @@ class TeacherDebugActivity : Activity() {
     private companion object {
         const val PAD = 32
         const val NS_PER_MS = 1_000_000
-        val TOKENIZER: TextTokenizer? = null // DEFERRED: on-phone SigLIP2 tokenizer
     }
 }

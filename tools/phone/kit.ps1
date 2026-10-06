@@ -11,7 +11,7 @@ $gl = 'tools\gradle-locked.ps1'
 $models = @(
   'nudenet\nudenet-320n.onnx', 'nudenet\nudenet-640m.onnx',
   'siglip2\siglip2-image-b1.onnx', 'siglip2\siglip2-image-b4.onnx', 'siglip2\siglip2-image-b16.onnx',
-  'siglip2\siglip2-tok.bin',
+  'siglip2\siglip2-tok.bin', 'siglip2\siglip2-text.onnx',
   'toxicity\toxicity-seq128.onnx', 'toxicity\toxicity-tok.bin',
   'yoloe\yoloe-26s-embed-top100.onnx') | ForEach-Object { "data\forge\$_" }
 $concept = 'contracts\examples\compiled-concept\valid-01-cats-siglip2.json'
