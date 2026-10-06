@@ -49,17 +49,17 @@ Added 2026-10-02 after Phase 1.1 took about 4 hours. **Hard rule from the user: 
 <!-- STATE:BEGIN (orchestrator: rewrite this block after every step) -->
 | Field | Value |
 | --- | --- |
-| STANDING ORDER (user) | Keep working every session until the WEEKLY usage limit (it resets Tuesday 2026-10-06 morning). When close to it: commit everything (per sub-phase), update this block, then shut down the laptop (`shutdown /s /t 60`) |
-| Active phases | ALL 18 PLAN phases built (3.1 PT PASS) + 7.0 built + phone-day kit DONE (tools/phone/kit.ps1 04351c2, docs/PHONE_DAY.md 4ebb1ac). NEW: PLAN.md Chapter 7 "NAME ANYTHING" added 2026-10-06 at the user's request: Phase 7.1 self-calibrating concepts (reference bank + null-quantile threshold + competitors + prompt ensemble + "Also hide?" chips) and Phase 7.2 benchmark (100 unseen concrete words; gate: >=90% of words reach recall >=90% at clean false-cover <=5%) |
-| Running agents | checkpoint loop (bash bg, every 12 min) |
+| STANDING ORDER (user) | Keep working every session until the WEEKLY usage limit. When close to it: commit + push everything (per sub-phase), update this block, then shut down the laptop (`shutdown /s /t 60`). On 2026-10-06 00:10 the orchestrator asked the user to confirm the shutdown (it would kill in-flight work); no answer yet, so ask again before shutting down. Also: commit + push every 10-15 min (checkpoint loop) |
+| Active phases | 7.1 "Self-calibrating concepts" BUILDING (SPEC 216 lines; waiver W-7.1-card approved by the orchestrator: optional `auto` on compiled cards + optional `alsoHide` on concept cards, contractVersion 1.0, old cards unchanged). After the build: run tools\heavy\7.1-heavy.ps1 -Mini, then the full mode ALONE (60-120 min, resumable), then the AC-7.1-03 eval on synthetic dev A. ALL 18 PLAN phases + 7.0 + phone kit done earlier |
+| Running agents | 7.1.1 a3a8b1ac06a329258 · 7.1.2 ab5e7cef82baa3900 · 7.1.3 a31ae733cb49922c0 · checkpoint loop (12 min) |
 | Waiting on you | progress/HUMAN_CHECKS.md: Sitting 1 (Phase 1.1) and HC-002 to HC-027 (HC-016 = Chapter 2 gate decision). HC-002 (phone) and HC-003 (AI Hub token) unblock the most; HC-026 (live Guard) unblocks HC-020/021/024/025 |
 | Deferred heavy checks | `progress/DEFERRED.md`: D-1.1-01, D-1.3-07, D-6.1-apk, D-4.2-pt, D-5.3-perfetto, D-6.3-*, D-5.2W-* |
 | Phone at last boot | NOT connected |
 | Phases accepted | 0 of 18 accepted (needs the human checks) · ALL built: 1.1-1.3, 2.1-2.3, 3.1, 3.2, 3.3, 4.1-4.3, 5.1, 5.2 (+5.2-W), 5.3, 6.1-6.3, + 7.0 |
-| Next action | Refine Phase 7.1 (veil-planner-high; PLAN.md "# Chapter 7: NAME ANYTHING") into progress/ch7-name-anything/phase-7.1-self-calibrating-concepts/SPEC.md, then build (3 veil-builders). Then 7.2. Product scope from the user: concrete nouns (animal/object/food/vehicle) at the level a person names them; finer subclasses are NOT required. Parked: D-5.2W-console (real console<->Guard bridge + the Pigeon fix, ~45 min; the user said "later"), a politics topic pack, D-7.0-auc |
+| Next action | Approve the 7.1 spec, spawn 3 veil-builders, run the heavy bank build ALONE (no other model process), verify + commit + push each with vc.sh. Then refine and build 7.2 (benchmark). Product scope: concrete nouns (animal/object/food/vehicle) at the level a person names them; no subclasses; never per-word tuning. Parked: D-5.2W-console (+ Pigeon fix), politics pack, D-7.0-auc |
 | Session notes | Agent types: veil-planner-medium/high (Opus), veil-builder (Sonnet, medium); definitions in .claude/agents (mirrored at veil/orchestration/claude-agents). Remote: private GitHub harutoNaiz/veil. User 2026-10-05 22:30: commit AND push everything so another agent can resume from a fresh clone; mirror via `veil/tools/orchestrator/sync.sh`. Commit per sub-phase via `bash veil/tools/orchestrator/vc.sh`. ALL Gradle via `tools\gradle-locked.ps1` (mutex Global\veil-gradle); never wait on java.exe (VS Code Java server + its Gradle daemon never exit); close VS Code Java import during builds. PUSH with `git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin main` (gh token has the workflow scope; the Windows credential manager token does not). Last push 375f7e8 (2026-10-05 22:50). USER RULE (2026-10-05 22:50): commit + push every 10-15 min and keep STATE current. A background loop runs `bash veil/tools/orchestrator/checkpoint.sh` every 12 min (mirror to main + WIP snapshot to origin/checkpoint); restart the loop when it ends (2 h); vc.sh pushes after each verified commit |
-| Sessions run | 7 |
-| Last updated | 2026-10-06 01:05 |
+| Sessions run | 8 |
+| Last updated | 2026-10-06 09:05 |
 <!-- STATE:END -->
 
 ## 2. Ledger

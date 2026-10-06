@@ -428,6 +428,13 @@ HC-2.2 Gatekeeper (laptop now ~5 min; phone later ~45 min)
 - **How to answer:** [PASS] or [FAIL] per step.
 - **Your answer:**
 
+### HC-028 · Phase 7.1 · Review waiver W-7.1-card, plus "buffalo" on the phone  [OPEN]
+- **Why a human:** a contract-schema change to review, and a phone timing.
+- **Blocks:** acceptance of 7.1 (non-blocking for the build).
+- **Waiver:** compiled concept cards gain an optional `auto` field (the self-calibration data) and concept cards an optional `alsoHide` list. contractVersion stays 1.0, and old cards behave exactly as before. The orchestrator approved this on 2026-10-06 so the build could continue. Reply [OK] or say what to change.
+- **Phone (after the 7.1 build + kit):** in the Console, type "buffalo". It must be active within ≤ 1 s and show "Also hide?" chips. Buffalo posts get covered; cow and horse posts stay visible unless you tick their chips.
+- **Your answer:**
+
 ---
 
 ## Later (not needed for Phase 1.1)

@@ -266,3 +266,6 @@ Events:
 2026-10-06 00:53 | phone-kit-1 | VERIFY PASS + COMMIT 04351c2 | [phone-kit-1] Phone-day kit: build all APKs, manifest, -Push installer
 - 2026-10-06 00:53 phone kit committed 04351c2 (6 APKs; console APK build FAILED: Pigeon file, D-6.1-apk); PLAN.md Chapter 7 NAME ANYTHING added (7.1 self-calibration, 7.2 benchmark; gate >=90% of words at recall>=90%/false-cover<=5%)
 - 2026-10-06 00:53 checkpoint (PLAN Chapter 7 added): main d23266b pushed; WIP files: 0
+- 2026-10-06 00:56 checkpoint (periodic): main d01a8e8 pushed; WIP files: 0
+- 2026-10-06 08:50 session 8 boot (weekly limit reset): tree clean, synced; checkpoint loop restarted; R-7.1 (veil-planner-high) spawned
+- 2026-10-06 09:05 7.1 spec approved (216 lines), W-7.1-card approved by orchestrator (HC-028 for user review); Builders 7.1.1-3 spawned
