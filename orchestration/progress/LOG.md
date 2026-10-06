@@ -311,3 +311,5 @@ Events:
 2026-10-06 12:15 | 7.1-A1 | VERIFY PASS + COMMIT 7bb68b1 | [7.1-A1] Amendment A1: null-quantile-v2 (remove shared text direction) + any-synset vocab fix
 - 2026-10-06 12:15 A1 committed 7bb68b1 (null-quantile-v2 + any-synset vocab); mini revocab + eval started alone
 2026-10-06 12:19 | 7.1-A1 | VERIFY PASS + COMMIT 48e18a9 | [7.1-A1] Fix relabel_bank header offset (corrupted dim)
+- 2026-10-06 12:19 checkpoint (periodic): main e168ca8 pushed; WIP files: 1
+- 2026-10-06 12:20 memory pressure: Claude Code stopped the A1 mini re-eval and the checkpoint loop; waiting for the user
