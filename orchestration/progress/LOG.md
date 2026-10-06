@@ -284,3 +284,5 @@ Events:
 - 2026-10-06 10:14 checkpoint (periodic): main c01df35 pushed; WIP files: 0
 - 2026-10-06 10:26 checkpoint (periodic): main 642c58d pushed; WIP files: 0
 - 2026-10-06 10:33 user restarting the terminal; mini bank at 768/2000 (resumable); downloads too slow for the full run (~45 img/min), parallel-download fix queued
+- 2026-10-06 10:33 checkpoint (before terminal restart): main 3b55f5a pushed; WIP files: 0
+- 2026-10-06 10:43 GPU via DirectML found (45 img/s vs 4.3 CPU, cos 1.0); fix1 Builder spawned; checkpoint loop restarted
