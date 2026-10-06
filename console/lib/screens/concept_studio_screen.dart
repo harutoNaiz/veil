@@ -16,6 +16,8 @@ class _ConceptStudioScreenState extends State<ConceptStudioScreen> {
   final List<FileRef> _photos = [];
   ConceptView? _draft;
   CoverStyle _style = CoverStyle.blur;
+  WordPreview? _wp;
+  final Set<String> _sel = {};
 
   @override
   void dispose() {
@@ -36,6 +38,48 @@ class _ConceptStudioScreenState extends State<ConceptStudioScreen> {
   Future<void> _addPhoto() async {
     final f = await widget.photos?.pick();
     if (f != null && mounted) setState(() => _photos.add(f));
+  }
+
+  Future<void> _onText(String v) async {
+    final t = v.trim();
+    if (t.isEmpty) {
+      setState(() {
+        _wp = null;
+        _sel.clear();
+      });
+      return;
+    }
+    final p = await widget.guard.previewWord(t);
+    if (mounted && _text.text.trim() == t) {
+      setState(() {
+        _wp = p;
+        _sel.clear();
+      });
+    }
+  }
+
+  Future<void> _add() async {
+    final text = _text.text.trim();
+    if (text.isEmpty) return;
+    final d = await widget.guard.compileConcept(
+      text,
+      List.of(_photos),
+      alsoHide: _sel.toList(),
+    );
+    final r = await widget.guard.applyConcepts([
+      ...widget.guard.current.concepts,
+      d.copyWith(coverStyle: _style),
+    ]);
+    _report(r);
+    if (mounted && r == PackResult.accepted) {
+      setState(() {
+        _draft = null;
+        _wp = null;
+        _sel.clear();
+        _photos.clear();
+        _text.clear();
+      });
+    }
   }
 
   Future<void> _generate() async {
@@ -93,10 +137,47 @@ class _ConceptStudioScreenState extends State<ConceptStudioScreen> {
           children: [
             TextField(
               controller: _text,
+              onChanged: _onText,
               decoration: const InputDecoration(
                 labelText: 'What do you want hidden?',
               ),
             ),
+            if (_wp != null && d == null) ...[
+              const SizedBox(height: 8),
+              Text('Also hide:', style: Theme.of(context).textTheme.titleSmall),
+              Wrap(
+                spacing: 8,
+                children: [
+                  for (final c in _wp!.alsoHide)
+                    FilterChip(
+                      label: Text(c),
+                      selected: _sel.contains(c),
+                      onSelected: (on) => setState(() {
+                        on ? _sel.add(c) : _sel.remove(c);
+                      }),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 56,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    for (final p in _wp!.preview)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Chip(label: Text(p)),
+                      ),
+                  ],
+                ),
+              ),
+              Text('Active in ${_wp!.elapsedMs} ms'),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: FilledButton(onPressed: _add, child: const Text('Add')),
+              ),
+            ],
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,

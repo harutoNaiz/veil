@@ -1,4 +1,4 @@
-# Phone-day kit: build every APK, collect into data\phone-kit\apks, write MANIFEST.txt, optionally push to a device.
+﻿# Phone-day kit: build every APK, collect into data\phone-kit\apks, write MANIFEST.txt, optionally push to a device.
 #   powershell -NoProfile -ExecutionPolicy Bypass -File tools\phone\kit.ps1 [-Push] [-DryRun]
 param([switch]$Push, [switch]$DryRun)
 $ErrorActionPreference = 'Continue'
@@ -95,6 +95,10 @@ if ($Push) {
   Do-Step "adb mkdir models/concepts" { adb shell mkdir -p $remote $remoteC }.GetNewClosure() | Out-Null
   foreach ($m in $models) {
     Do-Step "adb push $m" { if (Test-Path $m) { adb push $m $remote } else { Write-Host "skip missing $m"; $global:LASTEXITCODE = 0 } }.GetNewClosure() | Out-Null
+  }
+  foreach ($b in @(@('bank.bin', 'bank-v1.bin'), @('vocab.bin', 'vocab-v1.bin'), @('vocab.json', 'vocab-v1.json'))) {
+    $bf = "data\bank\v1\$($b[0])"; $bt = "$remote$($b[1])"
+    if (Test-Path $bf) { Do-Step "adb push $($b[1])" { adb push $bf $bt }.GetNewClosure() | Out-Null }
   }
   Do-Step "adb push concept" { adb push $concept $remoteC }.GetNewClosure() | Out-Null
 }

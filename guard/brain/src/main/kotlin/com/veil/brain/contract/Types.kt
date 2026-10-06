@@ -76,7 +76,17 @@ data class CompiledConcept(
     val margin: Double,
     val exampleCentroid: Embedding? = null,
     val exampleThreshold: Double? = null,
-    val raw: Record = emptyMap()
+    val raw: Record = emptyMap(),
+    val auto: AutoRule? = null
+)
+
+data class AutoTerm(val term: String, val embedding: Embedding, val thresholds: Map<String, Double>)
+
+data class AutoRule(
+    val positives: List<AutoTerm>,
+    val competitors: List<AutoTerm>,
+    val margin: Double,
+    val chips: List<String>
 )
 
 data class Verdict(

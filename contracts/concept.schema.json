@@ -119,6 +119,16 @@
     "sensitive": {
       "type": "boolean",
       "description": "True for sensitive topics (hidden from previews)."
+    },
+    "alsoHide": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64
+      },
+      "description": "Lookalike names the user chose to hide too (Chapter 7)."
     }
   },
   "required": [
