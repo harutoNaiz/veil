@@ -1,0 +1,25 @@
+=== 7.1.1-fix1 verify · 2026-10-06 11:10:18
+All checks passed!
+10 files already formatted
+ok    0 ruff
+........                                                                 [100%]
+8 passed in 0.83s
+ok    1 pytest
+[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.
+EMBED 48 rows 0.96 img/s
+BUILD OK n=48 vocab=53 bankId=c21d0910e40118bc
+ok    2 gpu smoke build
+[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.
+LICENCES ok=48/48
+BANK_CHECK min_cos=0.99941 n=16
+ok    3 gpu bank_check
+[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.
+Loading weights:   0%|          | 0/408 [00:00<?, ?it/s]LICENCES ok=48/48
+Loading weights:  11%|█         | 45/408 [00:00<00:00, 384.06it/s]Loading weights:  21%|██        | 84/408 [00:00<00:01, 237.25it/s]Loading weights:  27%|██▋       | 111/408 [00:00<00:01, 181.85it/s]Loading weights:  32%|███▏      | 132/408 [00:00<00:01, 143.27it/s]Loading weights: 100%|██████████| 408/408 [00:00<00:00, 513.68it/s]
+BANK_CHECK min_cos=0.99941 n=16
+ok    4 torch-cpu vs bank (cross-engine)
+VERIFY 7.1.1-fix1: PASS
+exit 0
