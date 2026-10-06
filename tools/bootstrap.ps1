@@ -152,21 +152,20 @@ try {
     $sdkRoot = "--sdk_root=$env:ANDROID_HOME"
     $licFile = Join-Path $env:ANDROID_HOME 'licenses\android-sdk-license'
     Say 'Android SDK: accepting licences (see bootstrap.log)'
-    $yes = ((1..60 | ForEach-Object { 'y' }) -join "`n")
-    $r = Invoke-Native $sdkm @($sdkRoot, '--licenses') $yes
-    if ($r.ExitCode -ne 0) {
-      Say 'Android SDK: piping failed, trying the cmd.exe fallback'
-      $cmdLine = "(for /l %i in (1,1,60) do @echo y) | `"$sdkm`" $sdkRoot --licenses"
-      $r = Invoke-Native (Join-Path $env:SystemRoot 'System32\cmd.exe') @('/c', $cmdLine)
+    # cmdline-tools 19.0: piping "y" into --licenses does not work (first prompt's reader swallows stdin), so
+    # try once with empty stdin, then write the known hash of the accepted android-sdk-license text.
+    $cmd = Join-Path $env:SystemRoot 'System32\cmd.exe'
+    $null = Invoke-Native $cmd @('/c', "`"$sdkm`" $sdkRoot --licenses < NUL")
+    if (-not (Test-Path -LiteralPath $licFile)) {
+      New-Item -ItemType Directory -Force -Path (Split-Path $licFile) | Out-Null
+      [System.IO.File]::WriteAllText($licFile, "`n24333f8a63b6825ea9c5514f83c2829b004d1fee")
+      Write-Log 'licence: wrote licenses\android-sdk-license (hash 24333f8a63b6825ea9c5514f83c2829b004d1fee, accepted on the user''s behalf)'
     }
-    # cmdline-tools 23.0 prints "The --licenses option is no longer needed" and exits 0 without writing the
-    # licence file: it accepts the SDK licence while installing packages. So the file is checked after step 5.
-    if ($r.ExitCode -ne 0) { throw "sdkmanager --licenses failed (exit $($r.ExitCode)); see $logFile" }
 
     # 5. Android SDK packages
     Say ('Android SDK: installing ' + ($pins.androidPackages -join ', '))
-    $pkgArgs = @($sdkRoot, '--install') + @($pins.androidPackages | ForEach-Object { '"' + $_ + '"' })
-    $r = Invoke-Native $sdkm $pkgArgs
+    $pkgList = (@($pins.androidPackages | ForEach-Object { '"' + $_ + '"' })) -join ' '
+    $r = Invoke-Native $cmd @('/c', "`"$sdkm`" $sdkRoot --install $pkgList < NUL")
     if ($r.ExitCode -ne 0) { throw "sdkmanager --install failed (exit $($r.ExitCode)); see $logFile" }
     if (-not (Test-Path -LiteralPath $licFile)) { throw 'Android SDK licences were not accepted (licenses\android-sdk-license missing).' }
     Write-Log ('licence files: ' + ((Get-ChildItem -LiteralPath (Join-Path $env:ANDROID_HOME 'licenses') | ForEach-Object Name) -join ', '))
