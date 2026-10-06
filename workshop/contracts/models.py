@@ -487,6 +487,10 @@ class Keyword(RootModel[str]):
     root: str = Field(..., max_length=64, min_length=1)
 
 
+class AlsoHideItem(RootModel[str]):
+    root: str = Field(..., max_length=64, min_length=1)
+
+
 class Concept(BaseModel):
     """
     The user-facing definition of one dislike: the concept card's words, lookalikes and settings. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16.
@@ -556,6 +560,10 @@ class Concept(BaseModel):
     sensitive: bool | None = None
     """
     True for sensitive topics (hidden from previews).
+    """
+    alsoHide: list[AlsoHideItem] | None = Field(None, max_length=16)
+    """
+    Lookalike names the user chose to hide too (Chapter 7).
     """
 
 
@@ -653,6 +661,125 @@ class CompiledConceptThresholds(BaseModel):
     """
 
 
+class CompiledConceptAutoThresholds3(BaseModel):
+    """
+    Cosine thresholds per mode.
+    """
+
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    light: float = Field(..., ge=-1.0, le=1.0)
+    """
+    Threshold in light mode.
+    """
+    balanced: float = Field(..., ge=-1.0, le=1.0)
+    """
+    Threshold in balanced mode.
+    """
+    strict: float = Field(..., ge=-1.0, le=1.0)
+    """
+    Threshold in strict mode.
+    """
+
+
+class CompiledConceptAutoThresholds1(BaseModel):
+    """
+    Balanced cosine threshold.
+    """
+
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    balanced: float = Field(..., ge=-1.0, le=1.0)
+    """
+    Threshold in balanced mode.
+    """
+
+
+class CompiledConceptAutoTerm(BaseModel):
+    """
+    A positive term of the auto rule.
+    """
+
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    term: str = Field(..., max_length=64, min_length=1)
+    """
+    The word.
+    """
+    embedding: Embedding
+    """
+    Ensemble text fingerprint of the word.
+    """
+    thresholds: CompiledConceptAutoThresholds3
+    """
+    Null-quantile cosine thresholds.
+    """
+
+
+class CompiledConceptAutoCompetitor(BaseModel):
+    """
+    A competitor term of the auto rule.
+    """
+
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    term: str = Field(..., max_length=64, min_length=1)
+    """
+    The word.
+    """
+    embedding: Embedding
+    """
+    Ensemble text fingerprint of the word.
+    """
+    thresholds: CompiledConceptAutoThresholds1
+    """
+    Null-quantile cosine thresholds.
+    """
+
+
+class Chip(RootModel[str]):
+    root: str = Field(..., max_length=64, min_length=1)
+
+
+class CompiledConceptAuto(BaseModel):
+    """
+    Optional self-calibrating rule (Chapter 7). When present the Judge takes the auto path.
+    """
+
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    rule: Literal["null-quantile-v1"] = "null-quantile-v1"
+    bankId: str = Field(..., max_length=64, min_length=1)
+    """
+    Id of the reference bank.
+    """
+    margin: float = Field(..., ge=-1.0, le=1.0)
+    """
+    Competitor margin.
+    """
+    excluded: int = Field(..., ge=0)
+    """
+    Bank rows excluded.
+    """
+    chips: list[Chip] = Field(..., max_length=16)
+    """
+    Lookalike names to offer.
+    """
+    positives: list[CompiledConceptAutoTerm] = Field(..., max_length=17, min_length=1)
+    """
+    Positive terms.
+    """
+    competitors: list[CompiledConceptAutoCompetitor] = Field(..., max_length=32)
+    """
+    Competitor terms.
+    """
+
+
 class CompiledConcept(BaseModel):
     """
     A concept compiled into fingerprints for one model family, ready for the Judge. Veil contract v1.0. Units: positions and sizes are integer screen pixels with the origin at the top-left of the display in its current orientation (x grows right, y grows down); times are integer milliseconds on one monotonic clock (Android SystemClock.uptimeMillis; replays use a virtual clock in the same unit); fingerprints are L2-normalised vectors stored as float16. A fingerprint may only be compared with a concept from the same model family: both must carry the same spaceId.
@@ -724,6 +851,10 @@ class CompiledConcept(BaseModel):
     exampleThreshold: float | None = Field(None, ge=0.0, le=1.0)
     """
     Threshold for matches against the example centroid.
+    """
+    auto: CompiledConceptAuto | None = None
+    """
+    Optional self-calibrating rule (Chapter 7). When present the Judge takes the auto path.
     """
 
 

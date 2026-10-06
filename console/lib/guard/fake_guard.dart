@@ -177,8 +177,42 @@ class FakeGuard implements GuardClient {
     ];
   }
 
+  static const _chipMap = {
+    'buffalo': ['bison', 'yak', 'ox', 'cow', 'horse', 'deer'],
+  };
+
+  List<String> _chips(String t) =>
+      _chipMap[t.trim().toLowerCase()] ??
+      [
+        for (final s in [
+          'toy',
+          'statue',
+          'drawing',
+          'logo',
+          'sticker',
+          'plush',
+        ])
+          '${t.trim()} $s',
+      ];
+
   @override
-  Future<ConceptView> compileConcept(String text, List<FileRef> photos) async {
+  Future<WordPreview> previewWord(String text) async {
+    calls.add('previewWord');
+    final t = text.trim();
+    return WordPreview(
+      word: t,
+      alsoHide: _chips(t),
+      preview: [for (var i = 1; i <= 6; i++) 'a photo caption $i with $t'],
+      elapsedMs: 120,
+    );
+  }
+
+  @override
+  Future<ConceptView> compileConcept(
+    String text,
+    List<FileRef> photos, {
+    List<String> alsoHide = const [],
+  }) async {
     calls.add('compileConcept');
     final t = text.trim();
     final id = t
@@ -189,7 +223,14 @@ class FakeGuard implements GuardClient {
       conceptId: id.isEmpty ? 'concept' : id,
       displayName: t.isEmpty ? 'Concept' : t,
       looksLike: ['$t in photos', '$t in videos', 'drawings of $t'],
-      butNot: ['toys that resemble $t', 'logos mentioning $t'],
+      butNot: [
+        'toys that resemble $t',
+        'logos mentioning $t',
+        if (alsoHide.isNotEmpty)
+          for (final c in _chips(t))
+            if (!alsoHide.contains(c)) c,
+      ],
+      alsoHide: alsoHide,
       examplePhotos: photos,
     );
   }

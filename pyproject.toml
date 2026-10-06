@@ -16,6 +16,8 @@ dependencies = [
   "huggingface_hub==2.1.1",
   "qai-hub==0.56.0",
   "cryptography==50.0.2",
+  "nltk>=3.10.3",
+  "requests>=2.34.2",
 ]
 
 [dependency-groups]

@@ -48,6 +48,8 @@ def judge(vecs: np.ndarray, cc: dict, mode: str = "balanced") -> list[dict]:
     vecs = np.atleast_2d(np.asarray(vecs, dtype=np.float64))
     if vecs.size == 0:
         return []
+    if cc.get("auto") is not None:
+        return _judge_auto(vecs, cc, mode)
     s_look = _best(vecs, cc["looksLike"])
     s_not = _best(vecs, cc.get("butNot", []))
     s_ign = _best(vecs, cc.get("ignore", []))
@@ -80,6 +82,58 @@ def judge(vecs: np.ndarray, cc: dict, mode: str = "balanced") -> list[dict]:
                 "p_raw": float(p_raw[i]),
                 "probability": float(prob[i]),
                 "score": float(s_look[i]),
+                "margin": float(margin[i]),
+                "decision": decision,
+            }
+        )
+        if s_ex is not None:
+            verdicts[-1]["exampleScore"] = float(s_ex[i])
+    return verdicts
+
+
+AUTO_NEAR_BAND = 0.02
+
+
+def _judge_auto(vecs: np.ndarray, cc: dict, mode: str) -> list[dict]:
+    """Auto path (Chapter 7.1): null-quantile thresholds and competitors; calibrationOffset and
+    userOffset are ignored here."""
+    auto = cc["auto"]
+    pos = auto["positives"]
+    pmat = _matrix([p["embedding"] for p in pos])
+    thr_m = np.array([p["thresholds"][mode] for p in pos])
+    thr_b = np.array([p["thresholds"]["balanced"] for p in pos])
+    s_t = vecs @ pmat.T
+    comp = np.full(len(vecs), -1e9)
+    cmat = _matrix([c["embedding"] for c in auto["competitors"]])
+    if cmat is not None:
+        cb = np.array([c["thresholds"]["balanced"] for c in auto["competitors"]])
+        comp = (vecs @ cmat.T - cb).max(axis=1)
+    hide_t = (s_t >= thr_m) & ((s_t - thr_b) - comp[:, None] >= auto["margin"])
+    star = (s_t - thr_m).argmax(axis=1)
+    rows = np.arange(len(vecs))
+    score = s_t[rows, star]
+    p = 1.0 / (1.0 + np.exp(-T * (score - thr_m[star])))
+    margin = (s_t - thr_b).max(axis=1) - comp
+    s_ex = None
+    if cc.get("exampleCentroid") is not None:
+        s_ex = vecs @ _matrix([cc["exampleCentroid"]])[0]
+    ex_thr = cc.get("exampleThreshold")
+    verdicts = []
+    for i in range(len(vecs)):
+        hide = bool(hide_t[i].any())
+        if s_ex is not None and ex_thr is not None and s_ex[i] >= ex_thr:
+            hide = True
+        if hide:
+            decision = "hide"
+        elif score[i] >= thr_m[star[i]] - AUTO_NEAR_BAND:
+            decision = "nearMiss"
+        else:
+            decision = "leave"
+        verdicts.append(
+            {
+                "p_raw": float(p[i]),
+                "probability": float(p[i]),
+                "score": float(score[i]),
                 "margin": float(margin[i]),
                 "decision": decision,
             }

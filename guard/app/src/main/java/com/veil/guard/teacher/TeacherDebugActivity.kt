@@ -2,6 +2,7 @@ package com.veil.guard.teacher
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -9,6 +10,9 @@ import android.widget.TextView
 import com.veil.teacher.OrtTextEncoder
 import com.veil.teacher.Teacher
 import com.veil.teacher.TextTokenizer
+import com.veil.teacher.autocal.AutoCal
+import com.veil.teacher.autocal.BankFile
+import com.veil.teacher.autocal.VocabFile
 import java.io.File
 import kotlin.concurrent.thread
 
@@ -39,8 +43,28 @@ class TeacherDebugActivity : Activity() {
                 val card = Teacher.conceptCard(word)
                 val model = File(filesDir, "siglip2-text.onnx")
                 val tokenizer = TOKENIZER
+                val md = File(externalMediaDirs.first(), "models")
+                val bankF = File(md, "bank-v1.bin")
+                val vocF = File(md, "vocab-v1.bin")
+                val vocJ = File(md, "vocab-v1.json")
                 val note =
-                    if (model.isFile && tokenizer != null) {
+                    if (bankF.isFile && vocF.isFile && vocJ.isFile) {
+                        val enc = if (model.isFile && tokenizer != null) OrtTextEncoder(model.path, tokenizer) else null
+                        val chips = runCatching {
+                            AutoCal.compileAuto(
+                                word,
+                                emptyList(),
+                                enc,
+                                BankFile.load(bankF),
+                                VocabFile.load(vocF, vocJ)
+                            )
+                                .second
+                        }
+                        enc?.close()
+                        val ms0 = (System.nanoTime() - t0) / NS_PER_MS
+                        Log.i("VeilTeacher", "ADD word=$word ms=$ms0 chips=${chips.getOrNull()}")
+                        "auto-compiled chips=${chips.getOrNull()} err=${chips.exceptionOrNull()?.message}"
+                    } else if (model.isFile && tokenizer != null) {
                         OrtTextEncoder(model.path, tokenizer).use { Teacher.compile(card, it) }
                         "compiled"
                     } else {
