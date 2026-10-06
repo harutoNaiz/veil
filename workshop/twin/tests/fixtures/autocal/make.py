@@ -69,8 +69,9 @@ def make_fixture(out: Path = HERE) -> None:
     ents = _entries()
     vrows = bankio.dequant(*bankio.quantise(_unit(rng, len(ents))))
     thr = np.zeros((len(ents), 3), dtype=np.float32)
+    center = bankio.noun_center(vrows, {"entries": ents})
     for i, e in enumerate(ents):
-        t, n = autocal.null_thresholds(bank, vrows[i], set(e["excl"]))
+        t, n = autocal.null_thresholds(bank, bankio.direction(vrows[i], center), set(e["excl"]))
         thr[i] = [t[m] for m in autocal.MODES]
         e["nPos"] = n if e["kind"] == "noun" else 0
     meta = {
@@ -97,6 +98,7 @@ def make_fixture(out: Path = HERE) -> None:
         idx = autocal.lookup(vocab, word)
         q = vocab.rows[idx] if idx is not None else autocal.ensemble(enc, word)
         auto = cc["auto"]
+        d = judge._matrix([auto["positives"][0]["embedding"]])[0]
         queries.append(
             {
                 "word": word,
@@ -109,7 +111,7 @@ def make_fixture(out: Path = HERE) -> None:
                 "auto": auto,
             }
         )
-        judges.extend(_judge_cases(qi, cc, q, rng))
+        judges.extend(_judge_cases(qi, cc, d, rng))
     expected = {
         "queries": queries,
         "vocabThr": [[float(x) for x in row] for row in thr],

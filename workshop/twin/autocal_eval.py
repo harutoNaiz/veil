@@ -5,7 +5,7 @@
 Clean false-cover comes from the cached synthetic dev A run (as in Chapter 1). Recall = the share of
 bank rows labelled with excl(word) that the auto judge hides at Balanced (full image = one piece).
 Writes data/bank/eval-<dir>.json and docs/reports/ch7-autocal.md; exits 1 if the snakes clean
-false-cover is above 0.05.
+false-cover is above 0.05 or cats/spiders (controls) screen recall is below 0.9.
 """
 
 from __future__ import annotations
@@ -33,7 +33,9 @@ WORDS = [
     "surfboard",
     "clock",
 ]
+CONTROLS = ["cats", "spiders"]
 LIMIT = 0.05
+MIN_RECALL = 0.9
 
 
 def _recall(cc: dict, bank: bankio.Bank, vocab: bankio.Vocab, word: str) -> tuple[object, int]:
@@ -55,6 +57,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--words", default=",".join(WORDS))
     a = ap.parse_args(argv)
     words = [w.strip() for w in a.words.split(",") if w.strip()]
+    words += [c for c in CONTROLS if c not in words]
 
     from workshop.forge.siglip2.runtime import OnnxDescriber
     from workshop.twin import run
@@ -91,7 +94,8 @@ def main(argv: list[str] | None = None) -> int:
             "chips": ccs[w]["auto"]["chips"],
             "compileSec": round(secs[w], 3),
         }
-        print(f"AUTOCAL {w} cleanFalseCover={rows[w]['cleanFalseCover']}")
+        thr = ccs[w]["auto"]["positives"][0]["thresholds"]["balanced"]
+        print(f"AUTOCAL {w} thr={thr:.4f} cleanFalseCover={rows[w]['cleanFalseCover']}")
     out = {"bank": a.bank.name, "bankId": bank.bank_id, "set": a.set_name, "words": rows}
     (REPO_ROOT / "data" / "bank").mkdir(parents=True, exist_ok=True)
     (REPO_ROOT / "data" / "bank" / f"eval-{a.bank.name}.json").write_text(
@@ -114,7 +118,13 @@ def main(argv: list[str] | None = None) -> int:
     report.parent.mkdir(parents=True, exist_ok=True)
     report.write_text("\n".join(lines) + "\n", encoding="utf-8")
     snakes = rows.get("snakes", {}).get("cleanFalseCover")
-    return 1 if snakes is not None and snakes > LIMIT else 0
+    bad = snakes is not None and snakes > LIMIT
+    for c in CONTROLS:
+        rec = rows[c]["screenRecall"]
+        if rec is None or rec < MIN_RECALL:
+            print(f"AUTOCAL FAIL control {c} screen recall {rec} < {MIN_RECALL}")
+            bad = True
+    return 1 if bad else 0
 
 
 if __name__ == "__main__":

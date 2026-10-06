@@ -188,3 +188,53 @@ def test_schemas(world):
     bad_cc["auto"]["extra"] = 1
     with pytest.raises(Exception):  # noqa: B017
         validate("CompiledConcept", bad_cc)
+
+
+def test_center_is_noun_mean(world):
+    _, vocab, _, _ = world
+    ents = vocab.meta["entries"]
+    nouns = [i for i, e in enumerate(ents) if e["kind"] == "noun"]
+    assert len(nouns) < len(ents)
+    assert np.array_equal(vocab.center, vocab.rows[nouns].mean(0))
+    d = bankio.direction(vocab.rows[3], vocab.center)
+    assert abs(np.linalg.norm(d) - 1) < 1e-12
+    assert autocal.RULE == "null-quantile-v2"
+
+
+def test_v2_fixes_common_mode_offset():
+    """Two domains with different mean projections on the shared direction: v1 fails, v2 passes."""
+    rng = np.random.default_rng(5)
+    dim, n = 64, 4000
+    u0 = np.zeros(dim)
+    u0[0] = 1.0
+
+    def unit(x):
+        return x / np.linalg.norm(x, axis=-1, keepdims=True)
+
+    def domain(off, m):
+        x = rng.normal(size=(m, dim)) / np.sqrt(dim)
+        x[:, 0] = off
+        return unit(x)
+
+    bank_rows, clean = domain(0.05, n), domain(0.35, 500)  # screens project harder on u0
+    nouns = unit(0.92 * u0 + 0.4 * rng.normal(size=(50, dim)) / np.sqrt(dim))
+    center = nouns.mean(0)
+    word = nouns[0]
+    bank = bankio.Bank(bank_rows, np.zeros(n + 1, dtype=np.uint32), np.zeros(0, np.uint16), "x")
+    thr1, _ = autocal.null_thresholds(bank, word, set())
+    d = bankio.direction(word, center)
+    thr2, _ = autocal.null_thresholds(bank, d, set())
+    fc1 = float(np.mean(clean @ word >= thr1["balanced"]))
+    fc2 = float(np.mean(clean @ d >= thr2["balanced"]))
+    assert fc1 > 0.5 and fc2 < 0.05, (fc1, fc2)
+
+
+def test_kite_in_vocabulary():
+    from workshop.twin.bank import vocab as bv
+
+    src = REPO_ROOT / "data" / "bank" / "src"
+    if not (src / "nltk").exists():
+        pytest.skip("wordnet data not present")
+    wn = bv.wn_setup(src)
+    assert bv._ok_synset(wn, "kite")
+    assert not bv._ok_synset(wn, "qzxv")

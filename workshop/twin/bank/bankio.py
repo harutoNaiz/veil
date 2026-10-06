@@ -24,6 +24,17 @@ class Vocab:
     rows: np.ndarray  # float64 unit (n, dim)
     thr: np.ndarray  # float32 (n, 3)
     meta: dict
+    center: np.ndarray | None = None  # mean of the noun rows (float64), set by read_vocab
+
+
+def noun_center(rows: np.ndarray, meta: dict) -> np.ndarray:
+    ix = [i for i, e in enumerate(meta["entries"]) if e["kind"] == "noun"]
+    return rows[ix].mean(0)
+
+
+def direction(e: np.ndarray, center: np.ndarray) -> np.ndarray:
+    v = np.asarray(e, dtype=np.float64) - center
+    return v / np.maximum(np.linalg.norm(v, axis=-1, keepdims=True), 1e-12)
 
 
 def quantise(v: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -56,6 +67,22 @@ def write_bank(path: Path, vecs: np.ndarray, labels: list[list[int]]) -> str:
     )
     Path(path).write_bytes(blob)
     return hashlib.sha256(blob).hexdigest()[:16]
+
+
+def relabel_bank(path: Path, labels: list[list[int]]) -> str:
+    """Rewrite only the label sections of a bank.bin (rows stay byte-identical)."""
+    blob = Path(path).read_bytes()
+    ver, n, dim, _ = struct.unpack_from("<IIII", blob, 4)
+    head = blob[: 20 + 4 * n + n * dim]
+    off = np.zeros(n + 1, dtype="<u4")
+    for i, lab in enumerate(labels):
+        off[i + 1] = off[i] + len(lab)
+    idx = np.array([x for lab in labels for x in lab], dtype="<u2")
+    out = bytearray(head)
+    out[12:16] = struct.pack("<I", len(idx))
+    out += off.tobytes() + idx.tobytes()
+    Path(path).write_bytes(bytes(out))
+    return hashlib.sha256(bytes(out)).hexdigest()[:16]
 
 
 def read_bank(path: Path) -> Bank:
@@ -102,7 +129,8 @@ def read_vocab(folder: Path) -> Vocab:
     p += n * dim
     thr = np.frombuffer(blob, "<f4", n * 3, p).reshape(n, 3).copy()
     meta = json.loads((folder / "vocab.json").read_text(encoding="utf-8"))
-    return Vocab(dequant(q, scale), thr, meta)
+    rows = dequant(q, scale)
+    return Vocab(rows, thr, meta, noun_center(rows, meta))
 
 
 def excluded_rows(bank: Bank, excl: set[int]) -> np.ndarray:
