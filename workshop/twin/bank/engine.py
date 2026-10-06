@@ -32,7 +32,7 @@ class FixedBatchOnnx(OnnxDescriber):
             import onnxruntime as ort
 
             if key == "text":
-                name, prov = "siglip2-text.onnx", PROVIDERS["cpu"]
+                name, prov = "siglip2-text.onnx", PROVIDERS[self.provider]
             else:
                 name, prov = "siglip2-image-b16.onnx", PROVIDERS[self.provider]
             self._sessions[key] = ort.InferenceSession(str(self.folder / name), providers=prov)
