@@ -278,3 +278,5 @@ Events:
 2026-10-06 09:41 | 7.1.2 | VERIFY PASS + COMMIT f863bf2 | [7.1.2] Auto threshold, competitors, ensembles (twin)
 - 2026-10-06 09:41 7.1.1 0ce0c2c, 7.1.3 7310cb2, 7.1.2 f863bf2 (after regenerating models.py) committed+pushed; heavy 7.1 -Mini started alone
 - 2026-10-06 09:43 heavy 7.1 -Mini and the checkpoint loop were stopped by Claude Code (system critically low on memory); waiting for the user before restarting
+- 2026-10-06 09:43 checkpoint (memory pressure stop): main 2907188 pushed; WIP files: 0
+- 2026-10-06 09:50 user said continue: checkpoint loop and heavy 7.1 -Mini restarted (2.8 GB free, VS Code closed)
