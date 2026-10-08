@@ -352,3 +352,4 @@ Events:
 2026-10-07 02:22 | D-72-fetch | VERIFY PASS + COMMIT 9ffcd89 | [D-72-fetch] Bench fetch over https (Flickr 301/429: redirects + ALPN)
 - 2026-10-07 02:22 D-72-fetch committed 9ffcd89 (https + redirects + ALPN; Flickr 429 on no-ALPN TLS); 3d runner relaunched
 - 2026-10-07 02:24 USER: pause after next step -> runner parent stopped; 7.2 -Mini allowed to finish; 7.2 full NOT started
+- 2026-10-08 15:00 SESSION START (10) on new laptop (pes2u); workspace restored from veil/orchestration mirror; bootstrap started; user resumed the 7.2 pause
