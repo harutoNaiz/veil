@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.metadata
 import importlib.util
 import platform
+import re
 import tomllib
 from pathlib import Path
 
@@ -14,7 +15,8 @@ ROOT = Path(__file__).resolve().parent.parent
 def _main_dependency_names() -> list[str]:
     """Names of [project].dependencies in pyproject.toml, in file order."""
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    return [dep.split("==")[0].strip() for dep in pyproject["project"]["dependencies"]]
+    deps = pyproject["project"]["dependencies"]
+    return [re.match(r"\s*([A-Za-z0-9][A-Za-z0-9._-]*)", dep).group(1) for dep in deps]
 
 
 def main() -> int:

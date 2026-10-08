@@ -127,7 +127,8 @@ def main(argv: list[str] | None = None) -> int:
 
     content = generate()
     if args.check:
-        if not args.out.exists() or args.out.read_bytes() != content:
+        on_disk = args.out.read_bytes().replace(b"\r\n", b"\n") if args.out.exists() else None
+        if on_disk != content.replace(b"\r\n", b"\n"):
             print(
                 f"STALE: {args.out} differs from the schemas; run contracts/scripts/gen_python.py"
             )
