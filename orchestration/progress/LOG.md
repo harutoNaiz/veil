@@ -354,3 +354,4 @@ Events:
 - 2026-10-07 02:24 USER: pause after next step -> runner parent stopped; 7.2 -Mini allowed to finish; 7.2 full NOT started
 - 2026-10-08 15:00 SESSION START (10) on new laptop (pes2u); workspace restored from veil/orchestration mirror; bootstrap started; user resumed the 7.2 pause
 - 2026-10-08 14:46 checkpoint (periodic): main b91a8cf pushed; WIP files: 0
+- 2026-10-08 14:58 checkpoint (periodic): main 373979f pushed; WIP files: 0
