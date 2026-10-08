@@ -361,3 +361,9 @@ Events:
 - 2026-10-08 15:47 checkpoint (periodic): main 4617182 pushed; WIP files: 0
 2026-10-08 15:54 | D-fresh-clone | VERIFY PASS + COMMIT 75f2e2c | [D-fresh-clone] Fresh clone: hello dep names + CRLF-safe codegen check
 - 2026-10-08 15:59 checkpoint (periodic): main bd4fa3b pushed; WIP files: 4
+- 2026-10-08 16:37 checkpoint (periodic): main a7ee5f1 pushed; WIP files: 4
+2026-10-08 15:20 | bootstrap | BOOTSTRAP OK on laptop pes2u (toolchain D:\veil-toolchain); console flutter test 32 PASS; contracts 429/430 (CRLF) + workshop.hello crash -> D-fresh-clone Builder (sonnet, MODEL line OK)
+2026-10-08 15:35 | D-fresh-clone | VERIFY PASS + COMMIT 75f2e2c (local; push needs gh)
+- 2026-10-08 15:50 D-6.1-apk Builder (sonnet, MODEL line OK): bridge already fixed at 960a605 (regen identical); verify script + unused import fix; -Build not yet run by orchestrator; uncommitted
+- 2026-10-08 16:00 3a SigLIP2 prefetch stalled twice on hf xet (network ~0.3 MB/s); retried with HF_HUB_DISABLE_XET=1
+- 2026-10-08 16:45 Claude Code stopped 3a prefetch/export and D-6.1-apk -Build (system low on memory); not restarted; waiting for the user
