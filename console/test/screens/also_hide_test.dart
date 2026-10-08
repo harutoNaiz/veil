@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veil_console/guard/fake_guard.dart';
-import 'package:veil_console/guard/guard_client.dart';
 import 'package:veil_console/screens/concept_studio_screen.dart';
 
 void main() {
