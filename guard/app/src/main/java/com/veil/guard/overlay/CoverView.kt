@@ -31,14 +31,7 @@ class CoverView(context: Context) : View(context) {
     var crops: FrameCropSource? = null
     var samples: FrameSampleSource? = null
 
-    private class Cloud(
-        val bmp: Bitmap,
-        val w: Int,
-        val h: Int,
-        val frameId: Long,
-        val madeMs: Long,
-        val puff: Boolean = false
-    )
+    private class Cloud(val bmp: Bitmap, val w: Int, val h: Int, val frameId: Long, val madeMs: Long)
 
     private val clouds = HashMap<Int, Cloud>()
 
@@ -84,18 +77,15 @@ class CoverView(context: Context) : View(context) {
         val now = SystemClock.uptimeMillis()
         val list = current(now)
         clouds.keys.retainAll(list.map { it.first.maskId }.toSet())
-        val puffs = com.veil.guard.app.VeilSettings.cloudLook(context)
-        val density = resources.displayMetrics.density
         for ((c, r, alpha) in list) {
             val dst = Rect(r.x, r.y, r.x + r.w, r.y + r.h)
-            val m = if (puffs) feather(r, density) else 0f
             val faded = alpha < 0.999f
             if (faded) {
                 canvas.saveLayerAlpha(
-                    dst.left - m,
-                    dst.top - m,
-                    dst.right + m,
-                    dst.bottom + m,
+                    dst.left.toFloat(),
+                    dst.top.toFloat(),
+                    dst.right.toFloat(),
+                    dst.bottom.toFloat(),
                     (
                         alpha *
                             255
@@ -105,7 +95,6 @@ class CoverView(context: Context) : View(context) {
             when {
                 c.label == "glue" -> solid(canvas, c, dst)
                 c.style == CoverStyle.MOSAIC -> crops?.crop(r)?.let { mosaic(canvas, it, dst) } ?: cloud(canvas, c, r)
-                puffs -> puff(canvas, c, r, m)
                 else -> cloud(canvas, c, r)
             }
             c.label?.let { canvas.drawText(it, dst.exactCenterX(), dst.exactCenterY() + text.textSize / 3, text) }
@@ -113,49 +102,6 @@ class CoverView(context: Context) : View(context) {
         }
         canvas.restore()
         if (smoother?.animating(now) == true) postInvalidateOnAnimation()
-    }
-
-    /** Feather width around a cloud cover: wide enough to melt into the page, never inside the hidden rect. */
-    private fun feather(r: Px, density: Float) = (minOf(r.w, r.h) * 0.2f).coerceIn(12f * density, 32f * density)
-
-    /**
-     * Cloud look: fully opaque over the cover rect (nothing shows through), then a soft lobed fade outside it
-     * that melts into the page, like a cloud rather than a box. Colours are the cover's own, dimmed for the label.
-     */
-    private fun puff(canvas: Canvas, c: Cover, r: Px, m: Float) {
-        val density = resources.displayMetrics.density
-        val snap = samples?.snapshot(r, width.coerceAtLeast(1), height.coerceAtLeast(1))
-        val now = SystemClock.uptimeMillis()
-        val old = clouds[c.maskId]
-        val fresh = old != null && old.puff && similar(old.w, r.w) && similar(old.h, r.h) &&
-            (old.frameId == (snap?.id ?: -1L) || now - old.madeMs < REFRESH_MS)
-        val bmp = if (fresh) {
-            old!!.bmp
-        } else {
-            makePuff(r, m, density, snap, c.maskId).also {
-                clouds[c.maskId] = Cloud(it, r.w, r.h, snap?.id ?: -1L, now, puff = true)
-            }
-        }
-        canvas.drawBitmap(bmp, null, RectF(r.x - m, r.y - m, r.x + r.w + m, r.y + r.h + m), smooth)
-        val core = RectF(r.x.toFloat(), r.y.toFloat(), (r.x + r.w).toFloat(), (r.y + r.h).toFloat())
-        label(canvas, core, CoverNames.reason(context, c), density)
-    }
-
-    private fun makePuff(r: Px, m: Float, density: Float, snap: FrameSnapshot?, seed: Int): Bitmap {
-        val (gw, gh) = CloudMath.gridSize(r.w, r.h, density, MAX_TEXELS)
-        val src = snap?.let { CloudMath.toFrame(r, it.screenW, it.screenH, it.w, it.h) }
-        val raw =
-            if (snap != null && src != null) {
-                CloudMath.sampleGrid(snap.argb, snap.w, snap.h, src, gw, gh)
-            } else {
-                CloudMath.fallbackGrid(gw, gh, night())
-            }
-        val grid = IntArray(raw.size) { CloudMath.mix(raw[it], DIM_TO, DIM) } // dark enough for the white label
-        val scale = (OUT_LONG / maxOf(r.w + 2 * m, r.h + 2 * m)).coerceAtMost(1f)
-        val ow = ((r.w + 2 * m) * scale).roundToInt().coerceAtLeast(8)
-        val oh = ((r.h + 2 * m) * scale).roundToInt().coerceAtLeast(8)
-        val px = CloudMath.compose(grid, gw, gh, r.w, r.h, m, ow, oh, PUFF_FROST, 1f, seed)
-        return Bitmap.createBitmap(px, ow, oh, Bitmap.Config.ARGB_8888)
     }
 
     /** "Sensitive content" veil: blurred own colours, evenly dimmed, rounded, exactly the cover rect, eye-off icon. */
@@ -296,6 +242,5 @@ class CoverView(context: Context) : View(context) {
         const val DIM_TO = 0xFF3A3F47.toInt()
         const val DIM = 0.45f
         const val REFRESH_MS = 2000L // colours of a playing video change constantly; a calm cover does not
-        const val PUFF_FROST = 0.15f
     }
 }

@@ -65,7 +65,6 @@ class MainActivity : Activity() {
     private lateinit var wordList: LinearLayout
     private lateinit var modes: RadioGroup
     private lateinit var coverModes: RadioGroup
-    private lateinit var looks: RadioGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -314,30 +313,6 @@ class MainActivity : Activity() {
                 coverModes
             )
         )
-        looks = RadioGroup(this).apply {
-            orientation = RadioGroup.HORIZONTAL
-            for ((cloud, label) in listOf(true to "Cloud", false to "Box")) {
-                addView(
-                    RadioButton(context).apply {
-                        text = label
-                        tag = cloud
-                        setTextColor(ink)
-                        id = View.generateViewId()
-                    }
-                )
-            }
-            setOnCheckedChangeListener { g, checked ->
-                val cloud = g.findViewById<RadioButton>(checked)?.tag as? Boolean ?: return@setOnCheckedChangeListener
-                VeilSettings.setCloudLook(this@MainActivity, cloud)
-            }
-        }
-        col.addView(
-            cardBox(
-                text("Cover look", 17f, ink, bold = true),
-                text("Cloud melts softly into the page; Box is a rounded card.", 13f, sub),
-                looks
-            )
-        )
         col.addView(
             text("Nothing leaves this phone. Covers never block taps or scrolling.", 12f, sub).apply {
                 setPadding(dp(4), dp(16), dp(4), 0)
@@ -386,11 +361,6 @@ class MainActivity : Activity() {
         for (i in 0 until coverModes.childCount) {
             val rb = coverModes.getChildAt(i) as RadioButton
             if (rb.tag == full && !rb.isChecked) rb.isChecked = true
-        }
-        val cloud = VeilSettings.cloudLook(this)
-        for (i in 0 until looks.childCount) {
-            val rb = looks.getChildAt(i) as RadioButton
-            if (rb.tag == cloud && !rb.isChecked) rb.isChecked = true
         }
         renderWords()
     }
