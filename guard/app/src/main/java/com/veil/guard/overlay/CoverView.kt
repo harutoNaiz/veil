@@ -116,7 +116,7 @@ class CoverView(context: Context) : View(context) {
     }
 
     /** Feather width around a cloud cover: wide enough to melt into the page, never inside the hidden rect. */
-    private fun feather(r: Px, density: Float) = (minOf(r.w, r.h) * 0.3f).coerceIn(16f * density, 56f * density)
+    private fun feather(r: Px, density: Float) = (minOf(r.w, r.h) * 0.2f).coerceIn(12f * density, 32f * density)
 
     /**
      * Cloud look: fully opaque over the cover rect (nothing shows through), then a soft lobed fade outside it
