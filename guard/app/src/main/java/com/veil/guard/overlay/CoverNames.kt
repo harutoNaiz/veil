@@ -9,7 +9,8 @@ import java.io.File
  * content", "Nudity") or the word they typed. Read from the concepts folder (pack files are "<pack>--<file>.json").
  */
 object CoverNames {
-    private val PACK_NAMES = mapOf("politics" to "Political content", "violence" to "Violence & gore")
+    private val PACK_NAMES =
+        mapOf("politics" to "Political content", "violence" to "Violence & gore", "sexual" to "Sexual content")
     private val ID = Regex("\"conceptId\"\\s*:\\s*\"([^\"]+)\"")
 
     @Volatile private var names: Map<String, String> = emptyMap()
@@ -39,7 +40,7 @@ object CoverNames {
                 f.bufferedReader().use { r -> CharArray(600).let { b -> String(b, 0, r.read(b).coerceAtLeast(0)) } }
             }.getOrNull()?.let { ID.find(it)?.groupValues?.get(1) } ?: continue
             val pack = f.name.substringBefore("--", "")
-            if (pack == "violence") v.add(id)
+            if (pack == "violence" || pack == "sexual") v.add(id) // never named in child mode
             m[id] = PACK_NAMES[pack] ?: id.replace('-', ' ')
         }
         names = m

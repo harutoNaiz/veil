@@ -15,7 +15,7 @@ object VeilSettings {
 
     fun adultNudity(ctx: Context) = prefs(ctx).getBoolean("cat_nudity", true)
 
-    /** Whether the pack should be on in the current mode. Child: violence always, politics per the parent. */
+    /** Whether the pack should be on in the current mode. Child: violence and sexual content always, politics per the parent. */
     fun packWanted(ctx: Context, id: String): Boolean = when {
         !Parental.childMode(ctx) -> prefs(ctx).getBoolean("adult_pack_$id", true)
         id == "politics" -> prefs(ctx).getBoolean("child_pack_politics", true)

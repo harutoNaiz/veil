@@ -28,7 +28,8 @@ object WordLibrary {
     /** Built-in packs: a folder of compiled concepts under assets/packs/<id>/, switched on and off together. */
     val PACKS = listOf(
         Pack("politics", "Political content", "Political words, politicians, rallies, elections"),
-        Pack("violence", "Violence & gore", "Gore, wounds, dead bodies, violent scenes")
+        Pack("violence", "Violence & gore", "Gore, wounds, dead bodies, violent scenes"),
+        Pack("sexual", "Sexual & suggestive content", "Intimate scenes, kissing, lingerie, swimwear")
     )
 
     data class Pack(val id: String, val name: String, val note: String)

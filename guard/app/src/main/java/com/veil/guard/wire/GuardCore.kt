@@ -119,7 +119,7 @@ class GuardCore(
             layout,
             idleLookMs = IDLE_LOOK_MS,
             selfCaptureHold = false,
-            holdMsOverride = 3000,
+            holdMsOverride = 1200, // a moved/closed picture must not leave its cover behind (was 3000)
             videoCovers = com.veil.guard.wire.ml.LiveLanes.fullCover,
             instantProb = 0.97
         )

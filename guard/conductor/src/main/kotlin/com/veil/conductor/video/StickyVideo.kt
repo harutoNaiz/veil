@@ -24,7 +24,16 @@ class StickyVideo {
                 s.rect = grow(s.rect, m)
                 s.lostSince = null
             } else if (regions.none { inter(s.rect, it) > 0 }) {
-                if (s.lostSince == null) s.lostSince = tMs
+                // The video moved (full player <-> mini player, new page): follow it to a playing area no other
+                // cover holds, rather than leave a cover on whatever is now at the old place.
+                val moved = regions.filter { r -> stickies.none { it !== s && inter(it.rect, r) > 0 } }
+                    .maxByOrNull { it.w.toLong() * it.h }
+                if (moved != null) {
+                    s.rect = moved
+                    s.lostSince = null
+                } else if (s.lostSince == null) {
+                    s.lostSince = tMs
+                }
             }
         }
         stickies.removeAll {
@@ -108,7 +117,7 @@ class StickyVideo {
     }
 
     private companion object {
-        const val LOST_MS = 1500L
+        const val LOST_MS = 600L // video moved (mini player, new page): drop the old cover fast
         const val CLEAN_LOOKS = 4
         const val CLEAN_MS = 3000L
     }
