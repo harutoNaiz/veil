@@ -34,7 +34,8 @@ object MaskPlanJson {
             style,
             m["layer"]?.jsonPrimitive?.int ?: 0,
             m["peekable"]?.jsonPrimitive?.content == "true",
-            m["label"]?.jsonPrimitive?.content
+            m["label"]?.jsonPrimitive?.content,
+            (m["conceptIds"] as? kotlinx.serialization.json.JsonArray).orEmpty().map { it.jsonPrimitive.content }
         )
     }
 

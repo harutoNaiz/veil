@@ -29,6 +29,19 @@ class EventMapperTest {
         assertEquals(1234L, e.tMs)
     }
 
+    @Test fun ownOverlayWindowStateDropped() {
+        val m = EventMapper(FakeScroll(), "com.veil.guard") { it == "com.veil.guard.MainActivity" }
+        val overlay = raw(EventMapper.TYPE_WINDOW_STATE_CHANGED, pkg = "com.veil.guard")
+        assertNull(m.map(overlay, next))
+    }
+
+    @Test fun ownActivityWindowStateKept() {
+        val m = EventMapper(FakeScroll(), "com.veil.guard") { it == "com.veil.guard.MainActivity" }
+        val r = raw(EventMapper.TYPE_WINDOW_STATE_CHANGED, pkg = "com.veil.guard")
+        val e = m.map(r.copy(className = "com.veil.guard.MainActivity"), next) as WindowChanged
+        assertEquals("com.veil.guard", e.packageName)
+    }
+
     @Test fun windowStateNullPackageDropped() {
         assertNull(EventMapper(FakeScroll()).map(raw(EventMapper.TYPE_WINDOW_STATE_CHANGED, pkg = null), next))
     }

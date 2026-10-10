@@ -155,6 +155,26 @@ def test_auto_judge_matches_fixture(world):
         assert got == j["verdict"]
 
 
+def test_phone_settings_fixture(world):
+    """The phone-kit settings (PHONE_K / PHONE_MARGIN) the on-device Teacher also uses; spec
+    stays K=8."""
+    bank, vocab, expected, enc = world
+    assert (autocal.PHONE_K, autocal.PHONE_MARGIN) == (128, 0.04)
+    assert (autocal.K_COMPETITORS, autocal.AUTO_MARGIN) == (8, 0.0)
+    assert expected["phone"]
+    for p in expected["phone"]:
+        cc = autocal.compile_auto(
+            p["word"], enc, bank, vocab, also_hide=p["alsoHide"], margin=p["margin"], k=p["k"]
+        )
+        validate("CompiledConcept", cc)
+        assert [c["term"] for c in cc["auto"]["competitors"]] == p["competitors"]
+        assert cc["margin"] == cc["auto"]["margin"] == autocal.PHONE_MARGIN
+        assert len(cc["butNot"]) == p["butNot"] and len(cc["ignore"]) == p["ignore"]
+        assert len(cc["auto"]["competitors"]) <= 256
+        for v in p["verdicts"]:
+            assert judge.judge(np.array(v["vector"]), cc, v["mode"])[0] == v["verdict"]
+
+
 def test_old_cards_unchanged():
     cases = json.loads(GOLDEN.read_text(encoding="utf-8"))["cases"]
     assert cases

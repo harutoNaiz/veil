@@ -1,6 +1,9 @@
 package com.veil.guard.wire.ml
 
+import java.io.File
+import java.nio.file.Files
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ConceptPackTest {
@@ -35,5 +38,25 @@ class ConceptPackTest {
         assertEquals(listOf("kitten", "cat"), c.keywords["cats"])
         assertEquals(1, c.describer.size)
         assertEquals(0, c.finder.size)
+    }
+
+    @Test
+    fun loadRejectsDimMismatchWithWarn() {
+        val vec = "A".repeat(2048) // 1536 zero bytes = 768 f16
+        val good = one.replace(
+            "\"dim\":8,\"vectorF16\":\"AAAAAAAAAAAAAAAAAAAAAA==\"",
+            "\"dim\":768,\"vectorF16\":\"$vec\""
+        )
+            .replace("cats", "good")
+        val dir = Files.createTempDirectory("concepts").toFile()
+        File(dir, "a-toy.json").writeText(one)
+        File(dir, "b-good.json").writeText(good)
+        File(dir, "c-junk.json").writeText("{not json")
+        val warns = ArrayList<Pair<String, String>>()
+        val c = ConceptPack.load(dir) { what, why -> warns.add(what to why) }
+        assertEquals(listOf("good"), c.describer.map { it.conceptId })
+        assertEquals(2, warns.size)
+        assertTrue(warns[0].second.contains("a-toy.json") && warns[0].second.contains("does not match"))
+        assertEquals(null, ConceptPack.dimProblem(ConceptPack.parse(good)[0]))
     }
 }

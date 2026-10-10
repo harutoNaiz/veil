@@ -47,16 +47,20 @@ STRINGS = [
 
 
 def tok_json(name: str) -> Path:
+    hf_repo = HF
     if name == "siglip2":
-        return REPO / "data/forge/siglip2/tokenizer.json"
+        local = REPO / "data/forge/siglip2/tokenizer.json"
+        if local.is_file():
+            return local
+        hf_repo = "models--google--siglip2-base-patch16-224"  # data/ rebuilt: use the HF cache
     hf = Path(os.environ["HF_HOME"])
-    snaps = (hf / "hub" / HF / "snapshots", hf / HF / "snapshots")
+    snaps = (hf / "hub" / hf_repo / "snapshots", hf / hf_repo / "snapshots")
     for s in snaps:
         if s.is_dir():
             for d in sorted(s.iterdir()):
                 if (d / "tokenizer.json").is_file():
                     return d / "tokenizer.json"
-    raise SystemExit(f"toxicity tokenizer.json not found under {hf}")
+    raise SystemExit(f"{name} tokenizer.json not found under {hf}")
 
 
 def out_bin(name: str) -> Path:

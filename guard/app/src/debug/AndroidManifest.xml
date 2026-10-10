@@ -18,5 +18,12 @@
             android:name=".replay.ReplayActivity"
             android:exported="true"
             android:permission="android.permission.DUMP" />
+        <activity
+            android:name=".bench.BenchActivity"
+            android:exported="true"
+            android:permission="android.permission.DUMP" />
+        <uses-native-library
+            android:name="libcdsprpc.so"
+            android:required="false" />
     </application>
 </manifest>

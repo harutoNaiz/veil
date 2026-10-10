@@ -313,7 +313,7 @@
         },
         "competitors": {
           "type": "array",
-          "maxItems": 32,
+          "maxItems": 256,
           "items": {
             "$ref": "#/$defs/AutoCompetitor"
           },

@@ -320,3 +320,10 @@ def test_corrupt_cache_entry_is_recomputed(tmp_path, monkeypatch):
     out = run.embed_set(screens, stub_piece_fn, "k")
     assert len(out) == 1 and out[0][1].shape[1] == 768
     assert run._load_cache(bad, run._sig(screens[0].image)) is not None
+
+
+def test_compile_words_writes_one_file_per_word(tmp_path):
+    paths = teacher.compile_words(["cats", "fox"], tmp_path / "out", StubEncoder())
+    assert [p.name for p in paths] == ["cats.json", "fox.json"]
+    cc = json.loads(paths[0].read_text(encoding="utf-8"))
+    assert cc["conceptId"] == "cats" and len(cc["looksLike"]) == 5 and len(cc["butNot"]) == 4

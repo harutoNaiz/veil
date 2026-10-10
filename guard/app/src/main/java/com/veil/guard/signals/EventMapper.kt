@@ -1,13 +1,22 @@
 package com.veil.guard.signals
 
 /** Pure mapping from a copied-out [RawEvent] to a [UiEvent]. Never touches the accessibility tree. */
-class EventMapper(private val scroll: ScrollNormaliser = ScrollTracker()) {
+class EventMapper(
+    private val scroll: ScrollNormaliser = ScrollTracker(),
+    private val ownPackage: String = "com.veil.guard",
+    /** True when [className] is one of our own Activities; our overlay windows are not. */
+    private val isOwnActivity: (String?) -> Boolean = { false }
+) {
     fun map(raw: RawEvent, nextId: () -> Long): UiEvent? = when (raw.type) {
         TYPE_VIEW_SCROLLED -> mapScroll(raw, nextId)
 
         TYPE_WINDOW_STATE_CHANGED -> {
             val pkg = raw.packageName
             if (pkg == null) {
+                null
+            } else if (pkg == ownPackage && !isOwnActivity(raw.className)) {
+                // Our cover overlay (ACCESSIBILITY_OVERLAY) raises window-state events after each draw; that is not the
+                // user switching to Veil, so it must not pause or reset analysis.
                 null
             } else {
                 WindowChanged(nextId(), raw.tMs, pkg, raw.className, raw.windowId.takeIf { it >= 0 })

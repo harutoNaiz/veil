@@ -23,7 +23,8 @@ class CoverTouchLayer(private val service: AccessibilityService, private val log
     private val windows = HashMap<Int, View>()
 
     fun update(covers: List<Cover>) {
-        val wanted = covers.filter { it.peekable }.associateBy { it.maskId }
+        // Covers pass every touch straight to the app (owner decision): no touch windows, so no hold-to-peek for now.
+        val wanted = if (PASS_THROUGH) emptyMap() else covers.filter { it.peekable }.associateBy { it.maskId }
         windows.keys.filter { it !in wanted }.toList().forEach { windows.remove(it)?.let(wm::removeView) }
         for ((id, c) in wanted) {
             val params = paramsFor(c, touchable = true)
@@ -129,5 +130,10 @@ class CoverTouchLayer(private val service: AccessibilityService, private val log
                 override fun onCancelled(g: GestureDescription?) = restore()
             }
         if (!service.dispatchGesture(b.build(), cb, main)) restore()
+    }
+
+    private companion object {
+        /** True: covers never intercept input (taps, scrolls go straight to the app). */
+        const val PASS_THROUGH = true
     }
 }

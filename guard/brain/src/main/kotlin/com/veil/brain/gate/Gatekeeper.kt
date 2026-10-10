@@ -29,7 +29,8 @@ object Gatekeeper {
             ci("cut_tile_level", 40),
             ci("cut_pct", 60),
             ci("cut_global", 30),
-            ci("cut_min_tiles", 8)
+            ci("cut_min_tiles", 8),
+            ci("own_mask", 0) == 1
         )
         val skip = (s["skip_packages"] as? List<String>) ?: emptyList()
         val mp = ModeParams(
@@ -45,6 +46,7 @@ class GatekeeperPipeline(private val cp: ChangeParams, private val mp: ModeParam
     override var rateMul: Int = 1
     private var state = SchedState()
     private var ref: ByteArray? = null
+    private var refOwn: BooleanArray? = null
     private var dySinceRef = 0
     private var pkg: String? = null
     private val buf = ArrayList<UiEvent>()
@@ -77,7 +79,9 @@ class GatekeeperPipeline(private val cp: ChangeParams, private val mp: ModeParam
         val (dy, wc, screen) = fold()
         dySinceRef += dy
         val shift = Change.shiftRows(dySinceRef, frame.width, frame.height, frame.screenWidth)
-        val res = Change.detect(thumb, ref, shift, cp)
+        // Pixels under our own covers (now, or when the reference was taken) are not real screen change.
+        val curOwn = if (cp.ownMask) ownThumbMask(frame.ownOverlay, frame.screenWidth, frame.screenHeight) else null
+        val res = Change.detect(thumb, ref, shift, cp, curOwn, refOwn)
         var revealed: Rect? = null
         val rr = res.revealedRows
         if (rr != null) {
@@ -99,10 +103,12 @@ class GatekeeperPipeline(private val cp: ChangeParams, private val mp: ModeParam
         state = ns
         if (req != null) {
             ref = thumb
+            refOwn = curOwn
             dySinceRef = 0
             busyUntil = t + lookMs
         } else if (ref == null) {
             ref = thumb
+            refOwn = curOwn
         }
         val change: Record = linkedMapOf(
             "kind" to "change",

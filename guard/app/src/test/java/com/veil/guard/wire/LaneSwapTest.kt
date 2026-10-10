@@ -97,4 +97,16 @@ class LaneSwapTest {
         c.setMode("strict")
         assertEquals(2, c.buildCount)
     }
+
+    @Test fun throwingLaneDoesNotDropOtherLanes() {
+        val warns = ArrayList<Record>()
+        val swap = GuardCore.SwapLane { com.veil.conductor.DebugLog { warns.add(it) } }
+        val bad = Lane { throw ArrayIndexOutOfBoundsException("length=8 index=8") }
+        swap.current = listOf(bad, loud, bad)
+        val input = com.veil.conductor.LookInput(1, frame(1), Rect(0, 0, 10, 10), emptyList(), "balanced")
+        val out = swap.run(input)
+        assertEquals(1, out.size)
+        assertEquals("layer1", out[0].lane)
+        assertEquals(2, warns.count { it["what"] == "lane-failed" })
+    }
 }

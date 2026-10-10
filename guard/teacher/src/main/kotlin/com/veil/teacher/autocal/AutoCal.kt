@@ -21,6 +21,12 @@ object AutoCal {
     const val K_COMPETITORS = 8
     const val N_CHIPS = 6
     const val AUTO_MARGIN = 0.0
+
+    /** Phone-kit settings (autocal.py PHONE_K / PHONE_MARGIN); the spec constants above stay K=8, margin 0.0. */
+    const val PHONE_K = 128
+    const val PHONE_MARGIN = 0.04
+    private const val MAX_BUT_NOT = 32
+    private const val MAX_IGNORE = 16
     private const val SPACE = "siglip2-base-p16-224"
     private const val MODEL = "siglip2-base-text"
 
@@ -93,7 +99,9 @@ object AutoCal {
         alsoHide: List<String>,
         enc: TextEncoder?,
         bank: BankFile,
-        vocab: VocabFile
+        vocab: VocabFile,
+        k: Int = PHONE_K,
+        margin: Double = PHONE_MARGIN
     ): Pair<CompiledConcept, List<String>> {
         val text = collapse(word)
         val idx = vocab.lookup(text)
@@ -124,7 +132,7 @@ object AutoCal {
             .filter { vocab.entries[it].kind == "noun" && it !in rel && it !in skip }
             .map { it to dot(e, vocab.rows[it]) }
             .sortedWith(compareBy({ -it.second }, { it.first }))
-            .take(K_COMPETITORS)
+            .take(k)
             .map { it.first }
         val chips = rank(emptySet()).take(N_CHIPS).map { vocab.entries[it].name }
         val ranked = rank(positives)
@@ -141,12 +149,12 @@ object AutoCal {
                 enc
             )
         }
-        val butNot = comps.dropLast(ignores.size)
-        val ignore = comps.takeLast(ignores.size)
+        val butNot = comps.dropLast(ignores.size).take(MAX_BUT_NOT)
+        val ignore = comps.takeLast(ignores.size).take(MAX_IGNORE)
         val rawAuto = linkedMapOf<String, Any?>(
             "rule" to RULE,
             "bankId" to bank.bankId,
-            "margin" to AUTO_MARGIN,
+            "margin" to margin,
             "excluded" to excluded,
             "chips" to chips,
             "positives" to pos.map { termMap(it) },
@@ -169,7 +177,7 @@ object AutoCal {
             "calibrationOffset" to 0.0,
             "userOffset" to 0.0,
             "thresholds" to th,
-            "margin" to AUTO_MARGIN,
+            "margin" to margin,
             "auto" to rawAuto
         )
         val cc = CompiledConcept(
@@ -180,9 +188,9 @@ object AutoCal {
             0.0,
             0.0,
             th,
-            AUTO_MARGIN,
+            margin,
             raw = raw,
-            auto = AutoRule(pos, comps, AUTO_MARGIN, chips)
+            auto = AutoRule(pos, comps, margin, chips)
         )
         return cc to chips
     }

@@ -21,9 +21,17 @@ class Conductor(
     private val log: DebugLog,
     private val counters: Counters,
     private val skipApps: Set<String>,
-    private val layout: () -> List<LayoutNode>
+    private val layout: () -> List<LayoutNode>,
+    /** Re-plans on the last frame when a look delivers findings and no new frame is waiting (static screens). */
+    private val autoSettle: Boolean = true,
+    /** > 0: a still screen still gets a full look every this many ms (live app); 0 = only the gate decides (tapes). */
+    private val idleLookMs: Long = 0,
+    /** See BrainPipeline.selfCaptureHold. */
+    selfCaptureHold: Boolean = true,
+    holdMsOverride: Int = 0
 ) {
-    private val pipeline = BrainPipeline(mode, paramsJson)
+    private val pipeline =
+        BrainPipeline(mode, paramsJson, selfCaptureHold = selfCaptureHold, holdMsOverride = holdMsOverride)
     private val lock = Any()
     private val slot = AtomicReference<Frame?>(null)
 
@@ -34,8 +42,10 @@ class Conductor(
         private set
 
     private var lastMeta: FrameMeta? = null
+    private var lastFrame: Frame? = null
     private var lastT = 0L
     private var lookId = 0
+    private var lastLookMs = Long.MIN_VALUE / 2
     private var looksTotal = 0
     private val lookTimes = ArrayDeque<Long>()
     private var aiLast = 0L
@@ -93,13 +103,33 @@ class Conductor(
 
     private fun step(f: Frame) {
         lastMeta = f.meta
+        lastFrame = f
         lastT = maxOf(lastT, f.meta.tMs)
         if (paused) {
             framesSkippedPaused++
             return
         }
         framesAnalysed++
-        for (r in pipeline.step(f.thumb, f.meta)) {
+        handle(f, pipeline.step(f.thumb, f.meta))
+        if (idleLookMs > 0 && !worker.busy && f.meta.tMs - lastLookMs >= idleLookMs) {
+            val whole = mapOf("x" to 0, "y" to 0, "w" to f.meta.screenWidth, "h" to f.meta.screenHeight)
+            startLook(f, linkedMapOf("look" to true, "rect" to whole, "reason" to "idle"))
+        }
+    }
+
+    /**
+     * A still screen sends no further frame, so findings would never reach a plan. Re-step the brain on the last
+     * frame at look-start + AI time (no motion, same thumb). Also fires the confirm look for tentative tracks.
+     */
+    private fun settle(tMs: Long) {
+        val f = lastFrame ?: return
+        if (paused) return
+        lastT = maxOf(lastT, tMs)
+        handle(f, pipeline.replan(f.meta, tMs))
+    }
+
+    private fun handle(f: Frame, records: List<Record>) {
+        for (r in records) {
             when (r["kind"]) {
                 "look" -> if (r["look"] == true) startLook(f, r)
 
@@ -117,6 +147,7 @@ class Conductor(
             return
         }
         val id = ++lookId
+        lastLookMs = f.meta.tMs
 
         @Suppress("UNCHECKED_CAST")
         val lr = look["rect"] as Map<String, Number>
@@ -132,8 +163,16 @@ class Conductor(
             )
         )
         val nodes = layout()
+        log.write(
+            linkedMapOf(
+                "kind" to "layout",
+                "lookId" to id,
+                "nodes" to nodes.filter { it.kind == "image" || it.kind == "video" || it.kind == "post" }.take(24)
+                    .map { linkedMapOf("k" to it.kind, "rect" to it.rect.toMap()) }
+            )
+        )
         worker.submit(
-            { lanes.flatMap { it.run(LookInput(id, f, rect, nodes, mode)) } },
+            { runLanesIsolated(lanes, LookInput(id, f, rect, nodes, mode), log) },
             { found, aiMs -> done(found, aiMs, f.meta.tMs) }
         )
     }
@@ -147,7 +186,10 @@ class Conductor(
                         "kind" to "finding",
                         "findingId" to x.findingId,
                         "conceptId" to x.conceptId,
-                        "lane" to x.lane
+                        "lane" to x.lane,
+                        "decision" to x.decision,
+                        "p" to Math.round(x.probability * 1000) / 1000.0,
+                        "rect" to x.rect.toMap()
                     )
                 )
             }
@@ -157,6 +199,7 @@ class Conductor(
             aiLast = aiMs
             aiSum += aiMs
             aiN++
+            if (autoSettle && found.isNotEmpty() && slot.get() == null) settle(tMs + maxOf(aiMs, 1L))
             val s =
                 linkedMapOf<String, Any?>(
                     "kind" to "stats", "tMs" to lastT, "mode" to mode, "looksTotal" to looksTotal,

@@ -116,8 +116,54 @@ def make_fixture(out: Path = HERE) -> None:
         "queries": queries,
         "vocabThr": [[float(x) for x in row] for row in thr],
         "judge": judges,
+        "phone": _phone_cases(plans, enc, bank, vocab),
     }
     (out / "expected.json").write_text(json.dumps(expected, indent=1), encoding="utf-8")
+
+
+def _phone_cases(plans, enc, bank, vocab) -> list[dict]:
+    """Phone settings (PHONE_K / PHONE_MARGIN) plus a small k that truncates; no rng, so the cases
+    above are unchanged. Kotlin AutoCal.compileAuto defaults to the phone settings."""
+    out = []
+    for word, also in plans:
+        if also is None:
+            also = autocal.chips_for(vocab, enc, word)[:2]
+        for k in (autocal.PHONE_K, 12):
+            cc = autocal.compile_auto(
+                word, enc, bank, vocab, also_hide=also, margin=autocal.PHONE_MARGIN, k=k
+            )
+            auto = cc["auto"]
+            q = judge._matrix([auto["positives"][0]["embedding"]])[0]
+            c0 = judge._matrix([auto["competitors"][0]["embedding"]])[0]
+            mix = (q + c0) / np.linalg.norm(q + c0)
+            verdicts = [
+                {"vector": [float(x) for x in v], "mode": m, "verdict": judge.judge(v, cc, m)[0]}
+                for v, m in ((q, "balanced"), (c0, "light"), (mix, "strict"))
+            ]
+            out.append(
+                {
+                    "word": word,
+                    "alsoHide": list(also),
+                    "vector": [
+                        float(x)
+                        for x in (
+                            vocab.rows[autocal.lookup(vocab, word)]
+                            if autocal.lookup(vocab, word) is not None
+                            else autocal.ensemble(enc, word)
+                        )
+                    ],
+                    "k": k,
+                    "margin": autocal.PHONE_MARGIN,
+                    "competitors": [c["term"] for c in auto["competitors"]],
+                    "chips": auto["chips"],
+                    "butNot": len(cc["butNot"]),
+                    "ignore": len(cc["ignore"]),
+                    "topMargin": cc["margin"],
+                    "autoMargin": auto["margin"],
+                    "verdicts": verdicts,
+                }
+            )
+    return out
 
 
 def _judge_cases(qi: int, cc: dict, q: np.ndarray, rng) -> list[dict]:

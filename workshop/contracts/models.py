@@ -774,7 +774,7 @@ class CompiledConceptAuto(BaseModel):
     """
     Positive terms.
     """
-    competitors: list[CompiledConceptAutoCompetitor] = Field(..., max_length=32)
+    competitors: list[CompiledConceptAutoCompetitor] = Field(..., max_length=256)
     """
     Competitor terms.
     """

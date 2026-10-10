@@ -135,7 +135,7 @@ class ReplayParityTest {
             Conductor(
                 mode, params, listOf(ScriptedLane(byFrame)), worker, overlay, {},
                 { if (it["kind"] == "look") worker.tag = (it["frameId"] as Number).toInt() }, Counters(), emptySet(),
-                { emptyList() }
+                { emptyList() }, false
             )
         val delivered = HashSet<Int>()
         var direct = 0

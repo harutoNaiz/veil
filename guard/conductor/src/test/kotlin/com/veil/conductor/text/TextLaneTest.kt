@@ -61,4 +61,20 @@ class TextLaneTest {
         val f = lane(Counters(), kw = kw).run(input(listOf(post, t, miss)))
         assertEquals(listOf("spoilers"), f.map { it.conceptId })
     }
+
+    @Test
+    fun tinyImagesSkippedAndOcrFailureDoesNotKillLane() {
+        val c = Counters()
+        val calls = ArrayList<Rect>()
+        val tiny = LayoutNode("image", Rect(0, 0, 90, 90)) // 30 px in this 1/3-scale frame
+        val ok = LayoutNode("image", Rect(0, 100, 300, 300))
+        val ok2 = LayoutNode("image", Rect(0, 500, 200, 200))
+        val l = lane(c, { _, r ->
+            calls.add(r)
+            if (r == ok.rect) error("boom") else "you are stupid"
+        })
+        val f = l.run(input(listOf(post, tiny, ok, ok2)))
+        assertEquals(listOf(ok.rect, ok2.rect), calls)
+        assertEquals(1, f.size)
+    }
 }

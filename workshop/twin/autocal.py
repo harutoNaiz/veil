@@ -22,7 +22,9 @@ TEMPLATES = [
 Q_PER_MILLE = {"light": 999, "balanced": 995, "strict": 980}
 K_COMPETITORS = 8
 N_CHIPS = 6
-AUTO_MARGIN = 0.0
+AUTO_MARGIN = 0.0  # spec constant (the on-device Teacher still writes this)
+PHONE_MARGIN = 0.04  # phone-kit CLI default, from phone_eval margin sweep
+PHONE_K = 128  # phone-kit competitor count (spec K=8): K=8 let rooster/dog tiles fire cats
 AUTO_NEAR_BAND = 0.02
 IGNORE = teacher.IGNORE
 RULE = "null-quantile-v2"
@@ -80,7 +82,12 @@ def _rel(vocab: Vocab, idx: int | None, word: str) -> set[int]:
 
 
 def competitors(
-    vocab: Vocab, q: np.ndarray, idx: int | None, word: str, positives: set[int] = frozenset()
+    vocab: Vocab,
+    q: np.ndarray,
+    idx: int | None,
+    word: str,
+    positives: set[int] = frozenset(),
+    k: int | None = None,
 ) -> list[int]:
     """Top K noun entries by cosine (not related, not positive), then the ignore entries."""
     entries = vocab.meta["entries"]
@@ -89,7 +96,7 @@ def competitors(
     cand = [i for i, e in enumerate(entries) if e["kind"] == "noun" and i not in skip]
     cand.sort(key=lambda i: (-sims[i], i))
     ign = [i for i, e in enumerate(entries) if e["kind"] == "ignore"]
-    return cand[:K_COMPETITORS] + ign
+    return cand[: K_COMPETITORS if k is None else k] + ign
 
 
 def chips_for(vocab: Vocab, enc, word: str) -> list[str]:
@@ -111,7 +118,15 @@ def _emb(enc, vec: np.ndarray, term: str) -> dict:
     }
 
 
-def compile_auto(word: str, enc, bank: Bank, vocab: Vocab, also_hide=()) -> dict:
+def compile_auto(
+    word: str,
+    enc,
+    bank: Bank,
+    vocab: Vocab,
+    also_hide=(),
+    margin: float = AUTO_MARGIN,
+    k: int | None = None,
+) -> dict:
     """CompiledConcept v1.0 with an `auto` rule. `also_hide` = chip names turned into positives."""
     entries = vocab.meta["entries"]
     idx = lookup(vocab, word)
@@ -139,11 +154,11 @@ def compile_auto(word: str, enc, bank: Bank, vocab: Vocab, also_hide=()) -> dict
                 dict(zip(MODES, map(float, vocab.thr[j]), strict=True)),
             )
         )
-    comp = competitors(vocab, q, idx, word, pos_idx | ({idx} if idx is not None else set()))
+    comp = competitors(vocab, q, idx, word, pos_idx | ({idx} if idx is not None else set()), k)
     auto = {
         "rule": RULE,
         "bankId": bank.bank_id,
-        "margin": AUTO_MARGIN,
+        "margin": margin,
         "excluded": n_excl,
         "chips": chips,
         "positives": [
@@ -187,6 +202,58 @@ def compile_auto(word: str, enc, bank: Bank, vocab: Vocab, also_hide=()) -> dict
         "calibrationOffset": 0.0,
         "userOffset": 0.0,
         "thresholds": {m: float(np.clip(p0[m], 0.0, 1.0)) for m in MODES},
-        "margin": AUTO_MARGIN,
+        "margin": margin,
         "auto": auto,
     }
+
+
+def compile_words_auto(words, out, enc, bank_dir, also_hide=(), margin=PHONE_MARGIN, k=None):
+    """Compile each word with the bank into <out>/<conceptId>.json. Returns the paths."""
+    import json
+    from pathlib import Path
+
+    from workshop.twin.bank import bankio
+
+    bank_dir, out = Path(bank_dir), Path(out)
+    bank = bankio.read_bank(bank_dir / "bank.bin")
+    vocab = bankio.read_vocab(bank_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for word in words:
+        cc = compile_auto(word, enc, bank, vocab, also_hide=also_hide, margin=margin, k=k)
+        path = out / f"{cc['conceptId']}.json"
+        path.write_text(json.dumps(cc, indent=2), encoding="utf-8")
+        paths.append(path)
+    return paths
+
+
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+    import json
+    from pathlib import Path
+
+    ap = argparse.ArgumentParser(prog="workshop.twin.autocal")
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    c = sub.add_parser("compile", help="compile words into auto CompiledConcept JSON files")
+    c.add_argument("--bank", required=True, type=Path)
+    c.add_argument("--out", required=True, type=Path)
+    c.add_argument("--also-hide", nargs="*", default=[])
+    c.add_argument("--margin", type=float, default=PHONE_MARGIN)
+    c.add_argument("--k", type=int, default=PHONE_K)
+    c.add_argument("words", nargs="+")
+    a = ap.parse_args(argv)
+    from workshop.forge.siglip2.runtime import OnnxDescriber
+
+    for p in compile_words_auto(
+        a.words, a.out, OnnxDescriber(), a.bank, a.also_hide, a.margin, a.k
+    ):
+        d = json.loads(p.read_text(encoding="utf-8"))["auto"]
+        print(
+            f"{p} positives={len(d['positives'])} competitors={len(d['competitors'])} "
+            f"thr={d['positives'][0]['thresholds']} excluded={d['excluded']} chips={d['chips']}"
+        )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

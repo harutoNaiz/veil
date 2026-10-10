@@ -1,11 +1,11 @@
 {
  "n": 30000,
  "dim": 768,
- "bankId": "2f82a5e9b31fda91",
+ "bankId": "823505690842971c",
  "sha256": {
-  "bank.bin": "2f82a5e9b31fda911323651ebee44b6a2c76c0c4d9a836d9c7395a0e8f37ab61",
-  "vocab.bin": "4338e49ec068d4d89db49e50f9d549800cbb04fd537398f6a031c4d9bb3d0414",
-  "vocab.json": "638c1d75881166017b3001857d346c8c75df78285883609b46092d3f3c3c5a83"
+  "bank.bin": "823505690842971c1e030bb88926e3cff894e23d58a06d33eceb4357ea25afac",
+  "vocab.bin": "f0c794b9b56ed2acb18f6f27db084c2c42ac642dc8399c8809205b93e3a59086",
+  "vocab.json": "1656ae64f887b5aeff224fc4b88c304c4bad377177e2494f7e5f16c697da47ca"
  },
  "sources": {
   "coco": 28500,

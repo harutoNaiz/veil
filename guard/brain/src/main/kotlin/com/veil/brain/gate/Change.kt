@@ -16,7 +16,9 @@ data class ChangeParams(
     val cutTileLevel: Int = 40,
     val cutPct: Int = 60,
     val cutGlobal: Int = 30,
-    val cutMinTiles: Int = 8
+    val cutMinTiles: Int = 8,
+    /** Ignore pixels under our own covers (params "own_mask": 1). Off in the twin/golden tapes, whose pixels never hold a cover. */
+    val ownMask: Boolean = false
 )
 
 class ChangeResult(
@@ -37,7 +39,14 @@ object Change {
         return if (num < 0) -mag else mag
     }
 
-    fun detect(cur: ByteArray, ref: ByteArray?, dyRows: Int, p: ChangeParams = ChangeParams()): ChangeResult {
+    fun detect(
+        cur: ByteArray,
+        ref: ByteArray?,
+        dyRows: Int,
+        p: ChangeParams = ChangeParams(),
+        curOwn: BooleanArray? = null,
+        refOwn: BooleanArray? = null
+    ): ChangeResult {
         if (ref == null) {
             val box = intArrayOf(0, 0, THUMB_W, THUMB_H)
             return ChangeResult(List(ROWS * COLS) { 255 }, ROWS * COLS, false, 0, null, box, 0)
@@ -57,7 +66,10 @@ object Change {
             for (x in 0 until THUMB_W) {
                 val c = cur[y * THUMB_W + x].toInt() and 0xFF
                 val r = ref[(y - dyRows) * THUMB_W + x].toInt() and 0xFF
-                diff[y * THUMB_W + x] = Math.abs(c - r)
+                val own =
+                    (curOwn != null && curOwn[y * THUMB_W + x]) ||
+                        (refOwn != null && refOwn[(y - dyRows) * THUMB_W + x])
+                diff[y * THUMB_W + x] = if (own) 0 else Math.abs(c - r)
             }
         }
         val scores = ArrayList<Int>()
@@ -111,4 +123,18 @@ object Change {
         val sy1 = minOf(box[3] * h * sw / (THUMB_H * w), sh)
         return Rect(sx0.toInt(), sy0.toInt(), (sx1 - sx0).toInt(), (sy1 - sy0).toInt())
     }
+}
+
+/** Thumb-grid mask of our own cover rects (screen px), rounded outward; null when there are none. */
+fun ownThumbMask(own: List<Rect>, screenW: Int, screenH: Int): BooleanArray? {
+    if (own.isEmpty() || screenW <= 0 || screenH <= 0) return null
+    val m = BooleanArray(THUMB_W * THUMB_H)
+    for (r in own) {
+        val x0 = maxOf(0, Math.floorDiv(r.x.toLong() * THUMB_W, screenW.toLong()).toInt())
+        val x1 = minOf(THUMB_W, Math.floorDiv((r.x + r.w).toLong() * THUMB_W + screenW - 1, screenW.toLong()).toInt())
+        val y0 = maxOf(0, Math.floorDiv(r.y.toLong() * THUMB_H, screenH.toLong()).toInt())
+        val y1 = minOf(THUMB_H, Math.floorDiv((r.y + r.h).toLong() * THUMB_H + screenH - 1, screenH.toLong()).toInt())
+        for (y in y0 until y1) for (x in x0 until x1) m[y * THUMB_W + x] = true
+    }
+    return m
 }

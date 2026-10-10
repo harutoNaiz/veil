@@ -33,11 +33,20 @@ object Judge {
     const val NEAR_MISS_BAND = 0.1
     private val MODES = setOf("light", "balanced", "strict")
 
-    private fun matrix(es: List<Embedding>): List<DoubleArray> = es.map { e ->
+    private val decodes = java.util.concurrent.atomic.AtomicLong()
+
+    /** How many f16 decodes have run since start; tests use it to prove decoding is not repeated per call. */
+    val decodeCount: Long get() = decodes.get()
+
+    /** The one place base64 f16 becomes a unit vector; reached through [Embedding.unit], which caches it. */
+    fun decodeUnit(e: Embedding): DoubleArray {
+        decodes.incrementAndGet()
         val v = F16.decode(e.vectorF16, e.dim).map { it.toDouble() }.toDoubleArray()
         val n = Math.max(Math.sqrt(v.sumOf { it * it }), 1e-12)
-        DoubleArray(v.size) { v[it] / n }
+        return DoubleArray(v.size) { v[it] / n }
     }
+
+    private fun matrix(es: List<Embedding>): List<DoubleArray> = es.map { it.unit }
 
     private fun dot(a: DoubleArray, b: DoubleArray): Double {
         var s = 0.0
@@ -51,14 +60,13 @@ object Judge {
 
     /** Auto path: per-word null-quantile thresholds; calibrationOffset and userOffset are ignored here. */
     private fun judgeAuto(vecs: List<DoubleArray>, cc: CompiledConcept, a: AutoRule, mode: String): List<Verdict> {
-        val pos = a.positives.map { matrix(listOf(it.embedding))[0] }
-        val comp = a.competitors.map { matrix(listOf(it.embedding))[0] }
-        val centroid = cc.exampleCentroid?.let { matrix(listOf(it))[0] }
+        val pos = a.positives.map { it.embedding.unit }
+        val comp = a.competitors.map { it.embedding.unit }
+        val centroid = cc.exampleCentroid?.unit
+        val compThr = DoubleArray(comp.size) { a.competitors[it].thresholds.getValue("balanced") }
         return vecs.map { v ->
             val s = pos.map { dot(v, it) }
-            val c = a.competitors.indices.maxOfOrNull {
-                dot(v, comp[it]) - a.competitors[it].thresholds.getValue("balanced")
-            } ?: -1e9
+            val c = comp.indices.maxOfOrNull { dot(v, comp[it]) - compThr[it] } ?: -1e9
             var hide = false
             var bi = 0
             var bd = Double.NEGATIVE_INFINITY
@@ -95,7 +103,7 @@ object Judge {
         val mn = matrix(cc.butNot)
         val mi = matrix(cc.ignore)
         val thr = cc.thresholds.getValue(mode)
-        val centroid = cc.exampleCentroid?.let { matrix(listOf(it))[0] }
+        val centroid = cc.exampleCentroid?.unit
         return vecs.map { v ->
             val sl = best(v, ml)
             val sn = best(v, mn)

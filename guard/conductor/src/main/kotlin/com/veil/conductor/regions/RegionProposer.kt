@@ -9,7 +9,9 @@ import com.veil.conductor.Source
 class RegionProposer(
     private val grid: Pair<Int, Int> = 3 to 6,
     private val overlap: Double = 0.25,
-    private val tallCrops: Int = 3
+    private val tallCrops: Int = 3,
+    /** Live app: page images smaller than this (icons, avatars, buttons) are not pieces. */
+    private val minLayoutSidePx: Int = 0
 ) {
     private fun rnd(v: Double): Int = Math.rint(v).toInt()
 
@@ -27,12 +29,23 @@ class RegionProposer(
         return if (w <= 0 || h <= 0) 0.0 else w.toDouble() * h / (a.w.toDouble() * a.h)
     }
 
+    /** A big image/video node may span flat letterbox bars around the photo: cut them off so the piece is the photo. */
+    private fun visible(input: LookInput, kind: String, r: Rect): Rect {
+        val argb = input.frame.argb ?: return r
+        if (kind == "post") return r
+        val m = input.frame.meta
+        if (r.w.toLong() * r.h * 5 < m.screenWidth.toLong() * m.screenHeight) return r
+        return BarTrim.trim(argb, m.width, m.height, m.screenWidth, m.screenHeight, r)
+    }
+
     fun propose(input: LookInput, finderBoxes: List<Rect>): List<Piece> {
         val look = input.lookId
         val out = ArrayList<Piece>()
         input.layout.forEachIndexed { i, n ->
-            if (n.kind == "image" || n.kind == "video" || n.kind == "post") {
-                out.add(Piece("L$i", n.rect, Source.LAYOUT, n.kind, look))
+            if ((n.kind == "image" || n.kind == "video" || n.kind == "post") &&
+                minOf(n.rect.w, n.rect.h) >= minLayoutSidePx
+            ) {
+                out.add(Piece("L$i", visible(input, n.kind, n.rect), Source.LAYOUT, n.kind, look))
             }
         }
         finderBoxes.forEachIndexed { i, r -> out.add(Piece("f$i", r, Source.FINDER, "object", look)) }

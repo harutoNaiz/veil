@@ -12,6 +12,9 @@ import com.veil.conductor.TextClassifier
 
 private const val WB = "\\b"
 
+/** ML Kit InputImage minimum side, in frame pixels. */
+const val MIN_OCR_PX = 32
+
 class TextLane(
     private val concepts: Concepts,
     private val tox: TextClassifier?,
@@ -36,9 +39,18 @@ class TextLane(
         val cands = ArrayList<Pair<LayoutNode, String>>()
         for (n in input.layout.filter { it.kind == "text" }) n.text?.let { cands.add(n to it) }
         if (ocr != null) {
-            for (n in input.layout.filter { it.kind == "image" }.sortedByDescending { it.rect.w * it.rect.h }.take(4)) {
+            val fm = input.frame.meta
+            val reader: Ocr = ocr
+            // ML Kit rejects inputs under 32 px a side; judge in frame pixels, not screen pixels.
+            val big = { n: LayoutNode ->
+                n.rect.w.toLong() * fm.width >= MIN_OCR_PX.toLong() * fm.screenWidth &&
+                    n.rect.h.toLong() * fm.height >= MIN_OCR_PX.toLong() * fm.screenHeight
+            }
+            val imgs = input.layout.filter { it.kind == "image" && big(it) }
+            for (n in imgs.sortedByDescending { it.rect.w * it.rect.h }.take(4)) {
                 counters.add("ocrCalls")
-                ocr.read(input.frame, n.rect)?.let { cands.add(n to it) }
+                // One bad piece must not kill the whole text lane for this look.
+                runCatching { reader.read(input.frame, n.rect) }.getOrNull()?.let { cands.add(n to it) }
             }
         }
         val posts = input.layout.filter { it.kind == "post" }
@@ -76,7 +88,36 @@ class TextLane(
                     rect, "post", "text"
                 )
             )
+            // A matching title or caption hides its picture too (video card, post): the nearest big image just
+            // above or below the text that shares its column.
+            (if (node.kind == "text") cardPicture(node.rect, input.layout) else null)?.let { pic ->
+                out.add(
+                    Finding(
+                        "tx-${input.lookId}-${out.size}-pic", m.frameId, input.lookId, m.tMs, concept, 2, "hide", p,
+                        pic, "object", "text"
+                    )
+                )
+            }
         }
         return out
+    }
+
+    private fun cardPicture(t: Rect, layout: List<com.veil.conductor.LayoutNode>): Rect? = layout.asSequence()
+        .filter { (it.kind == "image" || it.kind == "video") && minOf(it.rect.w, it.rect.h) >= CARD_PIC_MIN_PX }
+        .filter { !inside(t, it.rect) } // text read from (or lying on) this picture: it is already covered
+        .filter { n ->
+            val ov = minOf(n.rect.x + n.rect.w, t.x + t.w) - maxOf(n.rect.x, t.x)
+            ov * 10 >= minOf(n.rect.w, t.w) * 4
+        }
+        .map { n -> n.rect to gap(n.rect, t) }
+        .filter { it.second <= CARD_GAP_PX }
+        .minByOrNull { it.second }?.first
+
+    /** Vertical distance between two rects (0 when they overlap vertically). */
+    private fun gap(a: Rect, b: Rect): Int = maxOf(0, maxOf(a.y, b.y) - minOf(a.y + a.h, b.y + b.h))
+
+    private companion object {
+        const val CARD_PIC_MIN_PX = 300 // smaller images are icons, avatars, buttons
+        const val CARD_GAP_PX = 400
     }
 }

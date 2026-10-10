@@ -32,13 +32,74 @@ class AutoCalParityTest {
         override fun encode(phrases: List<String>) = phrases.map { FloatArray(v.size) { i -> v[i].toFloat() } }
     }
 
-    private fun compile(q: JsonObject) = AutoCal.compileAuto(
-        q["word"]!!.jsonPrimitive.content,
-        strs(q["alsoHide"]!!.jsonArray),
-        enc(dv(q["vector"]!!.jsonArray)),
-        bank,
-        vocab
-    )
+    /** Spec settings (K=8, margin 0.0) unless the case says otherwise; the fixture's top-level queries are spec. */
+    private fun compile(q: JsonObject, k: Int = AutoCal.K_COMPETITORS, margin: Double = AutoCal.AUTO_MARGIN) =
+        AutoCal.compileAuto(
+            q["word"]!!.jsonPrimitive.content,
+            strs(q["alsoHide"]!!.jsonArray),
+            enc(dv(q["vector"]!!.jsonArray)),
+            bank,
+            vocab,
+            k,
+            margin
+        )
+
+    @Test
+    fun phoneDefaultsAreTheLaptopPhoneSettings() {
+        assertEquals(128, AutoCal.PHONE_K)
+        assertEquals(0.04, AutoCal.PHONE_MARGIN, 0.0)
+        assertEquals(8, AutoCal.K_COMPETITORS)
+        assertEquals(0.0, AutoCal.AUTO_MARGIN, 0.0)
+    }
+
+    @Test
+    fun phoneSettingsMatchPython() {
+        val cases = expected["phone"]!!.jsonArray
+        assertEquals(6, cases.size)
+        for (pe in cases) {
+            val p = pe.jsonObject
+            val word = p["word"]!!.jsonPrimitive.content
+            val k = p["k"]!!.jsonPrimitive.int
+            val margin = p["margin"]!!.jsonPrimitive.double
+            val (cc, chips) = compile(p, k, margin)
+            assertEquals("chips $word/$k", strs(p["chips"]!!.jsonArray), chips)
+            assertEquals(
+                "competitors $word/$k",
+                strs(p["competitors"]!!.jsonArray),
+                cc.auto!!.competitors.map {
+                    it.term
+                }
+            )
+            assertEquals(margin, cc.margin, 0.0)
+            assertEquals(margin, cc.auto!!.margin, 0.0)
+            assertEquals(p["butNot"]!!.jsonPrimitive.int, cc.butNot.size)
+            assertEquals(p["ignore"]!!.jsonPrimitive.int, cc.ignore.size)
+            assertEquals(margin, (cc.raw["auto"] as Map<*, *>)["margin"])
+            assertEquals(margin, cc.raw["margin"])
+            for (ve in p["verdicts"]!!.jsonArray) {
+                val j = ve.jsonObject
+                val v = Judge.judge(listOf(dv(j["vector"]!!.jsonArray)), cc, j["mode"]!!.jsonPrimitive.content)[0]
+                val e = j["verdict"]!!.jsonObject
+                assertEquals("decision $word/$k", e["decision"]!!.jsonPrimitive.content, v.decision)
+                assertEquals(e["score"]!!.jsonPrimitive.double, v.score, 1e-6)
+                assertEquals(e["margin"]!!.jsonPrimitive.double, v.margin, 1e-6)
+            }
+        }
+    }
+
+    @Test
+    fun defaultCompileIsPhoneSettings() {
+        val q = expected["queries"]!!.jsonArray[0].jsonObject
+        val (cc, _) = AutoCal.compileAuto(
+            q["word"]!!.jsonPrimitive.content,
+            strs(q["alsoHide"]!!.jsonArray),
+            enc(dv(q["vector"]!!.jsonArray)),
+            bank,
+            vocab
+        )
+        assertEquals(AutoCal.PHONE_MARGIN, cc.auto!!.margin, 0.0)
+        assertEquals(true, cc.auto!!.competitors.size <= 256)
+    }
 
     @Test
     fun queriesMatchPython() {

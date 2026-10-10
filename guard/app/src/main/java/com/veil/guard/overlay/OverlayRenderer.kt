@@ -93,6 +93,7 @@ class OverlayRenderer :
         val display = wm?.defaultDisplay
         val ds = DisplayState(m.widthPixels, m.heightPixels, display?.rotation ?: Surface.ROTATION_0)
         v.crops = OverlayHub.crops
+        v.samples = OverlayHub.samples
         v.setCovers(plan.covers.mapNotNull { c -> CoverGeometry.toDisplay(c.rect, plan, ds)?.let { c to it } })
         val rects = v.drawnRects()
         val period = 1000.0 / (display?.refreshRate ?: 60f)

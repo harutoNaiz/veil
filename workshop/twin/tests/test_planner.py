@@ -54,7 +54,8 @@ def test_light_drop_and_layers():
         trk(3, 160, 160, 100, 100, layer=1),
     ]
     p = mk(ov)
-    assert [(m["layer"], m["trackIds"]) for m in p["masks"]] == [(1, [3]), (2, [1, 2])]
+    # 1 and 2 overlap by 25% only: two objects, two covers (genuine-overlap merge, no grid slabs).
+    assert [(m["layer"], m["trackIds"]) for m in p["masks"]] == [(1, [3]), (2, [1]), (2, [2])]
 
 
 def _inside(r, m):

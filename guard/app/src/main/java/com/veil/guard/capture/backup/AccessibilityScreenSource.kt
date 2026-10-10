@@ -13,9 +13,11 @@ import com.veil.guard.capture.FrameSink
 import com.veil.guard.capture.FrameSize
 import com.veil.guard.capture.FrameSource
 import com.veil.guard.capture.FrameSourceKind
+import com.veil.guard.capture.OwnCoverBridge
 import com.veil.guard.capture.PxRect
 import com.veil.guard.capture.ScreenshotBridge
 import com.veil.guard.capture.blind.BlindSpotDetector
+import com.veil.guard.wire.WireHub
 
 /** Frame produced by the accessibility path: a downscaled bitmap owned by the frame until close(). */
 private class BitmapFrame(
@@ -47,6 +49,9 @@ class AccessibilityScreenSource(
     private var handler: Handler? = null
     private var sink: FrameSink? = null
     private var frameId = 0L
+    private var unchangedSince = 0L
+    private var lastDeliveredMs = 0L
+    private var unchangedLogged = false
 
     @Volatile private var running = false
 
@@ -96,7 +101,7 @@ class AccessibilityScreenSource(
         val provider = bridge.provider
         if (!running || provider == null) return
         scheduler.onRequested(SystemClock.uptimeMillis())
-        provider.takeScreenshot { buffer, error ->
+        provider.takeAppWindowScreenshot { buffer, error ->
             if (buffer != null) {
                 try {
                     deliver(buffer)
@@ -127,10 +132,17 @@ class AccessibilityScreenSource(
                 (((c shr 16 and 0xFF) * 77 + (c shr 8 and 0xFF) * 150 + (c and 0xFF) * 29) shr 8).toByte()
             }
         val out = sink
-        if (out == null || !dedupe.changed(luma, target.width, target.height)) {
+        val now = SystemClock.uptimeMillis()
+        val changed = dedupe.changed(luma, target.width, target.height)
+        // Heartbeat: a still screen still sends a frame every HEARTBEAT_MS so the guard keeps checking it.
+        if (out == null || (!changed && now - lastDeliveredMs < HEARTBEAT_MS)) {
             small.recycle()
+            noteUnchanged()
             return
         }
+        lastDeliveredMs = now
+        unchangedSince = 0L
+        unchangedLogged = false
         val blind = BlindSpotDetector.detect(luma, target.width, target.height, emptyList())
         com.veil.guard.overlay.blind.BlindHintHub.onFrame(
             com.veil.guard.overlay.blind.BlindHintHub.isFullBlind(blind, target.width, target.height)
@@ -148,6 +160,24 @@ class AccessibilityScreenSource(
         )
     }
 
+    /** Unchanged screenshots are dropped by design (e.g. under our own opaque cover); say so once per episode. */
+    private fun noteUnchanged() {
+        val now = SystemClock.uptimeMillis()
+        if (unchangedSince == 0L) unchangedSince = now
+        if (!unchangedLogged && now - unchangedSince >= UNCHANGED_LOG_MS) {
+            unchangedLogged = true
+            WireHub.log?.write(
+                linkedMapOf(
+                    "kind" to "capture",
+                    "tMs" to now,
+                    "what" to "a11y-unchanged",
+                    "detail" to "dropped as unchanged for ${now - unchangedSince}ms",
+                    "cover" to OwnCoverBridge.coverage()
+                )
+            )
+        }
+    }
+
     private fun toScreen(rects: List<PxRect>, target: FrameSize) = rects.map {
         PxRect(
             it.x * screen.width / target.width,
@@ -159,6 +189,8 @@ class AccessibilityScreenSource(
 
     private companion object {
         const val TAG = "A11yScreenSource"
+        const val UNCHANGED_LOG_MS = 10_000L
+        const val HEARTBEAT_MS = 800L
         const val ERROR_INTERVAL_TOO_SHORT = 3
     }
 }

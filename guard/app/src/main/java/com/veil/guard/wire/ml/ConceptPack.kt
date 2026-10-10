@@ -5,6 +5,7 @@ import com.veil.brain.contract.AutoTerm
 import com.veil.brain.contract.CompiledConcept
 import com.veil.brain.contract.Embedding
 import com.veil.conductor.Concepts
+import com.veil.guard.wire.WireHub
 import java.io.File
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -73,13 +74,35 @@ object ConceptPack {
     private fun keywords(c: CompiledConcept): List<String> =
         (c.raw["keywords"] as? List<*>)?.filterIsInstance<String>() ?: emptyList()
 
+    /** finder stays empty: YOLOE text encoder export is blocked (variant C), boxes are described by SigLIP2. */
     fun toConcepts(all: List<CompiledConcept>): Concepts =
         Concepts(all, emptyList(), all.map { it.conceptId to keywords(it) }.filter { it.second.isNotEmpty() }.toMap())
 
-    fun load(dir: File): Concepts {
+    /** SigLIP2 describer output size; a concept in any other dim cannot be scored against it. */
+    const val DESCRIBER_DIM = 768
+
+    /** Why [c] cannot be used with a [dim]-wide describer, or null when it is fine. */
+    fun dimProblem(c: CompiledConcept, dim: Int = DESCRIBER_DIM): String? {
+        val auto = c.auto?.let { a -> (a.positives + a.competitors).map { it.embedding } } ?: emptyList()
+        val all = c.looksLike + c.butNot + c.ignore + listOfNotNull(c.exampleCentroid) + auto
+        val bad = all.map { it.dim }.filter { it != dim }.distinct()
+        return if (bad.isEmpty()) null else "embedding dim $bad does not match describer dim $dim"
+    }
+
+    private fun defaultWarn(what: String, why: String) {
+        WireHub.log?.write(linkedMapOf("kind" to "warn", "what" to what, "why" to why))
+    }
+
+    fun load(dir: File, warn: (what: String, why: String) -> Unit = ::defaultWarn): Concepts {
         val all = ArrayList<CompiledConcept>()
         dir.listFiles { f -> f.extension == "json" }?.sortedBy { it.name }?.forEach { f ->
-            runCatching { all += parse(f.readText()) }
+            runCatching { parse(f.readText()) }
+                .onFailure { warn("concept-rejected", "${f.name}: unreadable: $it") }
+                .getOrNull()
+                ?.forEach { c ->
+                    val p = dimProblem(c)
+                    if (p == null) all += c else warn("concept-rejected", "${f.name} (${c.conceptId}): $p")
+                }
         }
         return toConcepts(all)
     }

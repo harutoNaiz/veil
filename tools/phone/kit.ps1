@@ -14,7 +14,8 @@ $models = @(
   'siglip2\siglip2-tok.bin', 'siglip2\siglip2-text.onnx',
   'toxicity\toxicity-seq128.onnx', 'toxicity\toxicity-tok.bin',
   'yoloe\yoloe-26s-embed-top100.onnx') | ForEach-Object { "data\forge\$_" }
-$concept = 'contracts\examples\compiled-concept\valid-01-cats-siglip2.json'
+$conceptDir = Join-Path $kit 'concepts'   # REAL SigLIP2-compiled concepts; never push contracts\examples
+$demoWords = @('cats', 'fox', 'spiders')    # phase-6.3 D7: the demo uses only cats, the fox and spiders
 $remote = '/sdcard/Android/media/com.veil.guard/models/'
 $remoteC = '/sdcard/Android/media/com.veil.guard/concepts/'
 
@@ -28,6 +29,27 @@ function Do-Step([string]$name, [scriptblock]$body) {
 }
 function Gradle([string]$name, [string[]]$a) {
   Do-Step $name { powershell -NoProfile -ExecutionPolicy Bypass -File $gl @a }.GetNewClosure() | Out-Null
+}
+
+# Tokenizer packs (VBPE) the phone needs; build when missing (light, no download).
+Write-Host 'STEP  tokenizer packs (siglip2-tok.bin, toxicity-tok.bin) if missing'
+if (-not $DryRun -and -not ((Test-Path data\forge\siglip2\siglip2-tok.bin) -and (Test-Path data\forge\toxicity\toxicity-tok.bin))) {
+  uv run --locked python -m workshop.forge.toxicity.tokpack | Out-Host
+}
+# Compile real concepts with the SigLIP2 text encoder (dim 768).
+Write-Host "STEP  compile concepts: $($demoWords -join ', ') -> $conceptDir"
+if (-not $DryRun) {
+  if (Test-Path $conceptDir) { Remove-Item (Join-Path $conceptDir '*.json') -Force -ErrorAction SilentlyContinue }
+  $env:HF_HUB_DISABLE_XET = '1'
+  $bankDir = 'data\bank\v1'
+  if ((Test-Path "$bankDir\bank.bin") -and (Test-Path "$bankDir\vocab.bin") -and (Test-Path "$bankDir\vocab.json")) {
+    Write-Host 'INFO  compiling AUTO (self-calibrating) concepts from data\bank\v1'
+    uv run --locked python -m workshop.twin.autocal compile --bank $bankDir --out $conceptDir @demoWords | Out-Host
+  } else {
+    Write-Host 'WARN  data\bank\v1 is missing: compiling v0 teacher concepts, which over-fire on real screens (fox on everything, blank screens covered). Build the bank with tools\heavy\7.1-heavy.ps1.'
+    uv run --locked python -m workshop.twin.teacher compile --out $conceptDir @demoWords | Out-Host
+  }
+  if ($LASTEXITCODE -ne 0) { Write-Host 'FAIL  concept compile' }
 }
 
 if ($Push -and -not $DryRun) {
@@ -82,7 +104,9 @@ if (-not $DryRun) {
     if (Test-Path $m) { $lines += ('{0}  {1} bytes' -f $m, (Get-Item $m).Length) } else { $lines += "$m  MISSING" }
   }
   $lines += '', "[concept -> $remoteC]"
-  $lines += $(if (Test-Path $concept) { '{0}  {1} bytes' -f $concept, (Get-Item $concept).Length } else { "$concept  MISSING" })
+  $cf = @(Get-ChildItem $conceptDir -Filter *.json -ErrorAction SilentlyContinue)
+  if ($cf.Count -eq 0) { $lines += "$conceptDir  MISSING" }
+  foreach ($f in $cf) { $lines += ('{0}  {1} bytes' -f $f.Name, $f.Length) }
   $lines | Set-Content (Join-Path $kit 'MANIFEST.txt') -Encoding utf8
 } else {
   Write-Host 'STEP  write MANIFEST.txt'
@@ -100,7 +124,10 @@ if ($Push) {
     $bf = "data\bank\v1\$($b[0])"; $bt = "$remote$($b[1])"
     if (Test-Path $bf) { Do-Step "adb push $($b[1])" { adb push $bf $bt }.GetNewClosure() | Out-Null }
   }
-  Do-Step "adb push concept" { adb push $concept $remoteC }.GetNewClosure() | Out-Null
+  Do-Step "adb clear old concepts" { adb shell "rm -f ${remoteC}*.json" }.GetNewClosure() | Out-Null
+  foreach ($cf in Get-ChildItem $conceptDir -Filter *.json) {
+    Do-Step "adb push concept $($cf.Name)" { adb push $cf.FullName $remoteC }.GetNewClosure() | Out-Null
+  }
 }
 Write-Host "kit done (flutter ok: $flutterOk)"
 exit 0

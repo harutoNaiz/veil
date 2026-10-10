@@ -32,10 +32,11 @@ class ThreadWorker(private val post: (Runnable) -> Unit, private val onDone: () 
             val ms = (System.nanoTime() - t0) / 1_000_000
             post(
                 Runnable {
+                    // Free before done(): the conductor may start a confirm look from inside it.
+                    inFlight = false
                     try {
                         done(found, ms)
                     } finally {
-                        inFlight = false
                         onDone()
                     }
                 }

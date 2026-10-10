@@ -1,6 +1,7 @@
 package com.veil.brain.unit
 
 import com.veil.brain.contract.FrameMeta
+import com.veil.brain.contract.Rect
 import com.veil.brain.contract.UiEvent
 import com.veil.brain.gate.Change
 import com.veil.brain.gate.Gatekeeper
@@ -8,6 +9,7 @@ import com.veil.brain.gate.ModeParams
 import com.veil.brain.gate.SchedState
 import com.veil.brain.gate.Scheduler
 import com.veil.brain.gate.Tick
+import com.veil.brain.gate.ownThumbMask
 import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -44,6 +46,28 @@ class GateTests {
     }
 
     @Test
+    fun ownCoverPixelsAreNotChange() {
+        // Whole screen painted solid by our own cover: raw diff is a scene cut, masked diff is nothing.
+        val grey = ByteArray(32 * 64) { 30 }
+        val white = ByteArray(32 * 64) { 255.toByte() }
+        assertTrue(Change.detect(grey, white, 0).sceneCut)
+        val mask = ownThumbMask(listOf(Rect(0, 0, 720, 1600)), 720, 1600)!!
+        val masked = Change.detect(grey, white, 0, curOwn = mask)
+        assertEquals(0, masked.changedTiles)
+        assertEquals(false, masked.sceneCut)
+        // Cover removed again: the old reference mask hides the reveal too.
+        assertEquals(0, Change.detect(white, grey, 0, refOwn = mask).changedTiles)
+    }
+
+    @Test
+    fun ownMaskCoversRectCells() {
+        val m = ownThumbMask(listOf(Rect(100, 100, 50, 50)), 320, 640)!!
+        assertEquals(25, m.count { it })
+        assertTrue(m[10 * 32 + 10])
+        assertNull(ownThumbMask(emptyList(), 320, 640))
+    }
+
+    @Test
     fun schedulerCheckupThenImmediate() {
         val p = ModeParams(3, 5000, 150)
         val (s1, r1) = Scheduler.step(SchedState(), Tick(0, 1, 100, 200), p)
@@ -67,5 +91,22 @@ class GateTests {
         assertEquals("change", change["kind"])
         assertNotNull(look["rect"])
         assertEquals(listOf("kind", "frameId", "tMs", "look", "reason", "state", "x", "rect"), look.keys.toList())
+    }
+
+    @Test
+    fun ownCoverFrameIsNotSceneCutWhenMaskOn() {
+        val raw = File(System.getProperty("veil.repo"), "workshop/twin/params.json").readText()
+        val on = raw.replace("\"ignore_top_rows\"", "\"own_mask\": 1, \"ignore_top_rows\"")
+        val white = ByteArray(32 * 64) { 255.toByte() }
+        val grey = ByteArray(32 * 64) { 30 }
+        val cover = listOf(Rect(0, 0, 100, 200))
+
+        fun cut(json: String): Boolean {
+            val g = Gatekeeper.create("balanced", json, 0)
+            g.onThumb(white, FrameMeta(1, 0, 100, 200, 100, 200, emptyList()))
+            return g.onThumb(grey, FrameMeta(2, 50, 100, 200, 100, 200, cover)).first["sceneCut"] == true
+        }
+        assertTrue(cut(raw))
+        assertEquals(false, cut(on))
     }
 }

@@ -1,7 +1,9 @@
 package com.veil.conductor
 
+import com.veil.brain.contract.Finding
 import com.veil.brain.contract.FrameMeta
 import com.veil.brain.contract.Record
+import com.veil.brain.contract.Rect
 import com.veil.brain.contract.UiEvent
 import com.veil.brain.gate.THUMB_H
 import com.veil.brain.gate.THUMB_W
@@ -15,13 +17,18 @@ class ConductorTest {
     private val params = File(System.getProperty("veil.repo"), "workshop/twin/params.json").readText()
     private val rnd = Random(7)
 
-    private class Rig(params: String, val worker: ManualWorker, skip: Set<String> = setOf("com.skip.app")) {
+    private class Rig(
+        params: String,
+        val worker: ManualWorker,
+        skip: Set<String> = setOf("com.skip.app"),
+        lane: Lane = ScriptedLane()
+    ) {
         val overlay = RecordingOverlay()
         val stats = ArrayList<Record>()
         val looks = ArrayList<Record>()
         val c =
             Conductor(
-                "balanced", params, listOf(ScriptedLane()), worker, overlay, { stats.add(it) },
+                "balanced", params, listOf(lane), worker, overlay, { stats.add(it) },
                 { if (it["kind"] == "look") looks.add(it).also { worker.tag = looks.size } }, Counters(), skip,
                 { emptyList() }
             )
@@ -84,5 +91,61 @@ class ConductorTest {
         assertEquals(1, r.stats.size)
         assertEquals(42L, r.stats[0]["aiMsLast"])
         assertEquals(1, r.stats[0]["looksTotal"])
+    }
+
+    private fun cat(layer: Int, frameId: Int) = Finding(
+        "f$frameId-$layer", frameId, 1, 0, "cats", layer, "hide", 0.95, Rect(100, 300, 400, 400), "object", "t"
+    )
+
+    private fun maskCount(r: Rig) = (r.overlay.plans.last()["masks"] as List<*>).size
+
+    @Test fun staticScreenCoversWithoutSecondFrame() {
+        val w = ManualWorker()
+        val r = Rig(params, w, lane = Lane { listOf(cat(1, it.frame.meta.frameId)) })
+        r.c.offer(frame(0, 1000, false))
+        r.c.pump()
+        assertEquals(0, maskCount(r))
+        w.complete(w.pending[0], 150) // findings land; no further frame is ever offered
+        assertEquals(1, maskCount(r))
+    }
+
+    @Test fun balancedStaticScreenConfirmsWithOneConfirmLook() {
+        val w = ManualWorker()
+        val r = Rig(params, w, lane = Lane { listOf(cat(2, it.frame.meta.frameId)) })
+        r.c.offer(frame(0, 1000, false))
+        r.c.pump()
+        w.complete(w.pending[0], 150)
+        assertEquals(0, maskCount(r)) // tentative: 1 of 2 sightings
+        assertEquals(1, w.pending.size) // confirm look on the same still frame
+        assertEquals(2, r.looks.size)
+        assertEquals(true, ((r.looks[1]["rect"]) != null))
+        w.complete(w.pending[0], 150)
+        assertEquals(1, maskCount(r))
+        assertEquals(0, w.pending.size) // no further look: bounded
+    }
+
+    @Test fun confirmLookIsBoundedWhenNothingIsSeenAgain() {
+        var n = 0
+        val w = ManualWorker()
+        val r = Rig(params, w, lane = Lane { if (n++ == 0) listOf(cat(2, it.frame.meta.frameId)) else emptyList() })
+        r.c.offer(frame(0, 1000, false))
+        r.c.pump()
+        w.complete(w.pending[0], 150)
+        w.complete(w.pending[0], 150) // confirm look finds nothing
+        assertEquals(0, w.pending.size)
+        assertEquals(2, r.looks.size)
+    }
+
+    @Test fun coverPersistsWithNoFrames() {
+        val w = ManualWorker()
+        val r = Rig(params, w, lane = Lane { listOf(cat(1, it.frame.meta.frameId)) })
+        r.c.offer(frame(0, 1000, false))
+        r.c.pump()
+        w.complete(w.pending[0], 150)
+        val before = r.overlay.plans.size
+        // nothing offered for 10 s: no step, no expiry, the last plan stays up
+        assertEquals(1, maskCount(r))
+        assertEquals(before, r.overlay.plans.size)
+        assertEquals(1, ((r.c.lastPlan!!["masks"]) as List<*>).size)
     }
 }

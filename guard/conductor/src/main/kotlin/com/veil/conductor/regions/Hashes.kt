@@ -25,6 +25,16 @@ object Hashes {
         return h
     }
 
+    /** n x n luma samples at the cell centres of a screen-px rect (twin: guards.sample_luma). */
+    fun lumaGrid(frame: Frame, rect: Rect, n: Int = 32): IntArray {
+        val m = frame.meta
+        val sw = maxOf(m.screenWidth, 1).toDouble()
+        val sh = maxOf(m.screenHeight, 1).toDouble()
+        return IntArray(n * n) { i ->
+            gray(frame, (rect.x + rect.w * (i % n + 0.5) / n) / sw, (rect.y + rect.h * (i / n + 0.5) / n) / sh)
+        }
+    }
+
     private fun gray(frame: Frame, fx: Double, fy: Double): Int {
         val argb = frame.argb
         if (argb != null && frame.meta.width * frame.meta.height <= argb.size) {

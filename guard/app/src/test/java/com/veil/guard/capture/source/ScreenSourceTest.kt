@@ -13,6 +13,8 @@ class ScreenSourceTest {
         var creates = 0
         var attaches = 0
         var detaches = 0
+        var recreates = 0
+        var nudges = 0
         val resizes = mutableListOf<FrameSize>()
 
         override fun create(size: FrameSize, dpi: Int) {
@@ -21,6 +23,14 @@ class ScreenSourceTest {
 
         override fun setSurfaceAttached(on: Boolean) {
             if (on) attaches++ else detaches++
+        }
+
+        override fun nudge() {
+            nudges++
+        }
+
+        override fun recreateReader() {
+            recreates++
         }
 
         override fun resize(size: FrameSize, dpi: Int) {

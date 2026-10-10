@@ -87,4 +87,35 @@ class Layer1Test {
         assertEquals(0, out[0].cls)
         assertEquals(Rect(80, 80, 40, 40), out[0].rect)
     }
+
+    @Test
+    fun tallScreenIsReadInOverlappingSquareTiles() {
+        assertEquals(
+            listOf(Rect(0, 0, 1440, 1440), Rect(0, 864, 1440, 1440), Rect(0, 1728, 1440, 1440)),
+            Layer1Lane.tilesOf(Rect(0, 0, 1440, 3168))
+        )
+        assertEquals(emptyList<Rect>(), Layer1Lane.tilesOf(Rect(0, 0, 700, 800)))
+        val c = Counters()
+        Layer1Lane(Fake("320n", emptyList()), null, c, tiles = true).run(input("light"))
+        assertEquals(3L, c.m["layer1.tile"]) // 1080x2340: three overlapping squares
+    }
+
+    @Test
+    fun hitCoversThePictureItSitsIn() {
+        val player = Rect(0, 200, 1080, 610)
+        val hit = Rect(400, 400, 120, 120)
+        val nodes = listOf(
+            com.veil.conductor.LayoutNode("image", Rect(0, 0, 1080, 2340)), // the app itself: too big
+            com.veil.conductor.LayoutNode("video", player)
+        )
+        val lane = Layer1Lane(
+            Fake("320n", listOf(NsfwBox(3, 0.9f, hit), NsfwBox(2, 0.8f, Rect(700, 500, 100, 100)))),
+            null,
+            Counters(),
+            wholePicture = true
+        )
+        val f = lane.run(LookInput(1, frame, area, nodes, "light"))
+        assertEquals(1, f.size) // two hits in one player: one cover
+        assertEquals(player, f[0].rect)
+    }
 }

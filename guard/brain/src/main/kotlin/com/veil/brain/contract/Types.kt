@@ -63,7 +63,14 @@ data class Track(
     )
 }
 
-data class Embedding(val dim: Int, val vectorF16: String, val raw: Record = emptyMap())
+data class Embedding(val dim: Int, val vectorF16: String, val raw: Record = emptyMap()) {
+    /**
+     * L2-normalised float64 vector, decoded from [vectorF16] once on first use (thread-safe) and shared after.
+     * Read-only: callers must not mutate it. Not part of equals/hashCode/copy; a hot-swapped concept brings
+     * new Embedding instances, so there is nothing to invalidate.
+     */
+    val unit: DoubleArray by lazy { com.veil.brain.judge.Judge.decodeUnit(this) }
+}
 
 data class CompiledConcept(
     val conceptId: String,

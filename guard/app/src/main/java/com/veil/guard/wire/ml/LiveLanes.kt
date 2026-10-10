@@ -18,31 +18,69 @@ object LiveLanes {
         WireHub.log?.write(mapOf("kind" to "warn", "what" to "lane-off", "lane" to lane, "why" to why))
     }
 
+    /** YOLOE boxes (variant C: described by SigLIP2, not judged by their own fingerprint). Null = tiles/layout only. */
+    private fun openFinder(ctx: Context, store: ModelStore): OrtFinder? {
+        if (!store.has(OrtFinder.MODEL)) {
+            off("finder", "${OrtFinder.MODEL} missing")
+            return null
+        }
+        return runCatching {
+            val file = File(store.dir, OrtFinder.PE_FILE) // optional override next to the model
+            val raw = if (file.isFile) file.readBytes() else ctx.assets.open(OrtFinder.PE_ASSET).use { it.readBytes() }
+            val pe = OrtFinder.padPrompts(OrtFinder.parseNpy(raw))
+            OrtFinder(store.env, store.session(OrtFinder.MODEL) ?: error("session"), pe)
+        }.onFailure { off("finder", it.toString().take(120)) }.getOrNull()
+    }
+
     /** Re-reads models and concepts on every call. */
     fun build(ctx: Context, counters: Counters): List<Lane> {
         val store = ModelStore(ctx)
         val lanes = ArrayList<Lane>()
         val concepts = ConceptPack.load(File(ctx.externalMediaDirs.first(), "concepts"))
-        val s320 = if (store.has("nudenet-320n.onnx")) store.session("nudenet-320n.onnx") else null
-        if (s320 != null) {
+        val nudity = com.veil.guard.app.VeilSettings.nudity(ctx)
+        val s320 = if (nudity && store.has("nudenet-320n.onnx")) store.session("nudenet-320n.onnx") else null
+        if (!nudity) {
+            off("layer1", "turned off by the user (Nudity & explicit content)")
+        } else if (s320 != null) {
             val s640 = if (store.has("nudenet-640m.onnx")) store.session("nudenet-640m.onnx") else null
-            val large = s640?.let { OrtNsfwDetector("nudenet-640m", store.env, it, 640) }
-            lanes += Layer1Lane(OrtNsfwDetector("nudenet-320n", store.env, s320, 320), large, counters)
+            val large = s640?.let {
+                OrtNsfwDetector("nudenet-640m", store.env, it, 640) { store.ready("nudenet-640m.onnx") }
+            }
+            lanes +=
+                Layer1Lane(
+                    OrtNsfwDetector("nudenet-320n", store.env, s320, 320) {
+                        store.ready("nudenet-320n.onnx")
+                    },
+                    large,
+                    counters,
+                    tiles = true,
+                    wholePicture = true
+                )
         } else {
             off("layer1", "nudenet-320n.onnx missing")
         }
-        val img = listOf(1, 4, 16).mapNotNull { b ->
+        val img = store.imageBatches().mapNotNull { b ->
             val n = "siglip2-image-b$b.onnx"
             if (store.has(n)) store.session(n)?.let { b to it } else null
         }.toMap()
         if (img.isNotEmpty() && concepts.describer.isNotEmpty()) {
-            lanes += RegionLane(concepts, OrtDescriber(store.env, img), null, fingerprints, counters)
+            lanes +=
+                RegionLane(
+                    concepts,
+                    OrtDescriber(store.env, img) {
+                        store.readyImage()
+                    },
+                    openFinder(ctx, store), fingerprints, counters,
+                    maxCoverScreenPct = 40, minCoverSidePx = 160, requireFine = true,
+                    proposer = com.veil.conductor.regions.RegionProposer(minLayoutSidePx = 300)
+                )
         } else {
             off("region", if (img.isEmpty()) "siglip2 image models missing" else "no concepts")
         }
         val tox = OrtToxicity.open(store)
         if (tox == null) off("toxicity", "toxicity-seq128.onnx or toxicity-tok.bin missing")
         lanes += TextLane(concepts, tox, MlKitOcr(), counters)
+        store.warmUp() // QNN compile in the background; lanes hot-swap to it when ready
         return lanes
     }
 }

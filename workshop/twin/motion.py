@@ -143,6 +143,9 @@ class MotionPipeline:
     def _step(self, th: np.ndarray, frame: dict, frame_bgr: np.ndarray | None) -> list[dict]:
         t, fid = frame["tMs"], frame["frameId"]
         self.cum_at[fid] = self.cum_dy
+        # Real screen size from the frames (the 720x1600 default is the tapes' size; phones are
+        # bigger).
+        self.tracker.w, self.tracker.h = frame["screenWidth"], frame["screenHeight"]
         change, look = self.gk.on_thumb(th, frame)
         if change["sceneCut"]:
             self.tracker.on_scene_cut(t)

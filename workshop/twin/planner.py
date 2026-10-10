@@ -31,13 +31,30 @@ def pad(rect: dict, pct: int, screen_w: int, screen_h: int) -> dict | None:
     return {"x": x0, "y": y0, "w": x1 - x0, "h": y1 - y0}
 
 
+MERGE_OVERLAP_PCT = 50
+MERGE_INFLATE_PCT = 150
+
+
+def _inter_area(a: dict, b: dict) -> int:
+    w = min(a["x"] + a["w"], b["x"] + b["w"]) - max(a["x"], b["x"])
+    h = min(a["y"] + a["h"], b["y"] + b["h"]) - max(a["y"], b["y"])
+    return 0 if w <= 0 or h <= 0 else w * h
+
+
 def _meets(a: dict, b: dict) -> bool:
-    return (
-        a["x"] < b["x"] + b["w"]
-        and b["x"] < a["x"] + a["w"]
-        and a["y"] < b["y"] + b["h"]
-        and b["y"] < a["y"] + a["h"]
-    )
+    """Genuine overlap only: intersection >= 50% of the smaller mask, union box <= 150% of content.
+
+    Touching / lightly overlapping neighbours (padded photos in a dense grid) stay separate,
+    so merging never chains a grid into one slab.
+    """
+    i = _inter_area(a, b)
+    if i == 0:
+        return False
+    aa, ba = a["w"] * a["h"], b["w"] * b["h"]
+    if i * 100 < min(aa, ba) * MERGE_OVERLAP_PCT:
+        return False
+    u = _union(a, b)
+    return u["w"] * u["h"] * 100 <= (aa + ba - i) * MERGE_INFLATE_PCT
 
 
 def _union(a: dict, b: dict) -> dict:
@@ -63,7 +80,7 @@ def _key(m: dict) -> tuple:
 
 
 def merge(masks: list[dict]) -> list[dict]:
-    """Merge same-layer masks whose rects intersect (area > 0) until stable."""
+    """Merge same-layer masks that genuinely overlap (see _meets) until stable."""
     cur = sorted((dict(m) for m in masks), key=_key)
     changed = True
     while changed:

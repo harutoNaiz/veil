@@ -30,3 +30,6 @@ Thumbs.db
 # Model weights live in data/models (also ignored via /data/*); never commit them
 *.pt
 mobileclip*.ts
+
+# Word bank (~30 MB) generated from data/bank (v1 bank.bin + v1b vocab); copy into the APK assets before building
+guard/app/src/main/assets/bank/

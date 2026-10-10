@@ -35,7 +35,16 @@ object OverlayHostRegistry {
 
 class GuardAccessibilityService : AccessibilityService() {
     private val ids = AtomicLong(0)
-    private val mapper = EventMapper(ScrollTracker())
+    private val ownActivities: Set<String> by lazy {
+        try {
+            val flags = android.content.pm.PackageManager.GET_ACTIVITIES
+            packageManager.getPackageInfo(packageName, flags).activities?.map { it.name }?.toSet() ?: emptySet()
+        } catch (e: Exception) {
+            emptySet()
+        }
+    }
+    private val mapper =
+        EventMapper(ScrollTracker(), "com.veil.guard") { cn -> cn != null && cn in ownActivities }
     private val foreground = ForegroundTracker()
     private var screenReceiver: BroadcastReceiver? = null
     private var glue: GlueController? = null
@@ -62,15 +71,38 @@ class GuardAccessibilityService : AccessibilityService() {
         liveOverlay = LiveOverlay(t)
         WireHub.overlay = liveOverlay
         WireHub.layout = layoutFeed::latest
+        // Reboot / update / crash: the system rebinds this service; resume protection if the user left it on.
+        if (com.veil.guard.app.VeilSettings.protectionOn(this)) {
+            runCatching {
+                startForegroundService(
+                    android.content.Intent(this, com.veil.guard.capture.service.CaptureService::class.java).apply {
+                        action = com.veil.guard.capture.service.CaptureCommandReceiver.ACTION_CMD
+                        putExtra(com.veil.guard.capture.service.CaptureCommandReceiver.EXTRA_CMD, "source")
+                        putExtra(com.veil.guard.capture.service.CaptureCommandReceiver.EXTRA_VALUE, "a11y")
+                    }
+                )
+            }
+        }
     }
 
     private fun windowManager() = getSystemService(android.view.WindowManager::class.java)
+
+    /** A window-state event counts as an app switch only when it comes from an application window. */
+    private fun isAppSwitch(e: AccessibilityEvent): Boolean {
+        val w = runCatching { windows.firstOrNull { it.id == e.windowId } }.getOrNull()
+        if (w != null) return w.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION
+        val p = e.packageName?.toString() ?: return false
+        return p != "com.android.systemui" && !p.contains("inputmethod")
+    }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
         val raw = copy(event)
         if (raw.type == EventMapper.TYPE_WINDOW_STATE_CHANGED) {
             SignalsHub.foregroundPackage = foreground.onWindowState(raw.packageName, raw.className)
+            // Status bar, notifications, keyboard, gesture bars, popups: not the user switching apps. Forwarding
+            // them made the brain clear every tracked object, so most covers never got confirmed.
+            if (!isAppSwitch(event)) return
         }
         if (raw.type == AccessibilityEvent.TYPE_VIEW_SCROLLED) glue?.onEvent(raw)
         emit(mapper.map(raw) { ids.getAndIncrement() })

@@ -34,6 +34,13 @@ class BackupTest {
     }
 
     @Test
+    fun backoffIsCapped() {
+        val s = ShotScheduler()
+        repeat(10) { s.onIntervalTooShort() }
+        assertEquals(1000L, s.currentIntervalMs) // throttled window shots must not starve the pipeline
+    }
+
+    @Test
     fun pauseStopsScheduling() {
         val s = ShotScheduler()
         s.pause()

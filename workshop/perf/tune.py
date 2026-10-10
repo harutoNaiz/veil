@@ -11,6 +11,17 @@ ROOT = Path(__file__).resolve().parents[2]
 TWIN = ROOT / "workshop" / "twin" / "params.json"
 ANDROID = ROOT / "guard" / "app" / "src" / "androidTest" / "assets" / "params.json"
 MAIN = ROOT / "guard" / "app" / "src" / "main" / "assets" / "params.json"
+# Phone-only keys per mode group: live frames show Veil's own covers; twin/golden frames never do.
+MAIN_ONLY = {"change": {"own_mask": 1}}
+
+
+def main_bytes(twin_bytes: bytes) -> bytes:
+    """The twin params plus MAIN_ONLY in every mode: the content of the app's main params.json."""
+    data = json.loads(twin_bytes.decode("utf-8"))
+    for mode in data["modes"].values():
+        for group, keys in MAIN_ONLY.items():
+            mode[group].update(keys)
+    return (json.dumps(data, indent=1) + "\n").encode("utf-8")
 
 
 def apply(
@@ -33,12 +44,13 @@ def apply(
         twin.write_text(json.dumps(data, indent=1) + "\n", encoding="utf-8")
     android.write_bytes(twin.read_bytes())
     if main is not None:
-        main.write_bytes(twin.read_bytes())
+        main.write_bytes(main_bytes(twin.read_bytes()))
 
 
 def in_sync(twin: Path = TWIN, android: Path = ANDROID, main: Path | None = None) -> bool:
     want = twin.read_bytes()
-    return all(q.exists() and q.read_bytes() == want for q in (android, main) if q is not None)
+    ok = android.exists() and android.read_bytes() == want
+    return ok and (main is None or (main.exists() and main.read_bytes() == main_bytes(want)))
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -78,14 +78,22 @@ class Tr(val trackId: Int, f: Record, t: Long) {
 
 class Tracker(
     mode: String = "balanced",
-    private val screenW: Int = 720,
-    private val screenH: Int = 1600,
+    private var screenW: Int = 720,
+    private var screenH: Int = 1600,
     private val rule: Boolean = true,
     private val p: TrackParams = TRACK_MODES.getValue(mode)
 ) {
     var tracks: List<Tr> = emptyList()
     private var nextId = 1
     private var dy = 0
+
+    /** Real screen size from the frames (the 720x1600 default is the test tapes' size). */
+    fun resize(w: Int, h: Int) {
+        if (w > 0 && h > 0) {
+            screenW = w
+            screenH = h
+        }
+    }
 
     fun onScroll(d: Int) {
         for (tr in tracks) tr.rect = tr.rect.copy(y = tr.rect.y + d)

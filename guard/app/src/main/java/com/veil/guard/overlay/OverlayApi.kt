@@ -7,7 +7,9 @@ data class Cover(
     val style: CoverStyle,
     val layer: Int,
     val peekable: Boolean,
-    val label: String? = null
+    val label: String? = null,
+    /** Concept ids behind this cover (shown to the user as the reason it is hidden). */
+    val concepts: List<String> = emptyList()
 )
 data class CoverPlan(
     val planId: Long,
@@ -45,6 +47,9 @@ object OverlayHub {
     @Volatile var sink: OverlaySink? = null
 
     @Volatile var crops: FrameCropSource? = null
+
+    /** Pixel source for the frosted-cloud covers; set by wire.LatestFrame on the first published frame. */
+    @Volatile var samples: FrameSampleSource? = null
     val drawnListeners = java.util.concurrent.CopyOnWriteArrayList<OwnOverlayListener>()
     val gestureListeners = java.util.concurrent.CopyOnWriteArrayList<(CoverGesture) -> Unit>()
 }

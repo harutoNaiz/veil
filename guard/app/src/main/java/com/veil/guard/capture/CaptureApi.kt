@@ -50,6 +50,14 @@ interface FrameSource {
 /** Implemented by 4.2's accessibility service; full-resolution screenshot, callback on any thread. */
 interface ScreenshotProvider {
     fun takeScreenshot(onResult: (android.hardware.HardwareBuffer?, errorCode: Int) -> Unit)
+
+    /**
+     * Screenshot of the foreground app window WITHOUT our overlay on top (takeScreenshotOfWindow, API 34+).
+     * Implementations must only return it when the window covers the whole screen; otherwise fall back to
+     * [takeScreenshot]. Default: the full-display screenshot.
+     */
+    fun takeAppWindowScreenshot(onResult: (android.hardware.HardwareBuffer?, errorCode: Int) -> Unit) =
+        takeScreenshot(onResult)
 }
 
 object ScreenshotBridge {
@@ -64,5 +72,34 @@ object CaptureGeometry {
         val l = maxOf(screen.width, screen.height)
         val long = (Math.round(360.0 * l / s / 2.0) * 2).toInt()
         return if (portrait) FrameSize(360, long) else FrameSize(long, 360)
+    }
+}
+
+/**
+ * Own-cover coverage, so "no new frames" under our own opaque cover is not mistaken for a dead pipeline.
+ * CaptureService installs the real probe; the default says "no cover".
+ */
+object OwnCoverBridge {
+    /** Fraction 0..1 of the screen hidden by Veil's own covers right now. */
+    @Volatile var coverage: () -> Double = { 0.0 }
+}
+
+/** Pure: union coverage of screen-px rects on a coarse grid (overlaps counted once). */
+object CoverMath {
+    private const val GX = 32
+    private const val GY = 64
+
+    fun fraction(rects: List<PxRect>, screenW: Int, screenH: Int): Double {
+        if (rects.isEmpty() || screenW <= 0 || screenH <= 0) return 0.0
+        val hit = BooleanArray(GX * GY)
+        for (r in rects) {
+            if (r.w <= 0 || r.h <= 0) continue
+            val x0 = (r.x.toLong() * GX / screenW).toInt().coerceIn(0, GX)
+            val x1 = (((r.x + r.w).toLong() * GX + screenW - 1) / screenW).toInt().coerceIn(0, GX)
+            val y0 = (r.y.toLong() * GY / screenH).toInt().coerceIn(0, GY)
+            val y1 = (((r.y + r.h).toLong() * GY + screenH - 1) / screenH).toInt().coerceIn(0, GY)
+            for (y in y0 until y1) for (x in x0 until x1) hit[y * GX + x] = true
+        }
+        return hit.count { it }.toDouble() / hit.size
     }
 }

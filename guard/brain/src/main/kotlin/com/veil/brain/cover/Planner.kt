@@ -23,7 +23,30 @@ private fun pad(r: Rect, pct: Int, sw: Int, sh: Int): Rect? {
     return if (x1 <= x0 || y1 <= y0) null else Rect(x0, y0, x1 - x0, y1 - y0)
 }
 
-private fun meets(a: Rect, b: Rect) = a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h
+private fun interArea(a: Rect, b: Rect): Long {
+    val w = minOf(a.x + a.w, b.x + b.w) - maxOf(a.x, b.x)
+    val h = minOf(a.y + a.h, b.y + b.h) - maxOf(a.y, b.y)
+    return if (w <= 0 || h <= 0) 0L else w.toLong() * h
+}
+
+/**
+ * Two padded masks are one object only when they genuinely overlap: the intersection is at least [MERGE_OVERLAP_PCT]
+ * of the smaller mask, and their union box adds at most [MERGE_INFLATE_PCT] percent over the area of their content
+ * (a + b - inter). Touching or lightly overlapping neighbours (a dense photo grid, padding makes them touch) stay
+ * separate, so merging can never chain a grid into one slab covering text and gaps.
+ */
+const val MERGE_OVERLAP_PCT = 50
+const val MERGE_INFLATE_PCT = 150
+
+private fun meets(a: Rect, b: Rect): Boolean {
+    val i = interArea(a, b)
+    if (i == 0L) return false
+    val aa = a.w.toLong() * a.h
+    val ba = b.w.toLong() * b.h
+    if (i * 100 < minOf(aa, ba) * MERGE_OVERLAP_PCT) return false
+    val u = union(a, b)
+    return u.w.toLong() * u.h * 100 <= (aa + ba - i) * MERGE_INFLATE_PCT
+}
 
 private fun union(a: Rect, b: Rect): Rect {
     val x0 = minOf(a.x, b.x)

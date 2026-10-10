@@ -13,6 +13,7 @@ import com.veil.conductor.LayoutNode
 import com.veil.conductor.LookInput
 import com.veil.conductor.OverlayPort
 import com.veil.conductor.StatsSink
+import com.veil.conductor.runLanesIsolated
 
 /** Pure wiring: one Conductor + stage log + user pause. All calls except [offer] belong on one thread. */
 class GuardCore(
@@ -81,13 +82,14 @@ class GuardCore(
         }
 
     /** Delegates to a swappable lane list so concepts can change without rebuilding the Conductor. */
-    class SwapLane : Lane {
+    class SwapLane(private val log: () -> DebugLog? = { WireHub.log }) : Lane {
         @Volatile var current: List<Lane> = emptyList()
 
-        override fun run(input: LookInput): List<Finding> = current.flatMap { it.run(input) }
+        /** One lane throwing must not drop the others' findings. */
+        override fun run(input: LookInput): List<Finding> = runLanesIsolated(current, input, log())
     }
 
-    private val swap = SwapLane()
+    private val swap = SwapLane { wrappedLog }
     private var counters = Counters()
 
     var buildCount = 0
@@ -114,7 +116,10 @@ class GuardCore(
             wrappedLog,
             counters,
             skipApps,
-            layout
+            layout,
+            idleLookMs = IDLE_LOOK_MS,
+            selfCaptureHold = false,
+            holdMsOverride = 3000
         )
     }
 
@@ -166,5 +171,10 @@ class GuardCore(
 
     fun rebuild() {
         conductor = build()
+    }
+
+    private companion object {
+        /** A still screen is re-checked this often, so unchanged content (static bison page) still gets covered. */
+        const val IDLE_LOOK_MS = 1000L
     }
 }

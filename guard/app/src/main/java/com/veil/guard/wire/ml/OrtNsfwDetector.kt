@@ -14,7 +14,9 @@ class OrtNsfwDetector(
     override val id: String,
     private val env: OrtEnvironment,
     private val session: OrtSession,
-    private val size: Int
+    private val size: Int,
+    /** Hot-swap: accelerated session once ready (null until then). */
+    private val upgrade: (() -> OrtSession?)? = null
 ) : NsfwDetector {
     override fun detect(frame: Frame, area: Rect): List<NsfwBox> {
         val argb = frame.argb ?: return emptyList()
@@ -23,6 +25,7 @@ class OrtNsfwDetector(
         val (img, lb) = ImagePrep.letterbox(crop, size)
         val buf = FloatArray(3 * size * size)
         ImagePrep.chw(img, 0f, 1f, buf, 0)
+        val session = upgrade?.invoke() ?: this.session
         OnnxTensor.createTensor(env, FloatBuffer.wrap(buf), longArrayOf(1, 3, size.toLong(), size.toLong())).use { t ->
             session.run(mapOf(session.inputNames.first() to t)).use { res ->
                 val tensor = res.get(0) as OnnxTensor

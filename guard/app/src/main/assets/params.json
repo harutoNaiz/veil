@@ -9,7 +9,8 @@
     "cut_tile_level": 24,
     "cut_pct": 60,
     "cut_global": 30,
-    "cut_min_tiles": 8
+    "cut_min_tiles": 8,
+    "own_mask": 1
    },
    "sched": {
     "rate": 1,
@@ -31,7 +32,8 @@
     "cut_tile_level": 24,
     "cut_pct": 60,
     "cut_global": 30,
-    "cut_min_tiles": 8
+    "cut_min_tiles": 8,
+    "own_mask": 1
    },
    "sched": {
     "rate": 3,
@@ -53,7 +55,8 @@
     "cut_tile_level": 24,
     "cut_pct": 60,
     "cut_global": 30,
-    "cut_min_tiles": 8
+    "cut_min_tiles": 8,
+    "own_mask": 1
    },
    "sched": {
     "rate": 8,

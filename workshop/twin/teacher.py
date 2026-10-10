@@ -134,3 +134,37 @@ def compile_concept(
         if calib.get("exampleThreshold") is not None:
             cc["exampleThreshold"] = float(np.clip(calib["exampleThreshold"], 0.0, 1.0))
     return cc
+
+
+def compile_words(words: list[str], out: Path, enc: TextEncoder) -> list[Path]:
+    """Compile each word into <out>/<conceptId>.json (real text-encoder vectors)."""
+    out.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for word in words:
+        cc = compile_concept(concept_card(word), enc)
+        path = out / f"{cc['conceptId']}.json"
+        path.write_text(json.dumps(cc, indent=2), encoding="utf-8")
+        paths.append(path)
+    return paths
+
+
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
+    ap = argparse.ArgumentParser(prog="workshop.twin.teacher")
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    c = sub.add_parser("compile", help="compile words into CompiledConcept JSON files")
+    c.add_argument("--out", required=True, type=Path)
+    c.add_argument("words", nargs="+")
+    args = ap.parse_args(argv)
+    from workshop.twin.describer import Describer
+
+    for p in compile_words(args.words, args.out, Describer()):
+        d = json.loads(p.read_text(encoding="utf-8"))
+        n = len(d["looksLike"]), len(d["butNot"]), len(d["ignore"])
+        print(f"{p} looksLike={n[0]} butNot={n[1]} ignore={n[2]}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
