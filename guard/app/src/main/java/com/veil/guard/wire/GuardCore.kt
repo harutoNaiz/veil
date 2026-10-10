@@ -97,6 +97,13 @@ class GuardCore(
 
     @Volatile private var conductor: Conductor = build()
 
+    init {
+        // "Continue" on a cover (adult mode) tells the engine to stop covering that video or picture.
+        com.veil.guard.overlay.OverlayHub.onDismiss = { p ->
+            conductor.dismiss(com.veil.brain.contract.Rect(p.x, p.y, p.w, p.h))
+        }
+    }
+
     private fun build(): Conductor {
         buildCount++
         counters = Counters()
@@ -119,9 +126,10 @@ class GuardCore(
             layout,
             idleLookMs = IDLE_LOOK_MS,
             selfCaptureHold = false,
-            holdMsOverride = 1200, // a moved/closed picture must not leave its cover behind (was 3000)
+            holdMsOverride = 1500, // still-hold renews unchanged covers each shot; a changed one goes in 1.5 s
             videoCovers = com.veil.guard.wire.ml.LiveLanes.fullCover,
-            instantProb = 0.97
+            instantProb = 0.97,
+            holdStill = true
         )
     }
 

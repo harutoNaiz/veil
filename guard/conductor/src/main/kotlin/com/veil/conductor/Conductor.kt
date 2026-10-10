@@ -35,8 +35,13 @@ class Conductor(
     holdMsOverride: Int = 0,
     instantProb: Double = 2.0,
     /** Whole-video covers (motion-detected players, covered whole + sticky); the app flips it at runtime. */
-    @Volatile var videoCovers: Boolean = false
+    @Volatile var videoCovers: Boolean = false,
+    /** Keep covers on unchanged still pictures (no blinking); the live app turns it on. */
+    private val holdStill: Boolean = false
 ) {
+    private val stillHold = com.veil.conductor.video.StillHold()
+    private val dismissals = com.veil.conductor.video.Dismissals()
+    private var lastVideos: List<Rect> = emptyList()
     private var videoRegions: VideoRegions? = null
     private var videoSize = 0 to 0
     private val stickyVideo = StickyVideo()
@@ -138,6 +143,15 @@ class Conductor(
         }
         framesAnalysed++
         handle(f, pipeline.step(f.thumb, f.meta))
+        // Still screen between looks: keep covers on unchanged pictures alive without running any model.
+        if (holdStill && !f.showsOwnCovers && f.argb != null) {
+            val keep = stillHold.refresh(f, lookId, f.meta.tMs)
+                .filter { h -> dismissals.active().none { d -> overlapShare(h.rect, d) >= 0.5 } }
+            if (keep.isNotEmpty()) {
+                synchronized(lock) { keep.forEach { pipeline.enqueue(it) } }
+                settle(f.meta.tMs)
+            }
+        }
         if (idleLookMs > 0 && !worker.busy && f.meta.tMs - lastLookMs >= idleLookMs) {
             val whole = mapOf("x" to 0, "y" to 0, "w" to f.meta.screenWidth, "h" to f.meta.screenHeight)
             startLook(f, linkedMapOf("look" to true, "rect" to whole, "reason" to "idle"))
@@ -204,9 +218,31 @@ class Conductor(
         )
     }
 
+    /**
+     * "Continue" on a cover (adult mode): stop covering [r] (screen px). A rect on a playing video dismisses that
+     * video until it stops playing; otherwise that picture while it stays on screen.
+     */
+    fun dismiss(r: Rect) {
+        synchronized(lock) {
+            val video = lastVideos.any { v -> overlapShare(r, v) >= 0.3 } ||
+                stickyVideo.activeRects().any { v -> overlapShare(r, v) >= 0.3 }
+            dismissals.add(r, video, lastT, lastCleanFrame)
+            log.write(linkedMapOf("kind" to "dismiss", "tMs" to lastT, "rect" to r.toMap(), "video" to video))
+            stillHold.clear()
+        }
+    }
+
+    private fun overlapShare(a: Rect, b: Rect): Double {
+        val w = minOf(a.x + a.w, b.x + b.w) - maxOf(a.x, b.x)
+        val h = minOf(a.y + a.h, b.y + b.h) - maxOf(a.y, b.y)
+        val area = a.w.toLong() * a.h
+        return if (w <= 0 || h <= 0 || area <= 0) 0.0 else w.toDouble() * h / area
+    }
+
     private fun done(foundIn: List<Finding>, aiMs: Long, tMs: Long) {
         synchronized(lock) {
             var found = foundIn
+            var videos: List<Rect> = emptyList()
             if (videoCovers) {
                 val id = foundIn.firstOrNull()?.lookId ?: lookId
                 // The changing part of a video is often only the moving animal: grow it to the player's edges.
@@ -214,11 +250,15 @@ class Conductor(
                 val regions = videoRegions?.regions().orEmpty().map { r ->
                     if (clean?.argb != null) com.veil.conductor.regions.PictureEdges.snap(clean, r) else r
                 }
+                videos = regions
                 found = stickyVideo.apply(foundIn, regions, id, tMs)
                 for (r in stickyVideo.activeRects()) {
                     log.write(linkedMapOf("kind" to "video", "lookId" to id, "rect" to r.toMap(), "sticky" to true))
                 }
             }
+            lastVideos = videos
+            if (holdStill) found = stillHold.apply(found, lastCleanFrame, foundIn.firstOrNull()?.lookId ?: lookId, tMs)
+            found = dismissals.apply(found, videos, tMs, lastCleanFrame)
             for (x in found) {
                 pipeline.enqueue(x)
                 log.write(

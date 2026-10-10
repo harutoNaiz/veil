@@ -93,6 +93,8 @@ class OverlayRenderer :
             if (existing == null) {
                 val pv = android.view.View(c)
                 pv.setOnClickListener {
+                    // Tell the engine first (rect before the cover fades): it stops covering this video/picture.
+                    smoother.rectOf(id)?.let { r -> OverlayHub.onDismiss?.invoke(r) }
                     smoother.reveal(id, SystemClock.uptimeMillis())
                     view?.invalidate()
                     syncPills()

@@ -51,6 +51,9 @@ object OverlayHub {
     /** Pixel source for the frosted-cloud covers; set by wire.LatestFrame on the first published frame. */
     @Volatile var samples: FrameSampleSource? = null
 
+    /** Set by the engine: the viewer chose "Continue" on the cover at this rect (display px). */
+    @Volatile var onDismiss: ((Px) -> Unit)? = null
+
     /** Screen area between the system bars (display px), published by the cover view. */
     @Volatile var content: Px? = null
     val drawnListeners = java.util.concurrent.CopyOnWriteArrayList<OwnOverlayListener>()

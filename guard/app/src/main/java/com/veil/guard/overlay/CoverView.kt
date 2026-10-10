@@ -199,7 +199,10 @@ class CoverView(context: Context) : View(context) {
         }
 
     /** Instagram-style "sensitive content" badge: eye-off icon, "Hidden", and why (category or the user's word). */
-    private fun label(canvas: Canvas, dst: RectF, reason: String, density: Float, pill: Boolean) {
+    private fun label(canvas: Canvas, dst: RectF, why: String, density: Float, pill: Boolean) {
+        // Adult mode: a warning the viewer can act on ("Continue"); otherwise a plain "Hidden".
+        val head = if (revealOn) "Sensitive content" else "Hidden"
+        val reason = if (revealOn && why.isNotEmpty()) "Contains: $why" else why
         val short = minOf(dst.width(), dst.height())
         val s = (short * 0.10f).coerceIn(9f * density, 20f * density)
         val cy = dst.centerY() - if (pill) (PILL_H + 10f) * density / 2 else 0f
@@ -221,7 +224,7 @@ class CoverView(context: Context) : View(context) {
                 val top = cy - (s * 1.1f + 6f * density + title.textSize + rh) / 2
                 eyeOff(canvas, cx, top + s * 0.55f, s)
                 val ty = top + s * 1.1f + 6f * density + title.textSize * 0.8f
-                canvas.drawText("Hidden", cx, ty, title)
+                canvas.drawText(fit(title, head), cx, ty, title)
                 if (reason.isNotEmpty()) {
                     canvas.drawText(fit(reasonPaint, reason), cx, ty + 4f * density + reasonPaint.textSize, reasonPaint)
                 }

@@ -111,6 +111,9 @@ class CoverSmoother(private val fadeMs: Long = 180, private val moveMs: Long = 1
         s.dying = now
     }
 
+    /** Where cover [id] is now (display px), or null. */
+    fun rectOf(id: Int): Px? = shown.firstOrNull { it.id == id }?.to
+
     fun revealedIds(): Set<Int> = shown.filter { it.revealed }.map { it.id }.toSet()
 
     private fun moveTo(s: Shown, at: Px, next: Px, now: Long) {
