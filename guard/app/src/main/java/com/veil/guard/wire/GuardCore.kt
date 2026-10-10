@@ -178,6 +178,6 @@ class GuardCore(
 
     private companion object {
         /** A still screen is re-checked this often, so unchanged content (static bison page) still gets covered. */
-        const val IDLE_LOOK_MS = 1000L
+        const val IDLE_LOOK_MS = 2500L // re-check a still screen (was 1 s: kept the AI busy and the phone hot)
     }
 }

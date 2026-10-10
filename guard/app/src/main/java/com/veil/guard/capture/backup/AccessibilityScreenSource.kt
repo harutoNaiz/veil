@@ -44,9 +44,13 @@ class AccessibilityScreenSource(
 ) : FrameSource {
     override val kind = FrameSourceKind.ACCESSIBILITY_SCREENSHOT
 
-    private val scheduler = DualShotScheduler()
+    // At most 3 shots/s in total (4-5/s overheated the phone); slower still on a still screen, see schedule().
+    private val scheduler = DualShotScheduler(minGapMs = 333)
     private var pending: Runnable? = null
     private val dedupe = ThumbDedupe()
+
+    // Display shots differ from window shots in the status bar and under our covers: compare like with like.
+    private val dedupeDisplay = ThumbDedupe()
     private var thread: HandlerThread? = null
     private var handler: Handler? = null
     private var sink: FrameSink? = null
@@ -91,16 +95,20 @@ class AccessibilityScreenSource(
         this.screen = screen
         this.rotation = rotation
         dedupe.reset()
+        dedupeDisplay.reset()
     }
 
     /** Single pending runnable that re-evaluates which kind is due; callbacks of one kind never cancel the other. */
     private fun schedule(h: Handler) {
         pending?.let { h.removeCallbacks(it) }
         pending = null
-        val (kind, delay) = scheduler.next(SystemClock.uptimeMillis()) ?: return
+        val now = SystemClock.uptimeMillis()
+        val (kind, delay) = scheduler.next(now) ?: return
+        // Nothing has changed for a second: about one shot per second until something moves (saves heat).
+        val still = unchangedSince != 0L && now - unchangedSince >= STILL_AFTER_MS
         val r = Runnable { shoot(h, kind) }
         pending = r
-        h.postDelayed(r, delay)
+        h.postDelayed(r, if (still) maxOf(delay, STILL_GAP_MS) else delay)
     }
 
     private fun shoot(h: Handler, kind: DualShotScheduler.Kind) {
@@ -151,7 +159,7 @@ class AccessibilityScreenSource(
             }
         val out = sink
         val now = SystemClock.uptimeMillis()
-        val changed = dedupe.changed(luma, target.width, target.height)
+        val changed = (if (ownCovers) dedupeDisplay else dedupe).changed(luma, target.width, target.height)
         // Heartbeat: a still screen still sends a frame every HEARTBEAT_MS so the guard keeps checking it.
         if (out == null || (!changed && now - lastDeliveredMs < HEARTBEAT_MS)) {
             small.recycle()
@@ -210,6 +218,8 @@ class AccessibilityScreenSource(
         const val TAG = "A11yScreenSource"
         const val UNCHANGED_LOG_MS = 10_000L
         const val HEARTBEAT_MS = 800L
+        const val STILL_AFTER_MS = 1000L
+        const val STILL_GAP_MS = 900L
         const val ERROR_INTERVAL_TOO_SHORT = 3
 
         /** Code sent with a successful window request that fell back to a full-display shot. */
