@@ -50,6 +50,9 @@ object OverlayHub {
 
     /** Pixel source for the frosted-cloud covers; set by wire.LatestFrame on the first published frame. */
     @Volatile var samples: FrameSampleSource? = null
+
+    /** Screen area between the system bars (display px), published by the cover view. */
+    @Volatile var content: Px? = null
     val drawnListeners = java.util.concurrent.CopyOnWriteArrayList<OwnOverlayListener>()
     val gestureListeners = java.util.concurrent.CopyOnWriteArrayList<(CoverGesture) -> Unit>()
 }

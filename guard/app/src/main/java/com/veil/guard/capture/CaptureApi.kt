@@ -27,6 +27,9 @@ interface CapturedFrame : AutoCloseable {
     val blindRects: List<PxRect>
     val hardwareBuffer: android.hardware.HardwareBuffer? // null in JVM tests / a11y path after downscale to bitmap
     val bitmap: android.graphics.Bitmap? // set on the a11y path
+
+    /** True when the picture includes Veil's own covers (a full-display shot); window shots never do. */
+    val showsOwnCovers: Boolean get() = false
 }
 
 fun interface FrameSink {

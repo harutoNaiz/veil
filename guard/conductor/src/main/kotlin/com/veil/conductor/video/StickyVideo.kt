@@ -19,8 +19,9 @@ class StickyVideo {
         for (s in stickies) {
             s.hit = false
             val m = regions.maxByOrNull { iou(it, s.rect) }
-            if (m != null && iou(m, s.rect) >= 0.5) {
-                s.rect = m
+            if (m != null && iou(m, s.rect) >= 0.3) {
+                // Grow only: a walking animal moves the changing part around inside a still player.
+                s.rect = grow(s.rect, m)
                 s.lostSince = null
             } else if (regions.none { inter(s.rect, it) > 0 }) {
                 if (s.lostSince == null) s.lostSince = tMs
@@ -40,7 +41,7 @@ class StickyVideo {
             if (s == null && f.decision == "hide") {
                 val r = regions.firstOrNull { hits(f.rect, it) }
                 if (r != null) {
-                    s = Sticky(r, f.conceptId, f.layer, f.frameId, tMs)
+                    s = Sticky(grow(r, f.rect), f.conceptId, f.layer, f.frameId, tMs)
                     stickies.add(s)
                 }
             }
@@ -50,6 +51,7 @@ class StickyVideo {
             }
             s.hit = true
             s.lastHitMs = tMs
+            if (f.decision == "hide") s.rect = grow(s.rect, f.rect) // hides are snapped to the whole picture
             s.frameId = f.frameId
             if (f.decision == "nearMiss") out.add(f)
         }
@@ -74,6 +76,15 @@ class StickyVideo {
             )
         }
         return out
+    }
+
+    /** Union of the two, unless that is more than twice the larger (then the newer one: it moved). */
+    private fun grow(a: Rect, b: Rect): Rect {
+        val x0 = minOf(a.x, b.x)
+        val y0 = minOf(a.y, b.y)
+        val u = Rect(x0, y0, maxOf(a.x + a.w, b.x + b.w) - x0, maxOf(a.y + a.h, b.y + b.h) - y0)
+        val big = maxOf(a.w.toLong() * a.h, b.w.toLong() * b.h)
+        return if (u.w.toLong() * u.h > 2 * big) b else u
     }
 
     private fun hits(f: Rect, r: Rect): Boolean {

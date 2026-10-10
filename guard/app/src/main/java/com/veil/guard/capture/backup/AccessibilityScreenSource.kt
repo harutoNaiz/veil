@@ -27,7 +27,8 @@ private class BitmapFrame(
     override val screen: FrameSize,
     override val rotation: Int,
     override val blindRects: List<PxRect>,
-    override val bitmap: Bitmap
+    override val bitmap: Bitmap,
+    override val showsOwnCovers: Boolean = false
 ) : CapturedFrame {
     override val source = FrameSourceKind.ACCESSIBILITY_SCREENSHOT
     override val hardwareBuffer: HardwareBuffer? = null
@@ -112,7 +113,7 @@ class AccessibilityScreenSource(
                 if (buffer != null) {
                     scheduler.onShot(kind)
                     try {
-                        deliver(buffer)
+                        deliver(buffer, kind == DualShotScheduler.Kind.DISPLAY || error == DISPLAY_CONTENT)
                     } finally {
                         buffer.close()
                     }
@@ -134,7 +135,7 @@ class AccessibilityScreenSource(
         schedule(h)
     }
 
-    private fun deliver(buffer: HardwareBuffer) {
+    private fun deliver(buffer: HardwareBuffer, ownCovers: Boolean) {
         val target = CaptureGeometry.targetSize(screen)
         val hw = Bitmap.wrapHardwareBuffer(buffer, ColorSpace.get(ColorSpace.Named.SRGB)) ?: return
         val soft = hw.copy(Bitmap.Config.ARGB_8888, false)
@@ -172,7 +173,8 @@ class AccessibilityScreenSource(
                 screen,
                 rotation,
                 toScreen(blind, target),
-                small
+                small,
+                ownCovers
             )
         )
     }
@@ -209,5 +211,8 @@ class AccessibilityScreenSource(
         const val UNCHANGED_LOG_MS = 10_000L
         const val HEARTBEAT_MS = 800L
         const val ERROR_INTERVAL_TOO_SHORT = 3
+
+        /** Code sent with a successful window request that fell back to a full-display shot. */
+        const val DISPLAY_CONTENT = A11yDisplayFallback.CODE
     }
 }

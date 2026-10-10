@@ -59,6 +59,7 @@ class Conductor(
 
     private var lastMeta: FrameMeta? = null
     private var lastFrame: Frame? = null
+    private var lastCleanFrame: Frame? = null
     private var lastT = 0L
     private var lookId = 0
     private var lastLookMs = Long.MIN_VALUE / 2
@@ -120,12 +121,14 @@ class Conductor(
     private fun step(f: Frame) {
         lastMeta = f.meta
         lastFrame = f
+        if (!f.showsOwnCovers) lastCleanFrame = f
         lastT = maxOf(lastT, f.meta.tMs)
         if (paused) {
             framesSkippedPaused++
             return
         }
-        if (videoCovers && f.thumb.size == THUMB_W * THUMB_H) {
+        // Only shots without our covers: a cover flipping between shot kinds would look like a playing video.
+        if (videoCovers && !f.showsOwnCovers && f.thumb.size == THUMB_W * THUMB_H) {
             val sz = f.meta.screenWidth to f.meta.screenHeight
             if (videoRegions == null || sz != videoSize) {
                 videoRegions = VideoRegions(sz.first, sz.second)
@@ -206,7 +209,12 @@ class Conductor(
             var found = foundIn
             if (videoCovers) {
                 val id = foundIn.firstOrNull()?.lookId ?: lookId
-                found = stickyVideo.apply(foundIn, videoRegions?.regions().orEmpty(), id, tMs)
+                // The changing part of a video is often only the moving animal: grow it to the player's edges.
+                val clean = lastCleanFrame
+                val regions = videoRegions?.regions().orEmpty().map { r ->
+                    if (clean?.argb != null) com.veil.conductor.regions.PictureEdges.snap(clean, r) else r
+                }
+                found = stickyVideo.apply(foundIn, regions, id, tMs)
                 for (r in stickyVideo.activeRects()) {
                     log.write(linkedMapOf("kind" to "video", "lookId" to id, "rect" to r.toMap(), "sticky" to true))
                 }

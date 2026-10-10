@@ -6,8 +6,11 @@ import com.veil.brain.contract.FrameMeta
 import com.veil.brain.contract.Record
 import com.veil.brain.contract.Rect
 
-/** thumb = brain THUMB_W x THUMB_H gray; argb = frame-size pixels (null in pure tests). Rects everywhere are SCREEN px. */
-class Frame(val meta: FrameMeta, val thumb: ByteArray, val argb: IntArray? = null)
+/**
+ * thumb = brain THUMB_W x THUMB_H gray; argb = frame-size pixels (null in pure tests). Rects everywhere are SCREEN px.
+ * [showsOwnCovers]: the picture includes Veil's own covers (full-display shot), so it must not drive motion maps.
+ */
+class Frame(val meta: FrameMeta, val thumb: ByteArray, val argb: IntArray? = null, val showsOwnCovers: Boolean = false)
 
 /** kind as 4.2 SnapNode: image|video|web|text|list|post|other */
 data class LayoutNode(val kind: String, val rect: Rect, val text: String? = null)

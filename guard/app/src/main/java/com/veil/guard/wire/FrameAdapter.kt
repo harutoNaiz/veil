@@ -15,6 +15,8 @@ import com.veil.guard.overlay.self.SelfCapture
 /** Capture sink: copies the frame to an IntArray, closes it at once, restamps with uptime, hands a Frame to the hub. */
 object FrameAdapter {
     private var id = 0
+    private var lastWindow: IntArray? = null
+    private var lastWindowMs = 0L
 
     val sink: FrameSink =
         FrameSink { frame -> handle(frame) }
@@ -27,6 +29,7 @@ object FrameAdapter {
         }
         Trace.beginSection("veil.frame")
         try {
+            val ownCovers = frame.showsOwnCovers
             val w = frame.size.width
             val h = frame.size.height
             val argb: IntArray
@@ -64,9 +67,21 @@ object FrameAdapter {
             }
             val t = SystemClock.uptimeMillis()
             val own = SelfCapture.current?.at(t)?.map { Rect(it.x, it.y, it.w, it.h) } ?: emptyList()
+            if (ownCovers) {
+                // A display shot differs from window shots in the system bars and under our own covers; left as is,
+                // every look would chase that "change". Patch those areas from the latest window shot.
+                // No recent window shot (keyboard, split screen: only display shots exist): use the shot as is.
+                val base = lastWindow
+                if (base != null && base.size == argb.size && t - lastWindowMs <= 2000) {
+                    ShotPatch.patch(argb, base, w, h, frame.screen.width, frame.screen.height, own)
+                }
+            } else {
+                lastWindow = argb.copyOf()
+                lastWindowMs = t
+            }
             val meta = FrameMeta(++id, t, w, h, frame.screen.width, frame.screen.height, own)
             LatestFrame.publish(argb, w, h, frame.screen.width, frame.screen.height)
-            cb(Frame(meta, Thumbs.fromArgb(argb, w, h), argb))
+            cb(Frame(meta, Thumbs.fromArgb(argb, w, h), argb, ownCovers))
         } finally {
             Trace.endSection()
         }

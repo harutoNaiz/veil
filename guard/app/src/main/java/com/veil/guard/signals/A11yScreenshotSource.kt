@@ -9,6 +9,7 @@ import android.view.Display
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityWindowInfo
 import com.veil.guard.capture.ScreenshotProvider
+import com.veil.guard.capture.backup.A11yDisplayFallback
 
 /** Screenshot path via AccessibilityService.takeScreenshot (about 3 fps, no consent dialog). */
 class A11yScreenshotSource(private val service: AccessibilityService) :
@@ -50,7 +51,7 @@ class A11yScreenshotSource(private val service: AccessibilityService) :
         val screen = service.getSystemService(WindowManager::class.java).currentWindowMetrics.bounds
         val id = if (Build.VERSION.SDK_INT >= 34) fullScreenAppWindowId(screen.width(), screen.height()) else null
         if (id == null) {
-            takeScreenshot(onResult)
+            takeScreenshot { hb, e -> onResult(hb, if (hb != null) A11yDisplayFallback.CODE else e) }
             return
         }
         service.takeScreenshotOfWindow(
@@ -63,7 +64,7 @@ class A11yScreenshotSource(private val service: AccessibilityService) :
                         onResult(hb, 0)
                     } else {
                         hb.close()
-                        takeScreenshot(onResult)
+                        takeScreenshot { b, e -> onResult(b, if (b != null) A11yDisplayFallback.CODE else e) }
                     }
                 }
 

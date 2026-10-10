@@ -58,6 +58,7 @@ class CoverView(context: Context) : View(context) {
             WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout()
         )
         return Px(i.left, i.top, (w - i.left - i.right).coerceAtLeast(0), (h - i.top - i.bottom).coerceAtLeast(0))
+            .also { OverlayHub.content = it }
     }
 
     private fun clip(r: Px, a: Px): Px? {

@@ -50,3 +50,8 @@ class DualShotScheduler(private val minGapMs: Long = 150) {
         paused = false
     }
 }
+
+/** A window screenshot that fell back to the full display (no full-screen app window): it shows Veil's covers. */
+object A11yDisplayFallback {
+    const val CODE = -7
+}

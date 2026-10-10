@@ -15,6 +15,15 @@ class ThreadWorker(private val post: (Runnable) -> Unit, private val onDone: () 
 
     override fun submit(job: () -> List<Finding>, done: (List<Finding>, Long) -> Unit) {
         inFlight = true
+        // A look scheduled just as protection stops reaches a shut-down executor: drop it, do not crash.
+        try {
+            run(job, done)
+        } catch (e: java.util.concurrent.RejectedExecutionException) {
+            inFlight = false
+        }
+    }
+
+    private fun run(job: () -> List<Finding>, done: (List<Finding>, Long) -> Unit) {
         exec.execute {
             val t0 = System.nanoTime()
             val found =
