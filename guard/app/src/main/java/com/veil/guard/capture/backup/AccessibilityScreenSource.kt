@@ -144,7 +144,11 @@ class AccessibilityScreenSource(
     }
 
     private fun deliver(buffer: HardwareBuffer, ownCovers: Boolean) {
-        val target = CaptureGeometry.targetSize(screen)
+        // The shot itself has the current orientation (nothing reports rotations to this source): a landscape
+        // full-screen video must not be squashed into the portrait size, or every cover lands in the wrong place.
+        val shotScreen = if (buffer.width > 0 && buffer.height > 0) FrameSize(buffer.width, buffer.height) else screen
+        screen = shotScreen
+        val target = CaptureGeometry.targetSize(shotScreen)
         val hw = Bitmap.wrapHardwareBuffer(buffer, ColorSpace.get(ColorSpace.Named.SRGB)) ?: return
         val soft = hw.copy(Bitmap.Config.ARGB_8888, false)
         hw.recycle()
@@ -178,7 +182,7 @@ class AccessibilityScreenSource(
                 frameId++,
                 SystemClock.uptimeMillis(),
                 target,
-                screen,
+                shotScreen,
                 rotation,
                 toScreen(blind, target),
                 small,

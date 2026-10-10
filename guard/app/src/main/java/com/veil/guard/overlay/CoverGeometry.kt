@@ -8,7 +8,9 @@ object CoverGeometry {
         var y1 = c.y + c.h
         var pw = plan.screenW
         var ph = plan.screenH
-        val turns = Math.floorMod(d.rotation - plan.rotation, 4)
+        // Plans are made from shots taken in the current orientation: only rotate when the shapes disagree.
+        val sameShape = (plan.screenW > plan.screenH) == (d.w > d.h)
+        val turns = if (sameShape) 0 else Math.floorMod(d.rotation - plan.rotation, 4)
         repeat(turns) {
             // One display rotation step = 90 degrees counter-clockwise.
             val nx0 = y0

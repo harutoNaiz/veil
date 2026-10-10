@@ -77,6 +77,8 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // The recent-apps preview must not show the parent's settings either.
+        if (android.os.Build.VERSION.SDK_INT >= 33) setRecentsScreenshotEnabled(false)
         setContentView(build())
         firstRun()
         scope.launch {
@@ -101,6 +103,18 @@ class MainActivity : Activity() {
         // After an update, crash or reboot the switch may say On while the guard is not running: resume it.
         if (VeilSettings.protectionOn(this) && accessibilityOn()) command("source", "a11y")
         refresh()
+    }
+
+    /**
+     * Leaving Veil (home, another app, recents) locks it at once, so a child picking the phone up next always meets
+     * the PIN screen. Safe for our own PIN screen: a correct PIN unlocks again right after this.
+     */
+    override fun onStop() {
+        super.onStop()
+        if (Parental.hasPin(this) && !isChangingConfigurations) {
+            Parental.lock()
+            content.visibility = View.INVISIBLE
+        }
     }
 
     @Deprecated("Deprecated in Java")
