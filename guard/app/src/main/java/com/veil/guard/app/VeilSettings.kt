@@ -20,6 +20,11 @@ object VeilSettings {
 
     fun setMode(ctx: Context, m: String) = prefs(ctx).edit().putString("mode", m).apply()
 
+    /** How to hide: true = the whole picture or video (default), false = just the detected object. */
+    fun fullCover(ctx: Context) = prefs(ctx).getBoolean("full_cover", true)
+
+    fun setFullCover(ctx: Context, on: Boolean) = prefs(ctx).edit().putBoolean("full_cover", on).apply()
+
     /** First launch seeds the default categories once; the user can switch them off afterwards. */
     fun seeded(ctx: Context) = prefs(ctx).getBoolean("seeded", false)
 

@@ -120,7 +120,7 @@ class GuardCore(
             idleLookMs = IDLE_LOOK_MS,
             selfCaptureHold = false,
             holdMsOverride = 3000,
-            videoCovers = true,
+            videoCovers = com.veil.guard.wire.ml.LiveLanes.fullCover,
             instantProb = 0.97
         )
     }
@@ -169,6 +169,7 @@ class GuardCore(
 
     fun swapLanes() {
         swap.current = lanes(counters)
+        conductor.videoCovers = com.veil.guard.wire.ml.LiveLanes.fullCover
     }
 
     fun rebuild() {

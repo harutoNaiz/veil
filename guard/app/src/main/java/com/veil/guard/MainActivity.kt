@@ -64,6 +64,7 @@ class MainActivity : Activity() {
     private lateinit var wordStatus: TextView
     private lateinit var wordList: LinearLayout
     private lateinit var modes: RadioGroup
+    private lateinit var coverModes: RadioGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -281,6 +282,37 @@ class MainActivity : Activity() {
                 modes
             )
         )
+        coverModes = RadioGroup(this).apply {
+            orientation = RadioGroup.VERTICAL
+            for ((full, label) in listOf(true to "Whole picture or video", false to "Just the object")) {
+                addView(
+                    RadioButton(context).apply {
+                        text = label
+                        tag = full
+                        setTextColor(ink)
+                        id = View.generateViewId()
+                    }
+                )
+            }
+            setOnCheckedChangeListener { g, checked ->
+                val full = g.findViewById<RadioButton>(checked)?.tag as? Boolean ?: return@setOnCheckedChangeListener
+                if (full == VeilSettings.fullCover(this@MainActivity)) return@setOnCheckedChangeListener
+                VeilSettings.setFullCover(this@MainActivity, full)
+                GuardRuntime.reloadLanes()
+            }
+        }
+        col.addView(
+            cardBox(
+                text("How to hide", 17f, ink, bold = true),
+                text(
+                    "Whole picture or video covers everything the match appears in. Just the object covers only " +
+                        "the matching thing and leaves the rest of the picture visible.",
+                    13f,
+                    sub
+                ),
+                coverModes
+            )
+        )
         col.addView(
             text("Nothing leaves this phone. Covers never block taps or scrolling.", 12f, sub).apply {
                 setPadding(dp(4), dp(16), dp(4), 0)
@@ -324,6 +356,11 @@ class MainActivity : Activity() {
         for (i in 0 until modes.childCount) {
             val rb = modes.getChildAt(i) as RadioButton
             if (rb.tag == m && !rb.isChecked) rb.isChecked = true
+        }
+        val full = VeilSettings.fullCover(this)
+        for (i in 0 until coverModes.childCount) {
+            val rb = coverModes.getChildAt(i) as RadioButton
+            if (rb.tag == full && !rb.isChecked) rb.isChecked = true
         }
         renderWords()
     }

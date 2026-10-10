@@ -32,12 +32,18 @@ object LiveLanes {
         }.onFailure { off("finder", it.toString().take(120)) }.getOrNull()
     }
 
+    /** "How to hide" as of the last lane build: whole picture/video (true) or just the object. */
+    @Volatile var fullCover = true
+        private set
+
     /** Re-reads models and concepts on every call. */
     fun build(ctx: Context, counters: Counters): List<Lane> {
         val store = ModelStore(ctx)
         val lanes = ArrayList<Lane>()
         val concepts = ConceptPack.load(File(ctx.externalMediaDirs.first(), "concepts"))
         val nudity = com.veil.guard.app.VeilSettings.nudity(ctx)
+        val full = com.veil.guard.app.VeilSettings.fullCover(ctx)
+        fullCover = full
         val s320 = if (nudity && store.has("nudenet-320n.onnx")) store.session("nudenet-320n.onnx") else null
         if (!nudity) {
             off("layer1", "turned off by the user (Nudity & explicit content)")
@@ -54,7 +60,7 @@ object LiveLanes {
                     large,
                     counters,
                     tiles = true,
-                    wholePicture = true
+                    wholePicture = full
                 )
         } else {
             off("layer1", "nudenet-320n.onnx missing")
@@ -72,7 +78,8 @@ object LiveLanes {
                     },
                     openFinder(ctx, store), fingerprints, counters,
                     maxCoverScreenPct = 40, minCoverSidePx = 160, requireFine = true,
-                    proposer = com.veil.conductor.regions.RegionProposer(minLayoutSidePx = 300)
+                    proposer = com.veil.conductor.regions.RegionProposer(minLayoutSidePx = 300),
+                    snapPictures = full
                 )
         } else {
             off("region", if (img.isEmpty()) "siglip2 image models missing" else "no concepts")

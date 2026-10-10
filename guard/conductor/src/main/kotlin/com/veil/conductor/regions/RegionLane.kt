@@ -33,7 +33,9 @@ class RegionLane(
     private val maxCoverScreenPct: Int = 100,
     private val minCoverSidePx: Int = 0,
     /** Live app: only an object box or a reported image element may cause a cover (coarse tiles alone are noisy). */
-    private val requireFine: Boolean = false
+    private val requireFine: Boolean = false,
+    /** false = cover just the object (its own box), not the whole picture it sits in. */
+    private val snapPictures: Boolean = true
 ) : Lane {
     override fun run(input: LookInput): List<Finding> {
         val ownFp = concepts.finder.isNotEmpty()
@@ -79,7 +81,8 @@ class RegionLane(
             p.source == Source.LAYOUT && area(p.rect) * 100 <= sw * sh * FINE_MAX_SCREEN_PCT
         }.map { it.first.findingId }
         // A cover is never most of the screen (the phone must stay usable) and never a tiny icon or avatar.
-        return snapToPictures(tight, fineIds, pieces, input, sw * sh).filter { f ->
+        val placed = if (snapPictures) snapToPictures(tight, fineIds, pieces, input, sw * sh) else tight
+        return placed.filter { f ->
             f.decision != "hide" || f.layer == 1 ||
                 (
                     (!requireFine || f.findingId in solidIds) &&

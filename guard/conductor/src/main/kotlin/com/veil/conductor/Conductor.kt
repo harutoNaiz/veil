@@ -34,8 +34,8 @@ class Conductor(
     selfCaptureHold: Boolean = true,
     holdMsOverride: Int = 0,
     instantProb: Double = 2.0,
-    /** Detect playing-video areas from motion and cover them whole + sticky (live app). */
-    private val videoCovers: Boolean = false
+    /** Whole-video covers (motion-detected players, covered whole + sticky); the app flips it at runtime. */
+    @Volatile var videoCovers: Boolean = false
 ) {
     private var videoRegions: VideoRegions? = null
     private var videoSize = 0 to 0
