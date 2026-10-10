@@ -37,6 +37,14 @@ class Layer1Test {
     }
 
     @Test
+    fun customClassesAddCoveredParts() {
+        val box = NsfwBox(16, 0.9f, Rect(100, 100, 200, 200))
+        assertEquals(0, Layer1Lane(Fake("320n", listOf(box)), null, Counters()).run(input("light")).size)
+        val strict = Layer1Lane(Fake("320n", listOf(box)), null, Counters(), classes = Layer1Lane.CHILD_CLASSES)
+        assertEquals(1, strict.run(input("light")).size)
+    }
+
+    @Test
     fun mergesAndFiltersClasses() {
         val r = Rect(100, 100, 200, 200)
         val small = Fake("320n", listOf(NsfwBox(3, 0.8f, r), NsfwBox(1, 0.99f, Rect(0, 0, 50, 50))))

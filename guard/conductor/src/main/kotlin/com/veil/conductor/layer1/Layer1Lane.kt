@@ -23,11 +23,15 @@ class Layer1Lane(
     private val counters: Counters,
     private val thr: Double = 0.45,
     private val tiles: Boolean = false,
-    private val wholePicture: Boolean = false
+    private val wholePicture: Boolean = false,
+    private val classes: Set<Int> = CLASSES
 ) : Lane {
     companion object {
         /** NudeNet label indices: BUTTOCKS_EXPOSED 2, FEMALE_BREAST_EXPOSED 3, FEMALE_GENITALIA_EXPOSED 4, ANUS_EXPOSED 6, MALE_GENITALIA_EXPOSED 14. */
         val CLASSES: Set<Int> = setOf(2, 3, 4, 6, 14)
+
+        /** Child mode: also the covered sexual parts (genitalia 0, anus 15, breast 16, buttocks 17). */
+        val CHILD_CLASSES: Set<Int> = CLASSES + setOf(0, 15, 16, 17)
 
         /** A picture larger than this share of the screen is the app itself, not a picture in it. */
         const val PICTURE_MAX_SCREEN_PCT = 60
@@ -56,7 +60,7 @@ class Layer1Lane(
             boxes += large.detect(input.frame, input.rect)
         }
         val keep = ArrayList<NsfwBox>()
-        for (b in boxes.filter { it.cls in CLASSES && it.score >= thr }.sortedByDescending { it.score }) {
+        for (b in boxes.filter { it.cls in classes && it.score >= thr }.sortedByDescending { it.score }) {
             if (keep.none { iouPct(it.rect, b.rect) >= 50 }) keep.add(b)
         }
         val m = input.frame.meta

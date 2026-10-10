@@ -6,12 +6,25 @@ import android.content.Context
 object VeilSettings {
     private fun prefs(ctx: Context) = ctx.applicationContext.getSharedPreferences("veil_app", Context.MODE_PRIVATE)
 
-    fun protectionOn(ctx: Context) = prefs(ctx).getBoolean("protection", false)
+    fun protectionOn(ctx: Context) = Parental.childMode(ctx) || prefs(ctx).getBoolean("protection", false)
 
     fun setProtectionOn(ctx: Context, on: Boolean) = prefs(ctx).edit().putBoolean("protection", on).apply()
 
     /** Built-in category "Nudity & explicit content" (the NudeNet layer). On by default. */
-    fun nudity(ctx: Context) = prefs(ctx).getBoolean("cat_nudity", true)
+    fun nudity(ctx: Context) = Parental.childMode(ctx) || adultNudity(ctx)
+
+    fun adultNudity(ctx: Context) = prefs(ctx).getBoolean("cat_nudity", true)
+
+    /** Whether the pack should be on in the current mode. Child: violence always, politics per the parent. */
+    fun packWanted(ctx: Context, id: String): Boolean = when {
+        !Parental.childMode(ctx) -> prefs(ctx).getBoolean("adult_pack_$id", true)
+        id == "politics" -> prefs(ctx).getBoolean("child_pack_politics", true)
+        else -> true
+    }
+
+    fun setAdultPack(ctx: Context, id: String, on: Boolean) = prefs(ctx).edit().putBoolean("adult_pack_$id", on).apply()
+
+    fun setChildPolitics(ctx: Context, on: Boolean) = prefs(ctx).edit().putBoolean("child_pack_politics", on).apply()
 
     fun setNudity(ctx: Context, on: Boolean) = prefs(ctx).edit().putBoolean("cat_nudity", on).apply()
 

@@ -38,6 +38,13 @@ class CoverView(context: Context) : View(context) {
     /** Calm on-screen covers (merged, steady, scroll-following, faded); set by the renderer. */
     var smoother: CoverSmoother? = null
 
+    /** True when a consenting adult may reveal covers: each cover then shows a "Continue" pill. */
+    var revealOn = false
+
+    /** Called (posted) after each draw so the renderer can keep the pill touch windows in place. */
+    var onFrame: (() -> Unit)? = null
+    private var child = false
+
     /** The covers to draw this frame, clipped to the content area, with their fade. */
     private fun current(now: Long): List<Triple<Cover, Px, Float>> {
         val content = contentArea()
@@ -47,6 +54,30 @@ class CoverView(context: Context) : View(context) {
     }
 
     fun drawnRects(): List<Px> = current(SystemClock.uptimeMillis()).map { it.second }
+
+    /** Screen rect of the "Continue" pill of every live cover (cover id to rect); empty unless [revealOn]. */
+    fun pills(now: Long): List<Pair<Int, RectF>> {
+        if (!revealOn) return emptyList()
+        val content = contentArea()
+        val d = resources.displayMetrics.density
+        return smoother?.frame(now).orEmpty().filter {
+            it.live && it.alpha >= 0.5f && it.cover.label != "glue" && it.cover.style != CoverStyle.MOSAIC
+        }.mapNotNull { dr ->
+            clip(dr.rect, content)?.let { r ->
+                pillRect(RectF(r.x.toFloat(), r.y.toFloat(), (r.x + r.w).toFloat(), (r.y + r.h).toFloat()), d)
+                    ?.let { dr.cover.maskId to it }
+            }
+        }
+    }
+
+    private fun pillRect(dst: RectF, d: Float): RectF? {
+        if (dst.height() < 100f * d || dst.width() < 100f * d) return null
+        val w = PILL_W * d
+        val h = PILL_H * d
+        val l = dst.centerX() - w / 2
+        val t = dst.bottom - 10f * d - h
+        return RectF(l, t, l + w, t + h)
+    }
 
     /** Display area minus the visible system bars (status bar, navigation buttons, cutout band). */
     private fun contentArea(): Px {
@@ -75,6 +106,7 @@ class CoverView(context: Context) : View(context) {
         canvas.save()
         canvas.clipRect(a.x, a.y, a.x + a.w, a.y + a.h) // the cloud's feathered rim never reaches the bars
         val now = SystemClock.uptimeMillis()
+        child = com.veil.guard.app.Parental.childMode(context)
         val list = current(now)
         clouds.keys.retainAll(list.map { it.first.maskId }.toSet())
         for ((c, r, alpha) in list) {
@@ -102,6 +134,7 @@ class CoverView(context: Context) : View(context) {
         }
         canvas.restore()
         if (smoother?.animating(now) == true) postInvalidateOnAnimation()
+        onFrame?.let { post(it) }
     }
 
     /** "Sensitive content" veil: blurred own colours, evenly dimmed, rounded, exactly the cover rect, eye-off icon. */
@@ -127,8 +160,28 @@ class CoverView(context: Context) : View(context) {
         canvas.clipPath(clipPath)
         canvas.drawBitmap(bmp, null, dst, smooth)
         canvas.restore()
-        label(canvas, dst, CoverNames.reason(context, c), density)
+        val pill = if (revealOn && c.style != CoverStyle.MOSAIC) pillRect(dst, density) else null
+        label(canvas, dst, CoverNames.reason(context, c, child), density, pill != null)
+        if (pill != null) {
+            val pr = pill.height() / 2
+            canvas.drawRoundRect(pill, pr, pr, pillFill)
+            canvas.drawRoundRect(pill, pr, pr, pillStroke.apply { strokeWidth = density })
+            pillText.textSize = 12f * density
+            canvas.drawText("Continue", pill.centerX(), pill.centerY() + pillText.textSize / 3, pillText)
+        }
     }
+
+    private val pillFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0x33FFFFFF }
+    private val pillStroke =
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = 0x66FFFFFF
+            style = Paint.Style.STROKE
+        }
+    private val pillText =
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            textAlign = Paint.Align.CENTER
+        }
 
     private val title =
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -146,9 +199,10 @@ class CoverView(context: Context) : View(context) {
         }
 
     /** Instagram-style "sensitive content" badge: eye-off icon, "Hidden", and why (category or the user's word). */
-    private fun label(canvas: Canvas, dst: RectF, reason: String, density: Float) {
+    private fun label(canvas: Canvas, dst: RectF, reason: String, density: Float, pill: Boolean) {
         val short = minOf(dst.width(), dst.height())
         val s = (short * 0.10f).coerceIn(9f * density, 20f * density)
+        val cy = dst.centerY() - if (pill) (PILL_H + 10f) * density / 2 else 0f
         val big = dst.height() >= 150f * density && dst.width() >= 150f * density
         val mid = !big && dst.height() >= 80f * density && dst.width() >= 110f * density
         title.textSize = (14f * density).coerceAtMost(short * 0.12f)
@@ -163,25 +217,22 @@ class CoverView(context: Context) : View(context) {
         val cx = dst.centerX()
         when {
             big -> {
-                val top =
-                    dst.centerY() - (s * 1.1f + 6f * density + title.textSize + 4f * density + reasonPaint.textSize) / 2
+                val rh = if (reason.isEmpty()) 0f else 4f * density + reasonPaint.textSize
+                val top = cy - (s * 1.1f + 6f * density + title.textSize + rh) / 2
                 eyeOff(canvas, cx, top + s * 0.55f, s)
                 val ty = top + s * 1.1f + 6f * density + title.textSize * 0.8f
                 canvas.drawText("Hidden", cx, ty, title)
-                canvas.drawText(fit(reasonPaint, reason), cx, ty + 4f * density + reasonPaint.textSize, reasonPaint)
+                if (reason.isNotEmpty()) {
+                    canvas.drawText(fit(reasonPaint, reason), cx, ty + 4f * density + reasonPaint.textSize, reasonPaint)
+                }
             }
 
-            mid -> {
-                eyeOff(canvas, cx, dst.centerY() - reasonPaint.textSize * 0.6f, s)
-                canvas.drawText(
-                    fit(reasonPaint, reason),
-                    cx,
-                    dst.centerY() + s * 0.6f + reasonPaint.textSize * 0.7f,
-                    reasonPaint
-                )
+            mid && reason.isNotEmpty() -> {
+                eyeOff(canvas, cx, cy - reasonPaint.textSize * 0.6f, s)
+                canvas.drawText(fit(reasonPaint, reason), cx, cy + s * 0.6f + reasonPaint.textSize * 0.7f, reasonPaint)
             }
 
-            else -> eyeOff(canvas, cx, dst.centerY(), s)
+            else -> eyeOff(canvas, cx, cy, s)
         }
     }
 
@@ -236,6 +287,9 @@ class CoverView(context: Context) : View(context) {
     }
 
     private companion object {
+        const val PILL_W = 88f
+        const val PILL_H = 28f
+
         /** At most this many colour cells across a cover's long side: shapes and faces cannot survive. */
         const val MAX_TEXELS = 6
         const val OUT_LONG = 160f

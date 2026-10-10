@@ -28,6 +28,7 @@ import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
+import com.veil.guard.app.Parental
 import com.veil.guard.app.VeilSettings
 import com.veil.guard.app.WordLibrary
 import com.veil.guard.capture.service.CaptureCommandReceiver
@@ -55,6 +56,14 @@ class MainActivity : Activity() {
     private val accent = 0xFF3B6FE0.toInt()
 
     private lateinit var setupCard: View
+    private lateinit var content: View
+    private lateinit var parentNote: TextView
+    private lateinit var childSwitch: Switch
+    private lateinit var childRow: View
+    private lateinit var parentSetup: Button
+    private lateinit var lockNow: Button
+    private lateinit var alwaysNote: TextView
+    private var asking = false
     private lateinit var protection: Switch
     private lateinit var protectionNote: TextView
     private lateinit var nudity: Switch
@@ -79,9 +88,42 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        if (isFinishing) return
+        if (Parental.hasPin(this) && !Parental.isUnlocked(this)) {
+            content.visibility = View.INVISIBLE
+            if (!asking) {
+                asking = true
+                startActivityForResult(Intent(this, ParentLockActivity::class.java), REQ_UNLOCK)
+            }
+            return
+        }
+        content.visibility = View.VISIBLE
         // After an update, crash or reboot the switch may say On while the guard is not running: resume it.
         if (VeilSettings.protectionOn(this) && accessibilityOn()) command("source", "a11y")
         refresh()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        asking = false
+        when {
+            resultCode != RESULT_OK -> if (requestCode == REQ_UNLOCK) finish()
+            requestCode == REQ_SETUP -> applyMode(true)
+        }
+    }
+
+    /** Switches child/adult mode: swaps the word list and packs, then makes the running guard rebuild. */
+    private fun applyMode(child: Boolean) {
+        Parental.setChildMode(this, child)
+        thread {
+            runCatching { WordLibrary.syncProfile(this) }
+            runOnUiThread {
+                GuardRuntime.reloadLanes()
+                if (VeilSettings.protectionOn(this) && accessibilityOn()) command("source", "a11y")
+                refresh()
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -176,6 +218,31 @@ class MainActivity : Activity() {
         )
         col.addView(setupCard)
 
+        parentNote = text("", 14f, sub)
+        childSwitch = Switch(this)
+        childSwitch.setOnCheckedChangeListener { sw, on ->
+            if (!sw.isPressed) return@setOnCheckedChangeListener
+            if (Parental.isUnlocked(this)) applyMode(on) else refresh()
+        }
+        childRow = switchRow("Child mode (parental control)", null, childSwitch)
+        parentSetup = button("Set up parental control", true) {
+            asking = true
+            startActivityForResult(Intent(this, ParentLockActivity::class.java), REQ_SETUP)
+        }
+        lockNow = button("Lock now", false) {
+            Parental.lock()
+            onResume()
+        }
+        col.addView(
+            cardBox(
+                text("Parental control", 17f, ink, bold = true),
+                parentNote,
+                childRow,
+                parentSetup,
+                lockNow
+            )
+        )
+
         protection = Switch(this)
         protectionNote = text("", 13f, sub)
         col.addView(
@@ -200,17 +267,25 @@ class MainActivity : Activity() {
         nudity = Switch(this)
         nudity.setOnCheckedChangeListener { sw, on ->
             if (!sw.isPressed) return@setOnCheckedChangeListener
+            if (Parental.childMode(this)) return@setOnCheckedChangeListener
             VeilSettings.setNudity(this, on)
             GuardRuntime.reloadLanes()
             refresh()
         }
         val always = cardBox(text("Always hidden", 17f, ink, bold = true))
+        alwaysNote = text("Locked in child mode", 13f, sub)
+        always.addView(alwaysNote)
         always.addView(switchRow("Nudity & explicit content", "Detected on the phone and blurred", nudity))
         for (p in WordLibrary.PACKS) {
             val sw = Switch(this)
             packSwitches[p.id] = sw
             sw.setOnCheckedChangeListener { s, on ->
                 if (!s.isPressed) return@setOnCheckedChangeListener
+                if (Parental.childMode(this)) {
+                    if (p.id == "politics") VeilSettings.setChildPolitics(this, on)
+                } else {
+                    VeilSettings.setAdultPack(this, p.id, on)
+                }
                 thread {
                     runCatching { WordLibrary.setPack(this, p, on) }
                     runOnUiThread { refresh() }
@@ -320,6 +395,7 @@ class MainActivity : Activity() {
         )
 
         return ScrollView(this).apply {
+            content = col
             setBackgroundColor(bg)
             addView(col)
             setOnApplyWindowInsetsListener { v, insets ->
@@ -343,7 +419,21 @@ class MainActivity : Activity() {
         setupCard.visibility = if (a11y) View.GONE else View.VISIBLE
         val on = VeilSettings.protectionOn(this) && a11y
         protection.isChecked = on
+        val child = Parental.childMode(this)
+        val hasPin = Parental.hasPin(this)
         protection.isEnabled = a11y
+        lockedLook(protection, child)
+        parentSetup.visibility = if (hasPin) View.GONE else View.VISIBLE
+        childRow.visibility = if (hasPin) View.VISIBLE else View.GONE
+        lockNow.visibility = if (hasPin) View.VISIBLE else View.GONE
+        childSwitch.isChecked = child
+        parentNote.text = when {
+            !hasPin -> "Set a parent PIN to protect these settings and hide content for a child."
+            child -> "Child mode on: the child cannot change these settings"
+            else -> "Adult mode"
+        }
+        alwaysNote.visibility = if (child) View.VISIBLE else View.GONE
+        lockedLook(nudity, child)
         val topics = WordLibrary.words(this).size + activeDefaults()
         protectionNote.text = when {
             !a11y -> "Finish setup to turn Veil on"
@@ -351,7 +441,12 @@ class MainActivity : Activity() {
             else -> "Off"
         }
         nudity.isChecked = VeilSettings.nudity(this)
-        for (p in WordLibrary.PACKS) packSwitches[p.id]?.isChecked = WordLibrary.packOn(this, p)
+        for (p in WordLibrary.PACKS) {
+            packSwitches[p.id]?.apply {
+                isChecked = WordLibrary.packOn(this@MainActivity, p)
+                lockedLook(this, child && p.id != "politics")
+            }
+        }
         val m = VeilSettings.mode(this)
         for (i in 0 until modes.childCount) {
             val rb = modes.getChildAt(i) as RadioButton
@@ -363,6 +458,12 @@ class MainActivity : Activity() {
             if (rb.tag == full && !rb.isChecked) rb.isChecked = true
         }
         renderWords()
+    }
+
+    /** Locked switches keep their real on/off look (a disabled switch looks "off" on some phones) but ignore taps. */
+    private fun lockedLook(s: Switch, locked: Boolean) {
+        s.isClickable = !locked
+        s.alpha = if (locked) 0.6f else 1f
     }
 
     private fun activeDefaults() =
@@ -401,12 +502,14 @@ class MainActivity : Activity() {
     }
 
     private fun firstRun() {
-        if (VeilSettings.seeded(this) && VeilSettings.packsVersion(this) >= PACKS_VERSION) return
         thread {
-            runCatching { WordLibrary.PACKS.forEach { WordLibrary.setPack(this, it, true) } }
-            runCatching { WordLibrary.ensureBank(this) }
-            VeilSettings.setSeeded(this)
-            VeilSettings.setPacksVersion(this, PACKS_VERSION)
+            if (!VeilSettings.seeded(this) || VeilSettings.packsVersion(this) < PACKS_VERSION) {
+                runCatching { WordLibrary.PACKS.forEach { WordLibrary.setPack(this, it, true) } }
+                runCatching { WordLibrary.ensureBank(this) }
+                VeilSettings.setSeeded(this)
+                VeilSettings.setPacksVersion(this, PACKS_VERSION)
+            }
+            runCatching { WordLibrary.syncProfile(this) }
             runOnUiThread { refresh() }
         }
     }
@@ -462,5 +565,7 @@ class MainActivity : Activity() {
     companion object {
         const val TAG = "VeilHello"
         private const val PACKS_VERSION = 4
+        private const val REQ_UNLOCK = 1
+        private const val REQ_SETUP = 2
     }
 }

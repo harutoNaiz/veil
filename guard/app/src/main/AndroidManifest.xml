@@ -24,6 +24,10 @@
         </activity>
 
         <activity
+            android:name=".ParentLockActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".teacher.TeacherDebugActivity"
             android:exported="true" />
 

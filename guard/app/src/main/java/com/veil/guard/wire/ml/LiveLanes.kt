@@ -60,7 +60,12 @@ object LiveLanes {
                     large,
                     counters,
                     tiles = true,
-                    wholePicture = full
+                    wholePicture = full,
+                    classes = if (com.veil.guard.app.Parental.childMode(ctx)) {
+                        Layer1Lane.CHILD_CLASSES
+                    } else {
+                        Layer1Lane.CLASSES
+                    }
                 )
         } else {
             off("layer1", "nudenet-320n.onnx missing")

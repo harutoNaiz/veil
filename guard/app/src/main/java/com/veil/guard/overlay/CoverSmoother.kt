@@ -15,7 +15,7 @@ package com.veil.guard.overlay
  * All times are uptime milliseconds; rects are display pixels.
  */
 class CoverSmoother(private val fadeMs: Long = 180, private val moveMs: Long = 140) {
-    data class Drawn(val cover: Cover, val rect: Px, val alpha: Float)
+    data class Drawn(val cover: Cover, val rect: Px, val alpha: Float, val live: Boolean = true)
 
     private class Shown(
         val id: Int,
@@ -24,7 +24,8 @@ class CoverSmoother(private val fadeMs: Long = 180, private val moveMs: Long = 1
         var to: Px,
         var moveStart: Long,
         var born: Long,
-        var dying: Long = -1
+        var dying: Long = -1,
+        var revealed: Boolean = false
     )
 
     private val shown = ArrayList<Shown>()
@@ -34,8 +35,20 @@ class CoverSmoother(private val fadeMs: Long = 180, private val moveMs: Long = 1
     fun onPlan(targets: List<Pair<Cover, Px>>, screenArea: Long, now: Long) {
         val merged = merge(targets, screenArea)
         val used = HashSet<Shown>()
-        for ((c, t) in merged.sortedByDescending { area(it.second) }) {
-            val s = shown.filter { it !in used && alpha(it, now) > 0f }
+        // A revealed cover stays revealed while the engine keeps finding it; it is forgotten once it is gone.
+        val open = merged.filter { (_, t) ->
+            val r = shown.filter { it.revealed && it !in used }.maxByOrNull { inter(it.to, t) }
+                ?.takeIf { overlapFrac(it.to, t) >= MATCH }
+            if (r != null) {
+                used.add(r)
+                r.from = t
+                r.to = t
+            }
+            r == null
+        }
+        shown.removeAll { it.revealed && it !in used }
+        for ((c, t) in open.sortedByDescending { area(it.second) }) {
+            val s = shown.filter { it !in used && !it.revealed && alpha(it, now) > 0f }
                 .maxByOrNull { inter(cur(it, now), t) }
                 ?.takeIf { overlapFrac(cur(it, now), t) >= MATCH }
             if (s == null) {
@@ -79,15 +92,26 @@ class CoverSmoother(private val fadeMs: Long = 180, private val moveMs: Long = 1
 
     /** What to draw now (covers keep a stable id as maskId, so their cloud textures are reused). */
     fun frame(now: Long): List<Drawn> {
-        shown.removeAll { it.dying >= 0 && now - it.dying >= fadeMs }
-        return shown.map { s -> Drawn(s.cover.copy(maskId = s.id), cur(s, now), alpha(s, now)) }
+        shown.removeAll { it.dying >= 0 && !it.revealed && now - it.dying >= fadeMs }
+        return shown.filter { !it.revealed || now - it.dying < fadeMs }
+            .map { s -> Drawn(s.cover.copy(maskId = s.id), cur(s, now), alpha(s, now), s.dying < 0) }
             .sortedBy { it.cover.layer }
     }
 
     /** True while a fade or slide is running (keep drawing frames). */
     fun animating(now: Long): Boolean = shown.any { s ->
-        s.dying >= 0 || now - s.born < fadeMs || (now - s.moveStart < moveMs && s.from != s.to)
+        (s.dying >= 0 && now - s.dying < fadeMs) || now - s.born < fadeMs ||
+            (now - s.moveStart < moveMs && s.from != s.to)
     }
+
+    /** The user chose "Continue" on cover [id]: it fades out and stays hidden until the engine stops finding it. */
+    fun reveal(id: Int, now: Long) {
+        val s = shown.firstOrNull { it.id == id && !it.revealed } ?: return
+        s.revealed = true
+        s.dying = now
+    }
+
+    fun revealedIds(): Set<Int> = shown.filter { it.revealed }.map { it.id }.toSet()
 
     private fun moveTo(s: Shown, at: Px, next: Px, now: Long) {
         if (next == s.to) return

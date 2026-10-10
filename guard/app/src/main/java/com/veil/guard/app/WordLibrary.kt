@@ -71,6 +71,39 @@ object WordLibrary {
 
     fun remove(ctx: Context, id: String) {
         File(conceptsDir(ctx), "$id.json").delete()
+        File(profileDir(ctx, activeProfile(ctx)), "$id.json").delete()
+    }
+
+    // ---- child / adult profiles ----
+
+    fun activeProfile(ctx: Context) = if (Parental.childMode(ctx)) "child" else "adult"
+
+    fun profileDir(ctx: Context, name: String) = File(ctx.filesDir, "profiles/$name").also { it.mkdirs() }
+
+    private fun userFiles(dir: File): List<File> =
+        (dir.listFiles { f -> f.extension == "json" } ?: emptyArray()).filter { !it.name.contains("--") }
+
+    /**
+     * Makes the guard's concepts folder match the active mode: the active profile's own words, and the built-in
+     * packs as that mode wants them. First run moves the words already on the phone into the adult profile.
+     */
+    @Synchronized
+    fun syncProfile(ctx: Context) {
+        val adult = profileDir(ctx, "adult")
+        profileDir(ctx, "child")
+        val marker = File(ctx.filesDir, "profiles/.migrated")
+        if (!marker.exists()) {
+            userFiles(conceptsDir(ctx)).forEach { it.copyTo(File(adult, it.name), overwrite = true) }
+            marker.writeText("1")
+        }
+        userFiles(conceptsDir(ctx)).forEach { it.delete() }
+        userFiles(profileDir(ctx, activeProfile(ctx))).forEach {
+            it.copyTo(File(conceptsDir(ctx), it.name), overwrite = true)
+        }
+        for (p in PACKS) {
+            val want = VeilSettings.packWanted(ctx, p.id)
+            if (want != packOn(ctx, p)) setPack(ctx, p, want)
+        }
     }
 
     /** Copies the bundled reference bank (needed to learn words) out of the APK once. */
@@ -107,7 +140,9 @@ object WordLibrary {
             lazy.close()
         }
         val id = Teacher.conceptCard(text)["conceptId"] as String
-        atomicWrite(File(conceptsDir(ctx), "$id.json"), toJson(cc.raw).toString())
+        val json = toJson(cc.raw).toString()
+        atomicWrite(File(profileDir(ctx, activeProfile(ctx)), "$id.json"), json)
+        atomicWrite(File(conceptsDir(ctx), "$id.json"), json)
         return id
     }
 
