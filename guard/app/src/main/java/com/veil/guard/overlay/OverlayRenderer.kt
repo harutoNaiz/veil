@@ -25,6 +25,7 @@ class OverlayRenderer :
     private val smoother = CoverSmoother()
     private var ctx: Context? = null
     private val pillWins = HashMap<Int, android.view.View>()
+    private var mediaCalm: MediaCalm? = null
     private val scrolls = com.veil.guard.signals.ScrollTracker()
 
     override fun onServiceConnected(service: AccessibilityService) {
@@ -95,6 +96,7 @@ class OverlayRenderer :
                 pv.setOnClickListener {
                     // Tell the engine first (rect before the cover fades): it stops covering this video/picture.
                     smoother.rectOf(id)?.let { r -> OverlayHub.onDismiss?.invoke(r) }
+                    mediaCalm?.onContinue(id)
                     smoother.reveal(id, SystemClock.uptimeMillis())
                     view?.invalidate()
                     syncPills()
@@ -133,6 +135,8 @@ class OverlayRenderer :
     }
 
     private fun detach() {
+        mediaCalm?.release()
+        mediaCalm = null
         for (pv in pillWins.values) runCatching { wm?.removeView(pv) }
         pillWins.clear()
         if (OverlayHub.sink === this) OverlayHub.sink = null
@@ -156,6 +160,17 @@ class OverlayRenderer :
         }
     }
 
+    private fun updateCalm(screenArea: Long) {
+        val c = ctx ?: return
+        val m = mediaCalm ?: MediaCalm(c).also { mediaCalm = it }
+        val big = smoother.frame(SystemClock.uptimeMillis())
+            .filter { it.live && it.cover.label != "glue" && CoverLook.isBig(area(it), screenArea) }
+            .map { it.cover.maskId }.toSet()
+        m.update(big, com.veil.guard.app.Parental.revealAllowed(c), com.veil.guard.app.Parental.childMode(c))
+    }
+
+    private fun area(d: CoverSmoother.Drawn) = d.rect.w.toLong() * d.rect.h
+
     @Suppress("DEPRECATION")
     private fun renderInner(plan: CoverPlan, recvMs: Long) {
         val v = view ?: return
@@ -168,8 +183,10 @@ class OverlayRenderer :
         v.samples = OverlayHub.samples
         val targets = plan.covers.mapNotNull { c -> CoverGeometry.toDisplay(c.rect, plan, ds)?.let { c to it } }
         smoother.onPlan(targets, ds.w.toLong() * ds.h, SystemClock.uptimeMillis())
+        ctx?.let { com.veil.guard.app.ActivityStats.observe(it, targets) }
         v.invalidate()
         syncPills()
+        updateCalm(ds.w.toLong() * ds.h)
         val rects = v.drawnRects()
         val period = 1000.0 / (display?.refreshRate ?: 60f)
         Choreographer.getInstance().postFrameCallback {

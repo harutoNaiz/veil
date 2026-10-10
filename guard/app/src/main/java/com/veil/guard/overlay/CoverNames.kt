@@ -19,6 +19,17 @@ object CoverNames {
 
     @Volatile private var violence: Set<String> = emptySet()
 
+    @Volatile private var packOf: Map<String, String> = emptyMap()
+
+    /** "nudity" | "sexual" | "violence" | "politics" | "word" | "mixed" (see [CoverLook.category]). */
+    fun category(ctx: Context, c: Cover): String {
+        if (c.layer == 1) return "nudity"
+        if (c.concepts.isEmpty()) return "mixed"
+        names(ctx)
+        val p = packOf
+        return CoverLook.category(c.layer, c.concepts.map { p[it] })
+    }
+
     /** In [child] mode nudity and violence & gore are never named: the label is empty (icon + "Hidden" only). */
     fun reason(ctx: Context, c: Cover, child: Boolean = false): String {
         if (c.layer == 1) return if (child) "" else "Nudity"
@@ -35,16 +46,19 @@ object CoverNames {
         val dir = File(ctx.externalMediaDirs.firstOrNull() ?: return names, "concepts")
         val m = HashMap<String, String>()
         val v = HashSet<String>()
+        val po = HashMap<String, String>()
         for (f in dir.listFiles { x -> x.extension == "json" }.orEmpty()) {
             val id = runCatching {
                 f.bufferedReader().use { r -> CharArray(600).let { b -> String(b, 0, r.read(b).coerceAtLeast(0)) } }
             }.getOrNull()?.let { ID.find(it)?.groupValues?.get(1) } ?: continue
             val pack = f.name.substringBefore("--", "")
             if (pack == "violence" || pack == "sexual") v.add(id) // never named in child mode
+            po[id] = pack
             m[id] = PACK_NAMES[pack] ?: id.replace('-', ' ')
         }
         names = m
         violence = v
+        packOf = po
         builtMs = now
         return m
     }

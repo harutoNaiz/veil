@@ -161,7 +161,8 @@ class CoverView(context: Context) : View(context) {
         canvas.drawBitmap(bmp, null, dst, smooth)
         canvas.restore()
         val pill = if (revealOn && c.style != CoverStyle.MOSAIC) pillRect(dst, density) else null
-        label(canvas, dst, CoverNames.reason(context, c, child), density, pill != null)
+        val kind = CoverLook.icon(CoverNames.category(context, c), child)
+        label(canvas, dst, CoverNames.reason(context, c, child), kind, density, pill != null)
         if (pill != null) {
             val pr = pill.height() / 2
             canvas.drawRoundRect(pill, pr, pr, pillFill)
@@ -185,7 +186,7 @@ class CoverView(context: Context) : View(context) {
 
     private val title =
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.WHITE
+            color = 0xF2FFFFFF.toInt()
             textAlign = Paint.Align.CENTER
             typeface =
                 android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
@@ -199,10 +200,9 @@ class CoverView(context: Context) : View(context) {
         }
 
     /** Instagram-style "sensitive content" badge: eye-off icon, "Hidden", and why (category or the user's word). */
-    private fun label(canvas: Canvas, dst: RectF, why: String, density: Float, pill: Boolean) {
+    private fun label(canvas: Canvas, dst: RectF, why: String, kind: String, density: Float, pill: Boolean) {
         // Adult mode: a warning the viewer can act on ("Continue"); otherwise a plain "Hidden".
-        val head = if (revealOn) "Sensitive content" else "Hidden"
-        val reason = if (revealOn && why.isNotEmpty()) "Contains: $why" else why
+        val (head, reason) = CoverLook.texts(why, revealOn, child)
         val short = minOf(dst.width(), dst.height())
         val s = (short * 0.10f).coerceIn(9f * density, 20f * density)
         val cy = dst.centerY() - if (pill) (PILL_H + 10f) * density / 2 else 0f
@@ -222,7 +222,7 @@ class CoverView(context: Context) : View(context) {
             big -> {
                 val rh = if (reason.isEmpty()) 0f else 4f * density + reasonPaint.textSize
                 val top = cy - (s * 1.1f + 6f * density + title.textSize + rh) / 2
-                eyeOff(canvas, cx, top + s * 0.55f, s)
+                glyph(canvas, kind, cx, top + s * 0.55f, s)
                 val ty = top + s * 1.1f + 6f * density + title.textSize * 0.8f
                 canvas.drawText(fit(title, head), cx, ty, title)
                 if (reason.isNotEmpty()) {
@@ -231,11 +231,11 @@ class CoverView(context: Context) : View(context) {
             }
 
             mid && reason.isNotEmpty() -> {
-                eyeOff(canvas, cx, cy - reasonPaint.textSize * 0.6f, s)
+                glyph(canvas, kind, cx, cy - reasonPaint.textSize * 0.6f, s)
                 canvas.drawText(fit(reasonPaint, reason), cx, cy + s * 0.6f + reasonPaint.textSize * 0.7f, reasonPaint)
             }
 
-            else -> eyeOff(canvas, cx, cy, s)
+            else -> glyph(canvas, kind, cx, cy, s)
         }
     }
 
@@ -277,6 +277,53 @@ class CoverView(context: Context) : View(context) {
         canvas.drawArc(eye, 20f, 140f, false, icon)
         canvas.drawCircle(cx, cy, s * 0.22f, icon)
         canvas.drawLine(cx - s * 0.85f, cy + s * 0.75f, cx + s * 0.85f, cy - s * 0.75f, icon)
+    }
+
+    private val shape = Path()
+
+    private fun glyph(canvas: Canvas, kind: String, cx: Float, cy: Float, s: Float) {
+        icon.strokeWidth = s * 0.16f
+        icon.strokeJoin = Paint.Join.ROUND
+        shape.reset()
+        when (kind) {
+            "heart" -> {
+                shape.moveTo(cx, cy + s * 0.8f)
+                shape.cubicTo(cx - s * 1.5f, cy - s * 0.1f, cx - s * 0.8f, cy - s * 1.0f, cx, cy - s * 0.3f)
+                shape.cubicTo(cx + s * 0.8f, cy - s * 1.0f, cx + s * 1.5f, cy - s * 0.1f, cx, cy + s * 0.8f)
+            }
+
+            "drop" -> {
+                shape.moveTo(cx, cy - s * 0.9f)
+                shape.cubicTo(cx + s * 0.2f, cy - s * 0.4f, cx + s * 0.7f, cy - s * 0.1f, cx + s * 0.7f, cy + s * 0.3f)
+                shape.cubicTo(cx + s * 0.7f, cy + s * 0.9f, cx - s * 0.7f, cy + s * 0.9f, cx - s * 0.7f, cy + s * 0.3f)
+                shape.cubicTo(cx - s * 0.7f, cy - s * 0.1f, cx - s * 0.2f, cy - s * 0.4f, cx, cy - s * 0.9f)
+            }
+
+            "flag" -> {
+                canvas.drawLine(cx - s * 0.6f, cy - s * 0.9f, cx - s * 0.6f, cy + s * 0.9f, icon)
+                shape.moveTo(cx - s * 0.6f, cy - s * 0.8f)
+                shape.lineTo(cx + s * 0.8f, cy - s * 0.8f)
+                shape.lineTo(cx + s * 0.4f, cy - s * 0.3f)
+                shape.lineTo(cx + s * 0.8f, cy + s * 0.2f)
+                shape.lineTo(cx - s * 0.6f, cy + s * 0.2f)
+            }
+
+            "tag" -> {
+                shape.moveTo(cx - s * 0.9f, cy - s * 0.2f)
+                shape.lineTo(cx - s * 0.9f, cy - s * 0.8f)
+                shape.lineTo(cx - s * 0.3f, cy - s * 0.8f)
+                shape.lineTo(cx + s * 0.9f, cy + s * 0.4f)
+                shape.lineTo(cx + s * 0.3f, cy + s * 1.0f)
+                shape.close()
+                canvas.drawCircle(cx - s * 0.5f, cy - s * 0.4f, s * 0.1f, icon)
+            }
+
+            else -> {
+                eyeOff(canvas, cx, cy, s)
+                return
+            }
+        }
+        canvas.drawPath(shape, icon)
     }
 
     private fun solid(canvas: Canvas, c: Cover, dst: Rect) {
