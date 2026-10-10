@@ -25,6 +25,11 @@ object VeilSettings {
 
     fun setFullCover(ctx: Context, on: Boolean) = prefs(ctx).edit().putBoolean("full_cover", on).apply()
 
+    /** Cover look: true = soft opaque cloud that melts into the page (default), false = rounded box. */
+    fun cloudLook(ctx: Context) = prefs(ctx).getBoolean("cloud_look", true)
+
+    fun setCloudLook(ctx: Context, on: Boolean) = prefs(ctx).edit().putBoolean("cloud_look", on).apply()
+
     /** First launch seeds the default categories once; the user can switch them off afterwards. */
     fun seeded(ctx: Context) = prefs(ctx).getBoolean("seeded", false)
 
