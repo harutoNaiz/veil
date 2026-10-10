@@ -104,7 +104,10 @@ class GuardAccessibilityService : AccessibilityService() {
             // them made the brain clear every tracked object, so most covers never got confirmed.
             if (!isAppSwitch(event)) return
         }
-        if (raw.type == AccessibilityEvent.TYPE_VIEW_SCROLLED) glue?.onEvent(raw)
+        if (raw.type == AccessibilityEvent.TYPE_VIEW_SCROLLED) {
+            glue?.onEvent(raw)
+            (OverlayHostRegistry.host as? OverlayRenderer)?.onScrollEvent(raw)
+        }
         emit(mapper.map(raw) { ids.getAndIncrement() })
     }
 

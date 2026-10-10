@@ -25,19 +25,34 @@ class BackupTest {
     }
 
     @Test
+    fun neverAsksAtAndroidsRejectBoundary() {
+        // Android rejects <= 333 ms after its own stamp of the last request; ours must leave a margin.
+        assertTrue(ShotScheduler().currentIntervalMs > 333)
+    }
+
+    @Test
     fun backoffAddsInterval() {
         val s = ShotScheduler()
         s.onIntervalTooShort()
-        assertEquals(666L, s.currentIntervalMs)
+        assertEquals(420L, s.currentIntervalMs)
         s.onRequested(0)
-        assertEquals(666L, s.delayUntilNext(0))
+        assertEquals(420L, s.delayUntilNext(0))
     }
 
     @Test
     fun backoffIsCapped() {
         val s = ShotScheduler()
-        repeat(10) { s.onIntervalTooShort() }
+        repeat(30) { s.onIntervalTooShort() }
         assertEquals(1000L, s.currentIntervalMs) // throttled window shots must not starve the pipeline
+    }
+
+    @Test
+    fun recoversToFullPaceAfterRejections() {
+        // The old scheduler only ever slowed down: one burst of rejections held it at ~1 fps for good.
+        val s = ShotScheduler()
+        repeat(30) { s.onIntervalTooShort() }
+        repeat(60) { s.onShot() }
+        assertEquals(360L, s.currentIntervalMs)
     }
 
     @Test

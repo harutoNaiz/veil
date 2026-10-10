@@ -103,6 +103,7 @@ class AccessibilityScreenSource(
         scheduler.onRequested(SystemClock.uptimeMillis())
         provider.takeAppWindowScreenshot { buffer, error ->
             if (buffer != null) {
+                scheduler.onShot()
                 try {
                     deliver(buffer)
                 } finally {

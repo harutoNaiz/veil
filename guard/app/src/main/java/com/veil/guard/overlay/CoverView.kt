@@ -20,7 +20,6 @@ import kotlin.math.roundToInt
  * of what lies under them, puffy feathered edges), never drawn over the status or navigation bars.
  */
 class CoverView(context: Context) : View(context) {
-    private var covers: List<Pair<Cover, Px>> = emptyList()
     private val fill = Paint()
     private val text =
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -36,15 +35,18 @@ class CoverView(context: Context) : View(context) {
 
     private val clouds = HashMap<Int, Cloud>()
 
-    fun setCovers(list: List<Pair<Cover, Px>>) {
+    /** Calm on-screen covers (merged, steady, scroll-following, faded); set by the renderer. */
+    var smoother: CoverSmoother? = null
+
+    /** The covers to draw this frame, clipped to the content area, with their fade. */
+    private fun current(now: Long): List<Triple<Cover, Px, Float>> {
         val content = contentArea()
-        covers = list.sortedBy { it.first.layer }.mapNotNull { (c, r) -> clip(r, content)?.let { c to it } }
-        val live = covers.map { it.first.maskId }.toSet()
-        clouds.keys.retainAll(live)
-        invalidate()
+        return smoother?.frame(now).orEmpty().mapNotNull { d ->
+            clip(d.rect, content)?.let { Triple(d.cover, it, d.alpha) }
+        }
     }
 
-    fun drawnRects(): List<Px> = covers.map { it.second }
+    fun drawnRects(): List<Px> = current(SystemClock.uptimeMillis()).map { it.second }
 
     /** Display area minus the visible system bars (status bar, navigation buttons, cutout band). */
     private fun contentArea(): Px {
@@ -71,16 +73,34 @@ class CoverView(context: Context) : View(context) {
         val a = contentArea()
         canvas.save()
         canvas.clipRect(a.x, a.y, a.x + a.w, a.y + a.h) // the cloud's feathered rim never reaches the bars
-        for ((c, r) in covers) {
+        val now = SystemClock.uptimeMillis()
+        val list = current(now)
+        clouds.keys.retainAll(list.map { it.first.maskId }.toSet())
+        for ((c, r, alpha) in list) {
             val dst = Rect(r.x, r.y, r.x + r.w, r.y + r.h)
+            val faded = alpha < 0.999f
+            if (faded) {
+                canvas.saveLayerAlpha(
+                    dst.left.toFloat(),
+                    dst.top.toFloat(),
+                    dst.right.toFloat(),
+                    dst.bottom.toFloat(),
+                    (
+                        alpha *
+                            255
+                        ).toInt()
+                )
+            }
             when {
                 c.label == "glue" -> solid(canvas, c, dst)
                 c.style == CoverStyle.MOSAIC -> crops?.crop(r)?.let { mosaic(canvas, it, dst) } ?: cloud(canvas, c, r)
                 else -> cloud(canvas, c, r)
             }
             c.label?.let { canvas.drawText(it, dst.exactCenterX(), dst.exactCenterY() + text.textSize / 3, text) }
+            if (faded) canvas.restore()
         }
         canvas.restore()
+        if (smoother?.animating(now) == true) postInvalidateOnAnimation()
     }
 
     /** "Sensitive content" veil: blurred own colours, evenly dimmed, rounded, exactly the cover rect, eye-off icon. */
@@ -89,7 +109,7 @@ class CoverView(context: Context) : View(context) {
         val snap = samples?.snapshot(r, width.coerceAtLeast(1), height.coerceAtLeast(1))
         val now = SystemClock.uptimeMillis()
         val old = clouds[c.maskId]
-        val fresh = old != null && old.w == r.w && old.h == r.h &&
+        val fresh = old != null && similar(old.w, r.w) && similar(old.h, r.h) &&
             (old.frameId == (snap?.id ?: -1L) || now - old.madeMs < REFRESH_MS)
         val bmp = if (fresh) {
             old!!.bmp
@@ -180,6 +200,9 @@ class CoverView(context: Context) : View(context) {
         return Bitmap.createBitmap(px, ow, oh, Bitmap.Config.ARGB_8888)
     }
 
+    /** Within 25%: a sliding or growing cover reuses its texture (drawn scaled) instead of re-sampling every frame. */
+    private fun similar(a: Int, b: Int) = kotlin.math.abs(a - b) * 4 <= maxOf(a, b)
+
     private fun night() =
         resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
@@ -217,6 +240,6 @@ class CoverView(context: Context) : View(context) {
         const val OUT_LONG = 160f
         const val DIM_TO = 0xFF3A3F47.toInt()
         const val DIM = 0.45f
-        const val REFRESH_MS = 600L
+        const val REFRESH_MS = 2000L // colours of a playing video change constantly; a calm cover does not
     }
 }

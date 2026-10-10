@@ -22,6 +22,8 @@ class OverlayRenderer :
     private var view: CoverView? = null
     private var trace: RenderTrace? = null
     private var last: CoverPlan? = null
+    private val smoother = CoverSmoother()
+    private val scrolls = com.veil.guard.signals.ScrollTracker()
 
     override fun onServiceConnected(service: AccessibilityService) {
         main.post { attach(service) }
@@ -41,6 +43,7 @@ class OverlayRenderer :
         val w = s.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         wm = w
         val v = CoverView(s)
+        v.smoother = smoother
         view = v
         val flags =
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
@@ -59,6 +62,14 @@ class OverlayRenderer :
         w.addView(v, lp)
         OverlayHub.sink = this
         OverlayCommands.handlers["clear"] = { clear() }
+    }
+
+    /** A raw scroll event (main thread): covers move with the content at once, before the next screenshot. */
+    fun onScrollEvent(raw: com.veil.guard.signals.RawEvent) {
+        val v = view ?: return
+        val d = scrolls.onScroll(raw) ?: return
+        smoother.onScroll(d.dx, d.dy, d.containerRect?.let { Px(it.x, it.y, it.w, it.h) })
+        v.invalidate()
     }
 
     private fun detach() {
@@ -86,15 +97,16 @@ class OverlayRenderer :
     @Suppress("DEPRECATION")
     private fun renderInner(plan: CoverPlan, recvMs: Long) {
         val v = view ?: return
-        val delta = PlanDiff.diff(last, plan)
+        // Every plan goes to the smoother, even an unchanged one: it may correct a cover a scroll moved.
         last = plan
-        if (delta.isEmpty) return
         val m = v.resources.displayMetrics
         val display = wm?.defaultDisplay
         val ds = DisplayState(m.widthPixels, m.heightPixels, display?.rotation ?: Surface.ROTATION_0)
         v.crops = OverlayHub.crops
         v.samples = OverlayHub.samples
-        v.setCovers(plan.covers.mapNotNull { c -> CoverGeometry.toDisplay(c.rect, plan, ds)?.let { c to it } })
+        val targets = plan.covers.mapNotNull { c -> CoverGeometry.toDisplay(c.rect, plan, ds)?.let { c to it } }
+        smoother.onPlan(targets, ds.w.toLong() * ds.h, SystemClock.uptimeMillis())
+        v.invalidate()
         val rects = v.drawnRects()
         val period = 1000.0 / (display?.refreshRate ?: 60f)
         Choreographer.getInstance().postFrameCallback {
