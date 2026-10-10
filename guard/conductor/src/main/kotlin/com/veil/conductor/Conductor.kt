@@ -6,7 +6,11 @@ import com.veil.brain.contract.Record
 import com.veil.brain.contract.Rect
 import com.veil.brain.contract.UiEvent
 import com.veil.brain.cover.plan
+import com.veil.brain.gate.THUMB_H
+import com.veil.brain.gate.THUMB_W
 import com.veil.brain.motion.BrainPipeline
+import com.veil.conductor.video.StickyVideo
+import com.veil.conductor.video.VideoRegions
 import java.util.ArrayDeque
 import java.util.concurrent.atomic.AtomicReference
 
@@ -28,10 +32,22 @@ class Conductor(
     private val idleLookMs: Long = 0,
     /** See BrainPipeline.selfCaptureHold. */
     selfCaptureHold: Boolean = true,
-    holdMsOverride: Int = 0
+    holdMsOverride: Int = 0,
+    instantProb: Double = 2.0,
+    /** Detect playing-video areas from motion and cover them whole + sticky (live app). */
+    private val videoCovers: Boolean = false
 ) {
+    private var videoRegions: VideoRegions? = null
+    private var videoSize = 0 to 0
+    private val stickyVideo = StickyVideo()
     private val pipeline =
-        BrainPipeline(mode, paramsJson, selfCaptureHold = selfCaptureHold, holdMsOverride = holdMsOverride)
+        BrainPipeline(
+            mode,
+            paramsJson,
+            selfCaptureHold = selfCaptureHold,
+            holdMsOverride = holdMsOverride,
+            instantProb = instantProb
+        )
     private val lock = Any()
     private val slot = AtomicReference<Frame?>(null)
 
@@ -109,6 +125,14 @@ class Conductor(
             framesSkippedPaused++
             return
         }
+        if (videoCovers && f.thumb.size == THUMB_W * THUMB_H) {
+            val sz = f.meta.screenWidth to f.meta.screenHeight
+            if (videoRegions == null || sz != videoSize) {
+                videoRegions = VideoRegions(sz.first, sz.second)
+                videoSize = sz
+            }
+            videoRegions?.onFrame(f.thumb, THUMB_W, THUMB_H, f.meta.tMs)
+        }
         framesAnalysed++
         handle(f, pipeline.step(f.thumb, f.meta))
         if (idleLookMs > 0 && !worker.busy && f.meta.tMs - lastLookMs >= idleLookMs) {
@@ -177,8 +201,16 @@ class Conductor(
         )
     }
 
-    private fun done(found: List<Finding>, aiMs: Long, tMs: Long) {
+    private fun done(foundIn: List<Finding>, aiMs: Long, tMs: Long) {
         synchronized(lock) {
+            var found = foundIn
+            if (videoCovers) {
+                val id = foundIn.firstOrNull()?.lookId ?: lookId
+                found = stickyVideo.apply(foundIn, videoRegions?.regions().orEmpty(), id, tMs)
+                for (r in stickyVideo.activeRects()) {
+                    log.write(linkedMapOf("kind" to "video", "lookId" to id, "rect" to r.toMap(), "sticky" to true))
+                }
+            }
             for (x in found) {
                 pipeline.enqueue(x)
                 log.write(

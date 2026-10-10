@@ -10,7 +10,9 @@ data class TrackParams(
     val parkMs: Int = 3000,
     val iouHidePct: Int = 30,
     val iouKeepPct: Int = 50,
-    val selfCapturePct: Int = 80
+    val selfCapturePct: Int = 80,
+    /** A sighting with probability >= this (or lane "video" when <= 1.0) confirms at once; 2.0 = off. */
+    val instantProb: Double = 2.0
 )
 
 val TRACK_MODES =
@@ -109,7 +111,9 @@ class Tracker(
         tr.findingId = f["findingId"] as String?
         tr.cut = false
         tr.parkedUntil = null
-        tr.state = if (tr.layer == 1 || tr.sightings >= p.confirmN) "confirmed" else "tentative"
+        val instant = p.instantProb <= 1.0 &&
+            (((f["probability"] as? Number)?.toDouble() ?: 0.0) >= p.instantProb || f["lane"] == "video")
+        tr.state = if (tr.layer == 1 || tr.sightings >= p.confirmN || instant) "confirmed" else "tentative"
     }
 
     private fun best(f: Record, used: Set<Int>, minPct: Int): Tr? {

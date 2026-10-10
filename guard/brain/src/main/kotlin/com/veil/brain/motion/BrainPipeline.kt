@@ -24,12 +24,16 @@ class BrainPipeline(
      *  under covers, so the live app turns this off and stale covers clear on the next look. */
     selfCaptureHold: Boolean = true,
     /** > 0: hold a cover this long without a sighting (live app: bridges a late look; tapes use the mode). */
-    holdMsOverride: Int = 0
+    holdMsOverride: Int = 0,
+    /** <= 1.0: confident first sightings (and lane video) get a cover on the first look; 2.0 = off. */
+    instantProb: Double = 2.0
 ) {
     private val tracker = Tracker(
         mode,
         rule = selfCaptureHold,
-        p = TRACK_MODES.getValue(mode).let { if (holdMsOverride > 0) it.copy(holdMs = holdMsOverride) else it }
+        p = TRACK_MODES.getValue(mode).let {
+            (if (holdMsOverride > 0) it.copy(holdMs = holdMsOverride) else it).copy(instantProb = instantProb)
+        }
     )
     private var inbox = ArrayList<Record>()
     private var cumDy = 0

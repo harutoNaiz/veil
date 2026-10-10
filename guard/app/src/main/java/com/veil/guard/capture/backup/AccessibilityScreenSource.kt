@@ -43,7 +43,8 @@ class AccessibilityScreenSource(
 ) : FrameSource {
     override val kind = FrameSourceKind.ACCESSIBILITY_SCREENSHOT
 
-    private val scheduler = ShotScheduler()
+    private val scheduler = DualShotScheduler()
+    private var pending: Runnable? = null
     private val dedupe = ThumbDedupe()
     private var thread: HandlerThread? = null
     private var handler: Handler? = null
@@ -91,31 +92,46 @@ class AccessibilityScreenSource(
         dedupe.reset()
     }
 
+    /** Single pending runnable that re-evaluates which kind is due; callbacks of one kind never cancel the other. */
     private fun schedule(h: Handler) {
-        h.removeCallbacksAndMessages(null)
-        val delay = scheduler.delayUntilNext(SystemClock.uptimeMillis()) ?: return
-        h.postDelayed({ shoot(h) }, delay)
+        pending?.let { h.removeCallbacks(it) }
+        pending = null
+        val (kind, delay) = scheduler.next(SystemClock.uptimeMillis()) ?: return
+        val r = Runnable { shoot(h, kind) }
+        pending = r
+        h.postDelayed(r, delay)
     }
 
-    private fun shoot(h: Handler) {
+    private fun shoot(h: Handler, kind: DualShotScheduler.Kind) {
+        pending = null
         val provider = bridge.provider
         if (!running || provider == null) return
-        scheduler.onRequested(SystemClock.uptimeMillis())
-        provider.takeAppWindowScreenshot { buffer, error ->
-            if (buffer != null) {
-                scheduler.onShot()
-                try {
-                    deliver(buffer)
-                } finally {
-                    buffer.close()
+        scheduler.onRequested(kind, SystemClock.uptimeMillis())
+        val onResult = { buffer: HardwareBuffer?, error: Int ->
+            h.post {
+                if (buffer != null) {
+                    scheduler.onShot(kind)
+                    try {
+                        deliver(buffer)
+                    } finally {
+                        buffer.close()
+                    }
+                } else if (error == ERROR_INTERVAL_TOO_SHORT) {
+                    scheduler.onTooShort(kind)
+                } else {
+                    Log.w(TAG, "screenshot failed: $error")
                 }
-            } else if (error == ERROR_INTERVAL_TOO_SHORT) {
-                scheduler.onIntervalTooShort()
-            } else {
-                Log.w(TAG, "screenshot failed: $error")
+                if (running) schedule(h)
             }
-            if (running) schedule(h)
         }
+        // Display shots include Veil's own overlay covers (window shots do not); acceptable for now.
+        if (kind == DualShotScheduler.Kind.WINDOW) {
+            provider.takeAppWindowScreenshot { b, e -> onResult(b, e) }
+        } else {
+            provider.takeScreenshot { b, e -> onResult(b, e) }
+        }
+        // The other kind may be due while this request is in flight.
+        schedule(h)
     }
 
     private fun deliver(buffer: HardwareBuffer) {

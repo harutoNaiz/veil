@@ -119,7 +119,9 @@ class GuardCore(
             layout,
             idleLookMs = IDLE_LOOK_MS,
             selfCaptureHold = false,
-            holdMsOverride = 3000
+            holdMsOverride = 3000,
+            videoCovers = true,
+            instantProb = 0.97
         )
     }
 
