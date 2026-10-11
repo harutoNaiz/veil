@@ -58,6 +58,10 @@ class MainActivity : Activity() {
     private lateinit var setupCard: View
     private lateinit var content: View
     private lateinit var parentNote: TextView
+    private lateinit var activityToday: TextView
+    private lateinit var activityBreak: TextView
+    private lateinit var activityApps: TextView
+    private lateinit var activityBars: WeekBars
     private lateinit var childSwitch: Switch
     private lateinit var childRow: View
     private lateinit var parentSetup: Button
@@ -257,6 +261,21 @@ class MainActivity : Activity() {
             )
         )
 
+        activityToday = text("Today: nothing hidden yet", 15f, ink, bold = true)
+        activityBreak = text("", 13f, sub)
+        activityApps = text("", 13f, sub)
+        activityBars = WeekBars(this)
+        col.addView(
+            cardBox(
+                text("Activity", 17f, ink, bold = true),
+                text("Counts only. Nothing leaves this phone.", 13f, sub),
+                activityToday,
+                activityBreak,
+                activityApps,
+                activityBars.apply { layoutParams = LinearLayout.LayoutParams(-1, dp(72)).apply { topMargin = dp(8) } }
+            )
+        )
+
         protection = Switch(this)
         protectionNote = text("", 13f, sub)
         col.addView(
@@ -407,6 +426,11 @@ class MainActivity : Activity() {
                 setPadding(dp(4), dp(16), dp(4), 0)
             }
         )
+        col.addView(
+            text("🔒 All AI runs on this phone · 0 bytes sent", 12f, sub, bold = true).apply {
+                setPadding(dp(4), dp(6), dp(4), dp(8))
+            }
+        )
 
         return ScrollView(this).apply {
             content = col
@@ -428,7 +452,73 @@ class MainActivity : Activity() {
         return s.split(':').any { it.startsWith("$packageName/") && it.endsWith("GuardAccessibilityService") }
     }
 
+    /** Fills the Activity card off the main thread (counts only). */
+    private fun refreshActivity() {
+        thread {
+            val week = runCatching { com.veil.guard.app.ActivityStats.last7Days(this) }.getOrNull() ?: return@thread
+            val today = week.last()
+            val total = today.byCategory.values.sum()
+            val names = mapOf(
+                "nudity" to "nudity",
+                "sexual" to "sexual",
+                "violence" to "violence",
+                "politics" to "political",
+                "word" to "your words"
+            )
+            val parts = today.byCategory.entries.sortedByDescending { it.value }
+                .joinToString(" · ") { "${it.value} ${names[it.key] ?: it.key}" }
+            val system = setOf("com.android.systemui", "unknown", packageName)
+            val apps = com.veil.guard.app.StatsCore.topApps(today, 8)
+                .filter { (pkg, _) ->
+                    pkg !in system &&
+                        listOf("launcher", "uikit", "systemui").none { pkg.contains(it) }
+                }
+                .take(3)
+                .joinToString(" · ") { (pkg, n) ->
+                    val label = runCatching {
+                        packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
+                    }.getOrDefault(pkg.substringAfterLast('.').replaceFirstChar { it.uppercase() })
+                    "$label $n"
+                }
+            val bars = week.map { d -> d.byCategory.values.sum() }
+            runOnUiThread {
+                activityToday.text = if (total == 0) "Today: nothing hidden yet" else "Today: $total items hidden"
+                activityBreak.text = parts
+                activityBreak.visibility = if (parts.isEmpty()) View.GONE else View.VISIBLE
+                activityApps.text = if (apps.isEmpty()) "" else "Most in: $apps"
+                activityApps.visibility = if (apps.isEmpty()) View.GONE else View.VISIBLE
+                activityBars.set(bars)
+            }
+        }
+    }
+
+    /** Seven small bars, oldest to today (today highlighted). */
+    private class WeekBars(ctx: android.content.Context) : View(ctx) {
+        private var values: List<Int> = List(7) { 0 }
+        private val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
+
+        fun set(v: List<Int>) {
+            values = v
+            invalidate()
+        }
+
+        override fun onDraw(canvas: android.graphics.Canvas) {
+            val n = values.size.coerceAtLeast(1)
+            val max = (values.maxOrNull() ?: 0).coerceAtLeast(1)
+            val gap = width / (n * 4f)
+            val bw = (width - gap * (n + 1)) / n
+            for ((i, v) in values.withIndex()) {
+                val h = (height - 4f) * v / max
+                val x = gap + i * (bw + gap)
+                paint.color = if (i == n - 1) 0xFF4A6CF7.toInt() else 0xFFC9D2F5.toInt()
+                val top = if (v == 0) height - 4f else height - h.coerceAtLeast(4f)
+                canvas.drawRoundRect(x, top, x + bw, height.toFloat(), 8f, 8f, paint)
+            }
+        }
+    }
+
     private fun refresh() {
+        refreshActivity()
         val a11y = accessibilityOn()
         setupCard.visibility = if (a11y) View.GONE else View.VISIBLE
         val on = VeilSettings.protectionOn(this) && a11y
